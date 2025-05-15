@@ -7,7 +7,7 @@ class DocFormView extends StatefulWidget {
   final DocForm form;
 
   /// Get the FormResponse once the user taps on Submit button.
-  final ValueChanged<Map<String, dynamic>> onSubmit;
+  final ValueChanged<Map<String, dynamic>>? onSubmit;
 
   /// Necessary callback when Form has fields of type = `attachment`
   /// so the logic of loading an Attachment is handled outside of the logic
@@ -35,7 +35,7 @@ class DocFormView extends StatefulWidget {
   const DocFormView({
     super.key,
     required this.form,
-    required this.onSubmit,
+    this.onSubmit,
     this.controller,
     this.onAttachmentLoaded,
     this.isLoading = false,
@@ -155,6 +155,8 @@ class DocFormViewState extends State<DocFormView>
     }
   }
 
+  bool get canSubmit => !isLoading && widget.onSubmit != null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,7 +191,7 @@ class DocFormViewState extends State<DocFormView>
             padding: EdgeInsets.only(bottom: bottomPadding > 0 ? 0 : 16),
             child: FloatingActionButton.extended(
               shape: const StadiumBorder(),
-              onPressed: isLoading ? null : onSubmit,
+              onPressed: canSubmit ? onSubmit : null,
               label: Text(DocFormLocalization.instance.localization.btnSubmit),
             ),
           ),
@@ -338,7 +340,7 @@ class DocFormViewState extends State<DocFormView>
     if (validate()) {
       final formResponse =
           controller.generateResponse(form: form, itemBundles: fieldBundles);
-      widget.onSubmit(formResponse);
+      widget.onSubmit?.call(formResponse);
     }
   }
 
