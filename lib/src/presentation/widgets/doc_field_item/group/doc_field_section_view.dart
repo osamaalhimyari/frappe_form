@@ -26,6 +26,8 @@ class DocFieldSectionViewState extends DocFieldViewState<DocFieldSectionView> {
 
   @override
   Widget buildBody(BuildContext context) {
+    final color = theme.colorScheme.surfaceContainer;
+    final borderColor = theme.colorScheme.onSurface;
     double borderRadius = 0;
     if (theme.inputDecorationTheme.border is OutlineInputBorder) {
       borderRadius = (theme.inputDecorationTheme.border as OutlineInputBorder)
@@ -56,8 +58,10 @@ class DocFieldSectionViewState extends DocFieldViewState<DocFieldSectionView> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-                border: Border.all(width: 0.5),
-                borderRadius: BorderRadius.circular(borderRadius)),
+              border: Border.all(width: 0.5, color: borderColor),
+              borderRadius: BorderRadius.circular(borderRadius),
+              color: color,
+            ),
             padding: EdgeInsets.only(
                 left: 16,
                 right: 16,
@@ -89,7 +93,11 @@ class DocFieldSectionViewState extends DocFieldViewState<DocFieldSectionView> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    color: theme.colorScheme.surface,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 0.5, color: borderColor),
+                      borderRadius: BorderRadius.circular(borderRadius),
+                      color: color,
+                    ),
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: SizeRenderer(
                       onSizeRendered: onGroupTitleSizeRendered,
