@@ -76,14 +76,14 @@ DocFormView(
 ```
 
 ## DocFormView
-1. **DocForm form:** `DocFormView` requires an object of type **DocForm** this is the definition of the Frappe Form and will be used to build the Form UI and generate the Questions and Answers.
-2. **Locale? locale**: Optionally you can specify the language like "es" or "en" or "fr", etc. you want as a Locale object to use for validation messages and Submit button, by default the system language will be used.
-3. **List<DocFormBaseLocalization>? localizations**: this is a list that allows you to add extra language translations to the Form UI, currently the package supports only English and Spanish, so you can add other Languages, you just need to create a class for each new Language you want to support and extend **DocFormBaseLocalization**.
-4. **DocFormBaseLocalization? defaultLocalization**: Indicates what should be the fallback localization if the specified language or the system language is not supported, by default English is the fallback.
-5. **bool isLoading**: use this to indicate there is an ongoing operation, for instance if you need to make an API request to load your **DocForm** you can set `isLoading = true` so the `DocFormView` will show a Shimmer loading effect view.
-6. **Future<Attachment?> Function()? onAttachmentLoaded**: To make this package simpler and compatible with all Flutter supported platforms, the feature to load an attachment is delegated to the App, so you have to handle this logic by implementing this function and returning an instance of `Attachment`.
-7. **ValueChanged<Map<String, dynamic>> onSubmit**: This is the callback that will be triggered once the user taps on the Submit button, and you will get a `Map<String, dynamic>` instance with all the answers covered.
-8. **DocFormController? controller**: This is the controller to be used for questions and response generation within the `DocFormView`, the purpose of this controller here is to allow you to use an instance of an extension of `DocFormController` so you can override the behavior and widgets.
+1. **`DocForm form`**: `DocFormView` requires an object of type **DocForm** this is the definition of the Frappe Form and will be used to build the Form UI and generate the Questions and Answers.
+2. **`Locale? locale`**: Optionally you can specify the language like "es" or "en" or "fr", etc. you want as a Locale object to use for validation messages and Submit button, by default the system language will be used.
+3. **`List<DocFormBaseLocalization>? localizations`**: this is a list that allows you to add extra language translations to the Form UI, currently the package supports only English and Spanish, so you can add other Languages, you just need to create a class for each new Language you want to support and extend **DocFormBaseLocalization**.
+4. **`DocFormBaseLocalization? defaultLocalization`**: Indicates what should be the fallback localization if the specified language or the system language is not supported, by default English is the fallback.
+5. **`bool isLoading`**: use this to indicate there is an ongoing operation, for instance if you need to make an API request to load your **DocForm** you can set `isLoading = true` so the `DocFormView` will show a Shimmer loading effect view.
+6. **`Future<Attachment?> Function()? onAttachmentLoaded`**: To make this package simpler and compatible with all Flutter supported platforms, the feature to load an attachment is delegated to the App, so you have to handle this logic by implementing this function and returning an instance of `Attachment`.
+7. **`ValueChanged<Map<String, dynamic>>? onSubmit`**: This is the callback that will be triggered once the user taps on the Submit button, and you will get a `Map<String, dynamic>` instance with all the answers covered.
+8. **`DocFormController? controller`**: This is the controller to be used for questions and response generation within the `DocFormView`, the purpose of this controller here is to allow you to use an instance of an extension of `DocFormController` so you can override the behavior and widgets.
 
 ## Some extra notes
 1. This widget will use the app Theme to build, so if you want to change colors, InputDecorations, etc, you just have to change it in your app Theme. Also all the package widgets are public and exposed so you could override it if necessary.
