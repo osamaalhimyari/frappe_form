@@ -87,20 +87,6 @@ class DocFieldAutocompleteViewState<SF extends DocFieldAutocompleteView>
                       value.containsIgnoringCase(textEditingValue.text)),
           onSelected: (String value) => controller.value = value,
         ),
-        if (handleControllerErrorManually && controller.hasError)
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
-              top: 4.0,
-            ),
-            child: Text(
-              '${controller.error}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-          ),
         if (isOpen) ...[
           const SizedBox(height: 8.0),
           Padding(

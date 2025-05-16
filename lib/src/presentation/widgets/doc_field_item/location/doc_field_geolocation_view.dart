@@ -128,20 +128,6 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
             ),
           ],
         ),
-        if (handleControllerErrorManually && controller.hasError)
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
-              top: 4.0,
-            ),
-            child: Text(
-              '${controller.error}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-          ),
       ],
     );
   }

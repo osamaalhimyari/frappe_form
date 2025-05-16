@@ -113,6 +113,23 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     );
   }
 
+  Widget? buildErrorManuallyView(BuildContext context) {
+    if (!handleControllerErrorManually || !controller.hasError) return null;
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        top: 4.0,
+      ),
+      child: Text(
+        '${controller.error}',
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.error,
+        ),
+      ),
+    );
+  }
+
   EdgeInsetsGeometry get defaultPadding => const EdgeInsets.only(bottom: 24.0);
 
   @override
@@ -121,6 +138,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     theme = Theme.of(context);
     final titleView = buildTitleView(context);
     final descriptionView = buildDescriptionView(context);
+    final errorManuallyView = buildErrorManuallyView(context);
     return isHidden
         ? const SizedBox.shrink()
         : AnimatedSize(
@@ -140,6 +158,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
                         if (titleView != null) titleView,
                         buildBody(context),
                         if (descriptionView != null) descriptionView,
+                        if (errorManuallyView != null) errorManuallyView,
                       ],
                     ),
                   ),
