@@ -14,8 +14,8 @@ class DocFieldFloatView extends DocFieldTextFieldView {
   State createState() => DocFieldFloatViewState();
 }
 
-class DocFieldFloatViewState
-    extends DocFieldTextFieldViewState<DocFieldFloatView> {
+class DocFieldFloatViewState<SF extends DocFieldFloatView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   void initState() {
     super.initState();

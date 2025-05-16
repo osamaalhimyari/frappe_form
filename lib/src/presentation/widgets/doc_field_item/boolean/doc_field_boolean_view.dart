@@ -18,7 +18,8 @@ class DocFieldBooleanView extends DocFieldView {
   State createState() => DocFieldBooleanViewState();
 }
 
-class DocFieldBooleanViewState extends DocFieldViewState<DocFieldBooleanView> {
+class DocFieldBooleanViewState<SF extends DocFieldBooleanView>
+    extends DocFieldViewState<SF> {
   @override
   CustomValueController<bool> get controller =>
       super.controller as CustomValueController<bool>;

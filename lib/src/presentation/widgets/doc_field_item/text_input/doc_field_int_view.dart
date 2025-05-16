@@ -14,7 +14,8 @@ class DocFieldIntView extends DocFieldTextFieldView {
   State createState() => DocFieldIntViewState();
 }
 
-class DocFieldIntViewState extends DocFieldTextFieldViewState<DocFieldIntView> {
+class DocFieldIntViewState<SF extends DocFieldIntView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   void initState() {
     super.initState();

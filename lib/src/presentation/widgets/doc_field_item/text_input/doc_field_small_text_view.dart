@@ -13,8 +13,8 @@ class DocFieldSmallTextView extends DocFieldTextFieldView {
   State createState() => DocFieldSmallTextViewState();
 }
 
-class DocFieldSmallTextViewState
-    extends DocFieldTextFieldViewState<DocFieldSmallTextView> {
+class DocFieldSmallTextViewState<SF extends DocFieldSmallTextView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   TextInputType? get keyboardType => TextInputType.multiline;
   @override

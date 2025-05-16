@@ -13,8 +13,8 @@ class DocFieldPasswordView extends DocFieldTextFieldView {
   State createState() => DocFieldPasswordViewState();
 }
 
-class DocFieldPasswordViewState
-    extends DocFieldTextFieldViewState<DocFieldPasswordView> {
+class DocFieldPasswordViewState<SF extends DocFieldPasswordView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   bool get obscureText => true;
 }

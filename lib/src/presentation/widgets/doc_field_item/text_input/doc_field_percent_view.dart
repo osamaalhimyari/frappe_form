@@ -14,8 +14,8 @@ class DocFieldPercentView extends DocFieldTextFieldView {
   State createState() => DocFieldPercentViewState();
 }
 
-class DocFieldPercentViewState
-    extends DocFieldTextFieldViewState<DocFieldPercentView> {
+class DocFieldPercentViewState<SF extends DocFieldPercentView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   void initState() {
     super.initState();

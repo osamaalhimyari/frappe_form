@@ -23,8 +23,8 @@ class DocFieldAttachmentView extends DocFieldView {
   State createState() => DocFieldAttachmentViewState();
 }
 
-class DocFieldAttachmentViewState
-    extends DocFieldViewState<DocFieldAttachmentView> {
+class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
+    extends DocFieldViewState<SF> {
   bool isLoading = false;
   @override
   CustomValueController<Attachment> get controller =>

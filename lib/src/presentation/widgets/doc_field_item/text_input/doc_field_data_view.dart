@@ -14,5 +14,5 @@ class DocFieldDataView extends DocFieldTextFieldView {
   State createState() => DocFieldDataViewState();
 }
 
-class DocFieldDataViewState
-    extends DocFieldTextFieldViewState<DocFieldDataView> {}
+class DocFieldDataViewState<SF extends DocFieldDataView>
+    extends DocFieldTextFieldViewState<SF> {}

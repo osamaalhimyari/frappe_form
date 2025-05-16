@@ -14,8 +14,8 @@ class DocFieldCheckListView extends DocFieldView {
   State createState() => DocFieldCheckListViewState();
 }
 
-class DocFieldCheckListViewState
-    extends DocFieldViewState<DocFieldCheckListView> {
+class DocFieldCheckListViewState<SF extends DocFieldCheckListView>
+    extends DocFieldViewState<SF> {
   @override
   Widget buildBody(BuildContext context) {
     return Column(

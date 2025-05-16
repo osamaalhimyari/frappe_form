@@ -15,8 +15,8 @@ class DocFieldTextEditorView extends DocFieldTextFieldView {
   State createState() => DocFieldTextEditorViewState();
 }
 
-class DocFieldTextEditorViewState
-    extends DocFieldTextFieldViewState<DocFieldTextEditorView> {
+class DocFieldTextEditorViewState<SF extends DocFieldTextEditorView>
+    extends DocFieldTextFieldViewState<SF> {
   final htmlController = HtmlEditorController();
   @override
   TextInputType? get keyboardType => TextInputType.multiline;

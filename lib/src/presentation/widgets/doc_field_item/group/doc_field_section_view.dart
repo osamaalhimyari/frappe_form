@@ -14,7 +14,8 @@ class DocFieldSectionView extends DocFieldView {
   State createState() => DocFieldSectionViewState();
 }
 
-class DocFieldSectionViewState extends DocFieldViewState<DocFieldSectionView> {
+class DocFieldSectionViewState<SF extends DocFieldSectionView>
+    extends DocFieldViewState<SF> {
   double? groupTitleHeight;
   Map<int, double?> itemWidthInfo = {};
   int maxItemRowCount = 1;

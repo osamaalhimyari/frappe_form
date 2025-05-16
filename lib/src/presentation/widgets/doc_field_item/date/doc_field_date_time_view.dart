@@ -36,8 +36,8 @@ class DocFieldDateTimeView extends DocFieldView {
   State createState() => DocFieldDateTimeViewState();
 }
 
-class DocFieldDateTimeViewState
-    extends DocFieldViewState<DocFieldDateTimeView> {
+class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
+    extends DocFieldViewState<SF> {
   @override
   CustomValueController<DateTime> get controller =>
       super.controller as CustomValueController<DateTime>;

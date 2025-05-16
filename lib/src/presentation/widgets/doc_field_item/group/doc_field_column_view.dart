@@ -14,7 +14,8 @@ class DocFieldColumnView extends DocFieldView {
   State createState() => DocFieldColumnViewState();
 }
 
-class DocFieldColumnViewState extends DocFieldViewState<DocFieldColumnView> {
+class DocFieldColumnViewState<SF extends DocFieldColumnView>
+    extends DocFieldViewState<SF> {
   @override
   Widget? buildTitleView(BuildContext context) => null;
 

@@ -19,7 +19,8 @@ class DocFieldRatingView extends DocFieldView {
   State createState() => DocFieldRatingViewState();
 }
 
-class DocFieldRatingViewState extends DocFieldViewState<DocFieldRatingView> {
+class DocFieldRatingViewState<SF extends DocFieldRatingView>
+    extends DocFieldViewState<SF> {
   @override
   CustomValueController<double> get controller =>
       super.controller as CustomValueController<double>;

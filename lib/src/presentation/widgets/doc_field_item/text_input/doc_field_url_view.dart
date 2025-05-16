@@ -14,7 +14,8 @@ class DocFieldUrlView extends DocFieldTextFieldView {
   State createState() => DocFieldUrlViewState();
 }
 
-class DocFieldUrlViewState extends DocFieldTextFieldViewState<DocFieldUrlView> {
+class DocFieldUrlViewState<SF extends DocFieldUrlView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   void initState() {
     super.initState();

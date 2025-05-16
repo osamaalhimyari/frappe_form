@@ -14,8 +14,8 @@ class DocFieldCurrencyView extends DocFieldTextFieldView {
   State createState() => DocFieldCurrencyViewState();
 }
 
-class DocFieldCurrencyViewState
-    extends DocFieldTextFieldViewState<DocFieldCurrencyView> {
+class DocFieldCurrencyViewState<SF extends DocFieldCurrencyView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   void initState() {
     super.initState();

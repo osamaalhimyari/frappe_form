@@ -13,8 +13,8 @@ class DocFieldLongTextView extends DocFieldTextFieldView {
   State createState() => DocFieldLongTextViewState();
 }
 
-class DocFieldLongTextViewState
-    extends DocFieldTextFieldViewState<DocFieldLongTextView> {
+class DocFieldLongTextViewState<SF extends DocFieldLongTextView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   TextInputType? get keyboardType => TextInputType.multiline;
   @override

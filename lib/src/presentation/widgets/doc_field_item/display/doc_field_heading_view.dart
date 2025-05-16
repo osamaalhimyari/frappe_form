@@ -13,7 +13,8 @@ class DocFieldHeadingView extends DocFieldView {
   State createState() => DocFieldHeadingViewState();
 }
 
-class DocFieldHeadingViewState extends DocFieldViewState<DocFieldHeadingView> {
+class DocFieldHeadingViewState<SF extends DocFieldHeadingView>
+    extends DocFieldViewState<SF> {
   @override
   Widget? buildTitleView(BuildContext context) => null;
 

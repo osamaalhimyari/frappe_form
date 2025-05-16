@@ -15,8 +15,8 @@ class DocFieldMarkdownEditorView extends DocFieldTextFieldView {
   State createState() => DocFieldMarkdownEditorViewState();
 }
 
-class DocFieldMarkdownEditorViewState
-    extends DocFieldTextFieldViewState<DocFieldMarkdownEditorView> {
+class DocFieldMarkdownEditorViewState<SF extends DocFieldMarkdownEditorView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   TextInputType? get keyboardType => TextInputType.multiline;
   @override

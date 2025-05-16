@@ -19,7 +19,8 @@ class DocFieldTabView extends DocFieldView implements PreferredSizeWidget {
       ).preferredSize;
 }
 
-class DocFieldTabItemViewState extends DocFieldViewState<DocFieldTabView> {
+class DocFieldTabItemViewState<SF extends DocFieldTabView>
+    extends DocFieldViewState<SF> {
   @override
   Widget? buildTitleView(BuildContext context) => null;
 
