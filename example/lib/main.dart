@@ -13,25 +13,35 @@ void main() {
   runApp(const MyApp());
 }
 
-StreamController<InputDecorationTheme?> inputDecorationThemeStream =
-    StreamController<InputDecorationTheme>.broadcast();
+StreamController<
+        ({ThemeData? theme, InputDecorationTheme? inputDecorationTheme})>
+    themeStream = StreamController<
+        ({
+          ThemeData? theme,
+          InputDecorationTheme? inputDecorationTheme
+        })>.broadcast();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<InputDecorationTheme?>(
-      stream: inputDecorationThemeStream.stream,
+    return StreamBuilder<
+        ({ThemeData? theme, InputDecorationTheme? inputDecorationTheme})>(
+      stream: themeStream.stream,
       initialData: null,
       builder: (context, snapshot) {
+        final theme = snapshot.data?.theme ??
+            (View.of(context).platformDispatcher.platformBrightness ==
+                    Brightness.light
+                ? ThemeData.light()
+                : ThemeData.dark());
         return MaterialApp(
           title: 'Frappe Doc Form Demo',
           scrollBehavior: const CustomScrollBehavior(),
-          theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-              useMaterial3: true,
-              inputDecorationTheme: snapshot.data),
+          theme: theme.copyWith(
+            inputDecorationTheme: snapshot.data?.inputDecorationTheme,
+          ),
           home: const MyHomePage(),
         );
       },
@@ -103,6 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
       )
     ),
   ];
+  final List<({String name, ThemeData? value})> themes = [
+    (name: 'System Default', value: null),
+    (name: 'Light', value: ThemeData.light()),
+    (name: 'Dark', value: ThemeData.dark()),
+  ];
 
   static bool isValidJson(String? jsonString) {
     if (jsonString == null) {
@@ -121,6 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
   InputDecorationTheme? selectedInputDecorationTheme = InputDecorationTheme();
   final extraLocalizations = [DocFormFrLocalization()];
   ThemeData theme = ThemeData();
+  ThemeData? selectedTheme;
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
@@ -322,7 +338,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 16.0),
               DropdownButtonFormField<InputDecorationTheme?>(
                   decoration: const InputDecoration(
-                      label: Text('Select input decoration theme ')),
+                      label: Text('Select input decoration theme')),
                   value: selectedInputDecorationTheme,
                   items: inputDecorationThemes
                       .map((e) => DropdownMenuItem<InputDecorationTheme>(
@@ -334,9 +350,30 @@ class _MyHomePageState extends State<MyHomePage> {
                           ))
                       .toList(),
                   onChanged: (value) {
-                    selectedInputDecorationTheme = value;
-                    inputDecorationThemeStream
-                        .add(selectedInputDecorationTheme);
+                    themeStream.add((
+                      theme: selectedTheme,
+                      inputDecorationTheme: selectedInputDecorationTheme = value
+                    ));
+                  }),
+              const SizedBox(height: 16.0),
+              DropdownButtonFormField<ThemeData?>(
+                  decoration:
+                      const InputDecoration(label: Text('Select app theme')),
+                  value: selectedTheme,
+                  items: themes
+                      .map((e) => DropdownMenuItem<ThemeData>(
+                            value: e.value,
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.78,
+                              child: Text(e.name),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    themeStream.add((
+                      theme: selectedTheme = value,
+                      inputDecorationTheme: selectedInputDecorationTheme
+                    ));
                   }),
             ],
           ),
