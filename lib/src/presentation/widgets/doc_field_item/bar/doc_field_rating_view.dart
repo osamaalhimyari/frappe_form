@@ -31,41 +31,35 @@ class DocFieldRatingViewState<SF extends DocFieldRatingView>
     controller.value ??= field.initial?.toString().asDouble;
   }
 
+  void onRatingUpdate(double rating) => controller.value = rating / 5;
+
   @override
   Widget buildBody(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RatingBar(
-          initialRating: controller.value ?? 0,
-          minRating: 0,
-          maxRating: 5,
-          itemCount: 5,
-          direction: Axis.horizontal,
-          ignoreGestures: field.isRadOnly,
-          allowHalfRating: true,
-          glowColor: Colors.yellow,
-          ratingWidget: RatingWidget(
-            full: const Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            half: const Icon(
-              Icons.star_half,
-              color: Colors.amber,
-            ),
-            empty: const Icon(
-              Icons.star_outline,
-              color: Colors.amber,
-            ),
-          ),
-          // itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-          onRatingUpdate: (rating) {
-            controller.value = rating / 5;
-          },
+    return RatingBar(
+      initialRating: controller.value ?? 0,
+      minRating: 0,
+      maxRating: 5,
+      itemCount: 5,
+      direction: Axis.horizontal,
+      ignoreGestures: field.isRadOnly,
+      allowHalfRating: true,
+      glowColor: Colors.yellow,
+      ratingWidget: RatingWidget(
+        full: const Icon(
+          Icons.star,
+          color: Colors.amber,
         ),
-      ],
+        half: const Icon(
+          Icons.star_half,
+          color: Colors.amber,
+        ),
+        empty: const Icon(
+          Icons.star_outline,
+          color: Colors.amber,
+        ),
+      ),
+      // itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      onRatingUpdate: onRatingUpdate,
     );
   }
 }
