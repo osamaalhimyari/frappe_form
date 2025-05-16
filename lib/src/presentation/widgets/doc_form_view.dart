@@ -52,6 +52,7 @@ class DocFormViewState extends State<DocFormView>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   late final DocFormController controller;
   static const fabSize = kFloatingActionButtonMargin + 56;
+  ThemeData theme = ThemeData();
   ScrollController? scrollController;
   bool isKeyboardVisible = false;
   bool scrollReachedBottom = false;
@@ -159,6 +160,7 @@ class DocFormViewState extends State<DocFormView>
 
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: form.title.isEmpty ? null : Text(form.title),
@@ -191,6 +193,8 @@ class DocFormViewState extends State<DocFormView>
             padding: EdgeInsets.only(bottom: bottomPadding > 0 ? 0 : 16),
             child: FloatingActionButton.extended(
               shape: const StadiumBorder(),
+              backgroundColor: canSubmit ? null : theme.disabledColor,
+              foregroundColor: canSubmit ? null : theme.disabledColor,
               onPressed: canSubmit ? onSubmit : null,
               label: Text(DocFormLocalization.instance.localization.btnSubmit),
             ),
