@@ -33,6 +33,11 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
   @override
   void initState() {
     super.initState();
+    initValue();
+    initControllers();
+  }
+
+  void initValue() {
     if (controller.value == null) {
       try {
         if (field.initial?.toString().isNotEmpty ?? false) {
@@ -46,10 +51,11 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
         }
       }
     }
-
     latitude = controller.value?.features?.first.geometry?.coordinates?[0];
     longitude = controller.value?.features?.first.geometry?.coordinates?[1];
+  }
 
+  void initControllers() {
     latController = CustomTextEditingController(
       text: latitude?.toString() ?? '',
       focusNode: FocusNode(),
@@ -57,6 +63,14 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
     lngController = CustomTextEditingController(
       text: longitude?.toString() ?? '',
       focusNode: FocusNode(),
+    );
+  }
+
+  void onLocationChanged() {
+    if (latitude == null || longitude == null) return;
+    controller.value = DocGeolocation.fromLatLng(
+      latitude: latitude!,
+      longitude: longitude!,
     );
   }
 
@@ -86,6 +100,10 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
                   labelText:
                       DocFormLocalization.instance.localization.textLatitude,
                 ),
+                onChanged: (text) {
+                  latitude = double.tryParse(text);
+                  onLocationChanged();
+                },
               ),
             ),
             const SizedBox(width: 8),
@@ -102,6 +120,10 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
                   labelText:
                       DocFormLocalization.instance.localization.textLongitude,
                 ),
+                onChanged: (text) {
+                  longitude = double.tryParse(text);
+                  onLocationChanged();
+                },
               ),
             ),
           ],
