@@ -10,13 +10,13 @@ abstract class DocFieldView extends StatefulWidget {
   final FieldController controller;
   final DocField field;
   final List<DocFieldView>? children;
-  final DocFieldDependsOnController? enableWhenController;
+  final DocFieldDependsOnController? dependsOnController;
   const DocFieldView(
       {super.key,
       required this.controller,
       required this.field,
       this.children,
-      this.enableWhenController});
+      this.dependsOnController});
 }
 
 abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
@@ -25,8 +25,8 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   bool isEnabled = true;
   String? lastControllerError;
   FieldController get controller => widget.controller;
-  DocFieldDependsOnController? get enableWhenController =>
-      widget.enableWhenController;
+  DocFieldDependsOnController? get dependsOnController =>
+      widget.dependsOnController;
   DocField get field => widget.field;
   List<DocFieldView>? get children => widget.children;
 
@@ -50,7 +50,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
       if (isRequired) ValidationUtils.requiredFieldValidation,
     ]);
     isEnabled =
-        enableWhenController?.init(onEnabledChangedListener: onEnabled) ?? true;
+        dependsOnController?.init(onEnabledChangedListener: onEnabled) ?? true;
   }
 
   void onControllerErrorChanged() {
@@ -157,7 +157,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   @override
   void dispose() {
     controller.removeListener(onControllerErrorChanged);
-    enableWhenController?.dispose();
+    dependsOnController?.dispose();
     super.dispose();
   }
 }

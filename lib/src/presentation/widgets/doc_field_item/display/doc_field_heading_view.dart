@@ -6,7 +6,7 @@ class DocFieldHeadingView extends DocFieldView {
   DocFieldHeadingView({
     super.key,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(controller: DummyController());
 
   @override

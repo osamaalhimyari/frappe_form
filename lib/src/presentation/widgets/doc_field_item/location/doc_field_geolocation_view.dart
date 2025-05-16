@@ -8,7 +8,7 @@ class DocFieldGeolocationView extends DocFieldView {
     super.key,
     CustomValueController<DocGeolocation>? controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomValueController<DocGeolocation>(

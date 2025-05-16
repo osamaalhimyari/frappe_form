@@ -7,7 +7,7 @@ class DocFieldCheckView extends DocFieldView {
     super.key,
     CustomValueController<int>? controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomValueController<int>(

@@ -9,7 +9,7 @@ class DocFieldAutocompleteView extends DocFieldView {
     super.key,
     CustomValueController<String>? controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
     this.isOpen = false,
   }) : super(
             controller: controller ??

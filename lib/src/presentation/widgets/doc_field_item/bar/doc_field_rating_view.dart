@@ -8,7 +8,7 @@ class DocFieldRatingView extends DocFieldView {
     super.key,
     required super.field,
     CustomValueController<double>? controller,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomValueController<double>(

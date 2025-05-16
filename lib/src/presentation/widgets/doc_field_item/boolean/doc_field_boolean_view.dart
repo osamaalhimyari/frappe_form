@@ -7,7 +7,7 @@ class DocFieldBooleanView extends DocFieldView {
     super.key,
     CustomValueController<bool>? controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomValueController<bool>(

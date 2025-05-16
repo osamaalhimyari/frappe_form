@@ -9,7 +9,7 @@ class DocFieldPhoneView extends DocFieldView {
     super.key,
     CustomTextEditingController? controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomTextEditingController(

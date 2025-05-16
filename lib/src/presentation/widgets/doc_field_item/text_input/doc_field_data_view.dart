@@ -7,7 +7,7 @@ class DocFieldDataView extends DocFieldTextFieldView {
     super.key,
     super.controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   });
 
   @override

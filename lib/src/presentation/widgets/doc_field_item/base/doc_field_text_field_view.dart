@@ -7,7 +7,7 @@ abstract class DocFieldTextFieldView extends DocFieldView {
     super.key,
     CustomTextEditingController? controller,
     required super.field,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomTextEditingController(

@@ -7,7 +7,7 @@ class DocFieldSectionView extends DocFieldView {
     super.key,
     required super.field,
     super.children,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(controller: DummyController());
 
   @override

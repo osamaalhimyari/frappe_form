@@ -11,9 +11,9 @@ class DocFormController {
   /// Allows customizing the logic that maps [DocField] objects into
   /// [DocFieldView] widgets.
   ///
-  /// [enableWhenController] needs to be passed to the returned [DocFieldView]
-  /// otherwise the enableWhen functionality of for that DocField will not work.
-  /// assuming that form item has enableWhen values
+  /// [dependsOnController] needs to be passed to the returned [DocFieldView]
+  /// otherwise the dependsOn functionality of for that DocField will not work.
+  /// assuming that form item has dependsOn values
   DocFieldView? Function(
     DocField field,
     DocFieldDependsOnController? dependsOnController,
@@ -63,7 +63,7 @@ class DocFormController {
 
         final fieldBundle = buildFormFieldBundle(
           field: field,
-          enableWhenController: dependsOnController,
+          dependsOnController: dependsOnController,
           onAttachmentLoaded: onAttachmentLoaded,
           groupId: groupId,
           alreadyBuiltItemBundles: [
@@ -116,7 +116,7 @@ class DocFormController {
 
   DocFieldBundle? buildFormFieldBundle({
     required DocField field,
-    DocFieldDependsOnController? enableWhenController,
+    DocFieldDependsOnController? dependsOnController,
     Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltItemBundles,
@@ -137,7 +137,7 @@ class DocFormController {
 
     fieldView = onBuildFieldView?.call(
       field,
-      enableWhenController,
+      dependsOnController,
       onAttachmentLoaded,
     );
 
@@ -146,97 +146,97 @@ class DocFormController {
         case FieldType.data:
           fieldView = DocFieldDataView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.text:
           fieldView = DocFieldTextView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.smallText:
           fieldView = DocFieldSmallTextView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.longText:
           fieldView = DocFieldLongTextView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.textEditor:
           fieldView = DocFieldTextEditorView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.markdownEditor:
           fieldView = DocFieldMarkdownEditorView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.int:
           fieldView = DocFieldIntView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.float:
           fieldView = DocFieldFloatView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.percent:
           fieldView = DocFieldPercentView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.currency:
           fieldView = DocFieldCurrencyView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.check:
           fieldView = DocFieldCheckView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.select:
           fieldView = DocFieldSelectView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.autocomplete:
           fieldView = DocFieldAutocompleteView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.phone:
           fieldView = DocFieldPhoneView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.password:
           fieldView = DocFieldPasswordView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.geolocation:
           fieldView = DocFieldGeolocationView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.date:
@@ -244,7 +244,7 @@ class DocFormController {
         case FieldType.dateTime:
           fieldView = DocFieldDateTimeView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
             type: DateTimeType.fromFieldType(fieldType),
           );
           break;
@@ -253,26 +253,26 @@ class DocFormController {
           fieldView = DocFieldAttachmentView(
             field: field,
             onAttachmentLoaded: onAttachmentLoaded,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.heading:
           fieldView = DocFieldHeadingView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.tabBreak:
           fieldView = DocFieldTabView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
             children: children.map((itemBundle) => itemBundle.view).toList(),
           );
           break;
         case FieldType.columnBreak:
           fieldView = DocFieldColumnView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
             children: children.map((itemBundle) => itemBundle.view).toList(),
           );
           break;
@@ -304,14 +304,14 @@ class DocFormController {
           }
           fieldView = DocFieldSectionView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
             children: finalChildrenViews,
           );
           break;
         case FieldType.rating:
           fieldView = DocFieldRatingView(
             field: field,
-            enableWhenController: enableWhenController,
+            dependsOnController: dependsOnController,
           );
           break;
         //TODO: pending implementation
@@ -336,37 +336,37 @@ class DocFormController {
         // case FieldType.quantity:
         //   itemView = DocFieldQuantityView(
         //     item: item,
-        //     enableWhenController: enableWhenController,
+        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.boolean:
         //   fieldView = DocFieldBooleanView(
         //     field: field,
-        //     enableWhenController: enableWhenController,
+        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.checkOpen:
         //   fieldView = DocFieldCheckOpenView(
         //     field: field,
-        //     enableWhenController: enableWhenController,
+        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.radioOpen:
         //   fieldView = DocFieldRadioOpenView(
         //     field: field,
-        //     enableWhenController: enableWhenController,
+        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.selectOpen:
         //   fieldView = DocFieldSelectOpenView(
         //     field: field,
-        //     enableWhenController: enableWhenController,
+        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.url:
         //   fieldView = DocFieldUrlView(
         //     field: field,
-        //     enableWhenController: enableWhenController,
+        //     dependsOnController: dependsOnController,
         //   );
         //   break;
       }

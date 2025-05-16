@@ -7,5 +7,5 @@ class DocFieldSelectOpenView extends DocFieldSelectView {
       super.controller,
       required super.field,
       super.isOpen = true,
-      super.enableWhenController});
+      super.dependsOnController});
 }

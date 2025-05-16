@@ -25,7 +25,7 @@ class DocFieldDateTimeView extends DocFieldView {
     CustomValueController<DateTime>? controller,
     required super.field,
     required this.type,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomValueController<DateTime>(

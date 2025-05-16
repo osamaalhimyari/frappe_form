@@ -12,7 +12,7 @@ class DocFieldAttachmentView extends DocFieldView {
     CustomValueController<Attachment>? controller,
     required super.field,
     required this.onAttachmentLoaded,
-    super.enableWhenController,
+    super.dependsOnController,
   }) : super(
             controller: controller ??
                 CustomValueController<Attachment>(

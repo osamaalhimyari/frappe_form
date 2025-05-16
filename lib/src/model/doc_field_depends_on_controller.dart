@@ -121,14 +121,14 @@ class DocFieldDependsOnController {
   }
 
   void _addListeners() {
-    for (final enableWhenBundle in _dependsOnBundleList) {
-      enableWhenBundle.controller.addListener(_onControllerChange);
+    for (final dependsOnBundle in _dependsOnBundleList) {
+      dependsOnBundle.controller.addListener(_onControllerChange);
     }
   }
 
   void _removeListeners() {
-    for (final enableWhenBundle in _dependsOnBundleList) {
-      enableWhenBundle.controller.removeListener(_onControllerChange);
+    for (final dependsOnBundle in _dependsOnBundleList) {
+      dependsOnBundle.controller.removeListener(_onControllerChange);
     }
   }
 }
