@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -41,7 +39,6 @@ class DocFormLoadingView extends StatelessWidget {
           0.65,
           1.0
         ]);
-    final random = Random();
     return ListView.separated(
         primary: false,
         shrinkWrap: true,
@@ -59,7 +56,7 @@ class DocFormLoadingView extends StatelessWidget {
                   child: Shimmer(
                     gradient: shimmerGradient,
                     child: Container(
-                      width: 100.0 + random.nextInt(200),
+                      width: 100.0 + (index.isEven ? 100 : 0),
                       height: 18,
                       decoration: shimmerDecoration,
                     ),
