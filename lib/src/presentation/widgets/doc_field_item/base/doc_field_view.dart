@@ -115,10 +115,14 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
 
   Widget? buildErrorManuallyView(BuildContext context) {
     if (!handleControllerErrorManually || !controller.hasError) return null;
+    final inputBorderRadius = (theme.inputDecorationTheme.border
+            is OutlineInputBorder)
+        ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
+        : const BorderRadius.all(Radius.circular(4));
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
+      padding: EdgeInsets.only(
+        left: inputBorderRadius.bottomLeft.x / 2,
+        right: inputBorderRadius.bottomLeft.x / 2,
         top: 4.0,
       ),
       child: Text(
