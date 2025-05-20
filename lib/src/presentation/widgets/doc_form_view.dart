@@ -76,13 +76,18 @@ class DocFormViewState extends State<DocFormView>
   late final double bottomPadding;
   List<DocFieldBundle> fieldBundles = [];
 
-  bool _isLoading = true;
+  bool loading = true;
+  bool offstage = false;
 
-  void loading(bool value) {
-    if (_isLoading != value) setState(() => _isLoading = value);
+  void setLoading(bool value, {bool offstage = false}) {
+    if (loading != value || this.offstage != offstage) {
+      loading = value;
+      this.offstage = offstage;
+      setState(() {});
+    }
   }
 
-  bool get isLoading => widget.isLoading || _isLoading;
+  bool get isLoading => widget.isLoading || loading;
 
   @override
   void initState() {
@@ -148,7 +153,21 @@ class DocFormViewState extends State<DocFormView>
       length: tabsCount,
       initialIndex: 0,
     );
-    loading(false);
+    setLoading(false, offstage: tabsCount > 1);
+    renderAllTabs();
+  }
+
+  // This is a workaround to make sure all Tabs are built so all fields evaluate
+  // their controllers validations which are necessary for required fields on
+  // other tabs than the current one.
+  Future<void> renderAllTabs() async {
+    if (tabsCount < 2) return;
+    for (int i = 0; i < tabsCount; ++i) {
+      tabController.animateTo(i);
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    tabController.animateTo(0);
+    setLoading(false, offstage: false);
   }
 
   int get listViewCount =>
@@ -187,7 +206,7 @@ class DocFormViewState extends State<DocFormView>
       child: Scaffold(
         appBar: AppBar(
           title: form.title.isEmpty ? null : Text(form.title),
-          bottom: tabsCount < 2
+          bottom: offstage || tabsCount < 2
               ? null
               : TabBar.secondary(
                   controller: tabController,
@@ -253,23 +272,29 @@ class DocFormViewState extends State<DocFormView>
   }
 
   Widget get buildBody {
-    if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
-        child: DocFormLoadingView(),
-      );
-    }
-    switch (tabsCount) {
-      case 0:
-        return Center(
+    Widget loadingView = const Padding(
+      padding: EdgeInsets.all(16),
+      child: DocFormLoadingView(),
+    );
+    if (isLoading) return loadingView;
+    final view = switch (tabsCount) {
+      0 => Center(
           child: Text('No form available'),
-        );
-      default:
-        return TabBarView(
+        ),
+      _ => TabBarView(
           controller: tabController,
           children: tabContentViews,
-        );
-    }
+        ),
+    };
+
+    return offstage
+        ? Stack(
+            children: [
+              Offstage(child: view),
+              loadingView,
+            ],
+          )
+        : view;
   }
 
   bool validate() {
@@ -278,12 +303,14 @@ class DocFormViewState extends State<DocFormView>
     if (!validation.isValid) {
       setState(() {});
       scrollToField(
-          controller: validation.controller, indexOffset: validation.offset);
+          controller: validation.controller,
+          indexOffset: validation.offset,
+          tabIndex: validation.tabIndex);
     }
     return validation.isValid;
   }
 
-  ({bool isValid, double offset, FieldController? controller})
+  ({bool isValid, double offset, FieldController? controller, int tabIndex})
       validateRecursive({
     required List<DocFieldBundle> fieldBundles,
   }) {
@@ -291,7 +318,12 @@ class DocFormViewState extends State<DocFormView>
     FieldController? controller;
     double tempOffset = 0;
     double indexOffset = 0;
-    for (final fieldBundle in fieldBundles) {
+    int tabIndex = 0;
+    for (int i = 0; i < fieldBundles.length; ++i) {
+      final fieldBundle = fieldBundles[i];
+      if (isValid && fieldBundle.field.type == FieldType.tabBreak) {
+        tabIndex = i;
+      }
       if (!fieldBundle.field.isGroupType) {
         if (!fieldBundle.controller.validate() && isValid) {
           isValid = false;
@@ -309,13 +341,23 @@ class DocFormViewState extends State<DocFormView>
         }
       }
     }
-    return (isValid: isValid, offset: indexOffset, controller: controller);
+    return (
+      isValid: isValid,
+      offset: indexOffset,
+      controller: controller,
+      tabIndex: tabIndex
+    );
   }
 
   Future<void> scrollToField(
       {required FieldController? controller,
-      required double indexOffset}) async {
+      required double indexOffset,
+      required int tabIndex}) async {
     if (controller == null) return;
+    if (tabIndex != tabController.index) {
+      tabController.animateTo(tabIndex);
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
     scrollController?.animateTo(indexOffset,
         duration: const Duration(milliseconds: 300), curve: Curves.ease);
     Future.delayed(const Duration(milliseconds: 200), () {
