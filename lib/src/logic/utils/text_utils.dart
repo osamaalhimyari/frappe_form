@@ -49,8 +49,9 @@ typedef Validation = bool Function({FieldController? controller});
 class ValidationController {
   final Validation? isValid;
   final String? message;
+  final String Function()? messageCallback;
 
-  ValidationController({this.isValid, this.message});
+  ValidationController({this.isValid, this.message, this.messageCallback});
 }
 
 class EmptyValidationController extends ValidationController {
@@ -448,7 +449,8 @@ mixin FieldController<T> {
     if (!canValidate) return true;
     for (ValidationController validation in validations) {
       if (!(validation.isValid?.call(controller: this) ?? true)) {
-        setError(validation.message, notify: notify);
+        setError(validation.message ?? validation.messageCallback?.call(),
+            notify: notify);
         if (textFieldState?.startedTyping == false) {
           textFieldState?.startedTyping = true;
           textFieldState?.refresh();
@@ -471,7 +473,7 @@ mixin FieldController<T> {
     if (!canValidate) return null;
     for (ValidationController validation in validations) {
       if (!(validation.isValid?.call(controller: this) ?? true)) {
-        return validation.message;
+        return validation.message ?? validation.messageCallback?.call();
       }
     }
     return null;

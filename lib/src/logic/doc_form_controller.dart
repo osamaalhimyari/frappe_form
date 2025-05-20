@@ -5,8 +5,8 @@ import 'package:frappe_form/frappe_form.dart';
 class DocFormController {
   /// Allows to override the function to generate individual field answer,
   /// either to generate a new [DocFieldAnswer] or modify the generated one
-  DocFieldAnswer Function(DocFieldBundle fieldBundle, dynamic fieldValue)?
-      onGenerateFieldAnswer;
+  Future<DocFieldAnswer?> Function(
+      DocFieldBundle fieldBundle, dynamic fieldValue)? onGenerateFieldAnswer;
 
   /// Allows customizing the logic that maps [DocField] objects into
   /// [DocFieldView] widgets.
@@ -14,7 +14,7 @@ class DocFormController {
   /// [dependsOnController] needs to be passed to the returned [DocFieldView]
   /// otherwise the dependsOn functionality of for that DocField will not work.
   /// assuming that form item has dependsOn values
-  DocFieldView? Function(
+  Future<DocFieldView?> Function(
     DocField field,
     DocFieldDependsOnController? dependsOnController,
     Future<Attachment?> Function()? onAttachmentLoaded,
@@ -27,13 +27,13 @@ class DocFormController {
     this.onBuildFieldView,
   });
 
-  List<DocFieldBundle> buildFormFields(DocForm form,
-      {Future<Attachment?> Function()? onAttachmentLoaded}) {
+  Future<List<DocFieldBundle>> buildFormFields(DocForm form,
+      {Future<Attachment?> Function()? onAttachmentLoaded}) async {
     List<DocFieldBundle> fieldBundles = [];
     try {
       List<DocField> fieldGroups =
           docFieldGroupController.generateGroups(form.fields);
-      fieldBundles = buildFormFieldBundles(
+      fieldBundles = await buildFormFieldBundles(
         fields: fieldGroups,
         onAttachmentLoaded: onAttachmentLoaded,
       );
@@ -45,12 +45,12 @@ class DocFormController {
     return fieldBundles;
   }
 
-  List<DocFieldBundle> buildFormFieldBundles({
+  Future<List<DocFieldBundle>> buildFormFieldBundles({
     required List<DocField> fields,
     required Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltFieldBundles,
-  }) {
+  }) async {
     List<DocFieldBundle> fieldBundles = [];
     try {
       for (int i = 0; i < fields.length; i++) {
@@ -61,7 +61,7 @@ class DocFormController {
           ...fieldBundles,
         ]);
 
-        final fieldBundle = buildFormFieldBundle(
+        final fieldBundle = await buildFormFieldBundle(
           field: field,
           dependsOnController: dependsOnController,
           onAttachmentLoaded: onAttachmentLoaded,
@@ -114,13 +114,13 @@ class DocFormController {
     return controller;
   }
 
-  DocFieldBundle? buildFormFieldBundle({
+  Future<DocFieldBundle?> buildFormFieldBundle({
     required DocField field,
     DocFieldDependsOnController? dependsOnController,
     Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltItemBundles,
-  }) {
+  }) async {
     DocFieldView? fieldView;
     List<DocFieldBundle>? children;
     final fieldType = field.type;
@@ -128,14 +128,14 @@ class DocFormController {
     final groupIdForChildren =
         '${groupId != null ? "$groupId/" : ""}${field.fieldName}';
 
-    children = buildFormFieldBundles(
+    children = await buildFormFieldBundles(
       fields: field.children,
       onAttachmentLoaded: onAttachmentLoaded,
       groupId: groupIdForChildren,
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
     );
 
-    fieldView = onBuildFieldView?.call(
+    fieldView = await onBuildFieldView?.call(
       field,
       dependsOnController,
       onAttachmentLoaded,
@@ -383,10 +383,11 @@ class DocFormController {
         : null;
   }
 
-  Map<String, dynamic> generateResponse(
-      {required DocForm form, required List<DocFieldBundle> itemBundles}) {
+  Future<Map<String, dynamic>> generateResponse(
+      {required DocForm form,
+      required List<DocFieldBundle> itemBundles}) async {
     List<DocFieldAnswer> fieldAnswers =
-        generateFieldAnswers(fieldBundles: itemBundles);
+        await generateFieldAnswers(fieldBundles: itemBundles);
 
     Map<String, dynamic> response = form.toAnswerMap();
 
@@ -397,22 +398,23 @@ class DocFormController {
     return response;
   }
 
-  List<DocFieldAnswer> generateFieldAnswers(
-      {required List<DocFieldBundle> fieldBundles}) {
+  Future<List<DocFieldAnswer>> generateFieldAnswers(
+      {required List<DocFieldBundle> fieldBundles}) async {
     List<DocFieldAnswer> fieldAnswers = [];
     for (final fieldBundle in fieldBundles) {
-      final fieldAnswer = generateFieldAnswer(fieldBundle);
+      final fieldAnswer = await generateFieldAnswer(fieldBundle);
       if (fieldAnswer != null) {
         fieldAnswers.add(fieldAnswer);
       }
       fieldAnswers.addAll(
-          generateFieldAnswers(fieldBundles: fieldBundle.children ?? []));
+          await generateFieldAnswers(fieldBundles: fieldBundle.children ?? []));
     }
 
     return fieldAnswers;
   }
 
-  DocFieldAnswer? generateFieldAnswer(DocFieldBundle fieldBundle) {
+  Future<DocFieldAnswer?> generateFieldAnswer(
+      DocFieldBundle fieldBundle) async {
     final fieldType = fieldBundle.field.type;
 
     dynamic fieldValue = switch (fieldType ?? FieldType.unknown) {
@@ -470,7 +472,7 @@ class DocFormController {
     };
 
     DocFieldAnswer fieldAnswer =
-        onGenerateFieldAnswer?.call(fieldBundle, fieldValue) ??
+        await onGenerateFieldAnswer?.call(fieldBundle, fieldValue) ??
             DocFieldAnswer(
               type: fieldType,
               name: fieldBundle.field.fieldName,

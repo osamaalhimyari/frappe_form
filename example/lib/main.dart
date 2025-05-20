@@ -438,6 +438,8 @@ class DocFormPageState extends State<DocFormPage> {
       localizations: widget.localizations,
       isLoading: loading,
       onSubmit: onSubmit,
+      onCancel: onCancel,
+      onResponse: onResponse,
     );
   }
 
@@ -445,7 +447,45 @@ class DocFormPageState extends State<DocFormPage> {
     return AttachmentUtils.pickAttachment(context);
   }
 
-  void onSubmit(Map<String, dynamic> formResponse) async {
+  Future<bool> onSubmit() async =>
+      await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Warning'),
+                content: Text('Are you sure you want to submit?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text('Yes'),
+                  ),
+                ],
+              )) ??
+      false;
+
+  Future<bool> onCancel() async =>
+      await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Warning'),
+                content: Text('Are you sure you want to cancel?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text('Yes'),
+                  ),
+                ],
+              )) ??
+      false;
+
+  void onResponse(Map<String, dynamic> formResponse) async {
     String json = jsonEncode(formResponse);
     var prettyString = const JsonEncoder.withIndent('  ').convert(formResponse);
     debugPrint('''

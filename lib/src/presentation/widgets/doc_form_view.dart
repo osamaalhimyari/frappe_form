@@ -6,12 +6,17 @@ class DocFormView extends StatefulWidget {
   /// The DocForm definition.
   final DocForm form;
 
-  /// Get the FormResponse once the user taps on Submit button.
-  final ValueChanged<Map<String, dynamic>>? onSubmit;
+  /// Callback when the user wants to submit Form.
+  /// Return true to proceed with the submission, false otherwise.
+  final Future<bool> Function()? onSubmit;
 
   /// Callback when the user wants to cancel the submission of the Form.
-  /// Return true to allow the cancellation.
+  /// Return true to allow the cancellation, false otherwise.
   final Future<bool> Function()? onCancel;
+
+  /// Get the FormResponse after user taps on Submit button and all Form fields
+  /// has been processed.
+  final ValueChanged<Map<String, dynamic>>? onResponse;
 
   /// Necessary callback when Form has fields of type = `attachment`
   /// so the logic of loading an Attachment is handled outside of the logic
@@ -41,6 +46,7 @@ class DocFormView extends StatefulWidget {
     required this.form,
     this.onSubmit,
     this.onCancel,
+    this.onResponse,
     this.controller,
     this.onAttachmentLoaded,
     this.isLoading = false,
@@ -134,7 +140,7 @@ class DocFormViewState extends State<DocFormView>
   }
 
   Future<void> buildFormFields() async {
-    fieldBundles = controller.buildFormFields(form,
+    fieldBundles = await controller.buildFormFields(form,
         onAttachmentLoaded: widget.onAttachmentLoaded);
     tabsCount = fieldBundles.length;
     tabController = TabController(
@@ -222,44 +228,6 @@ class DocFormViewState extends State<DocFormView>
         body: UnfocusView(
           child: buildBody,
         ),
-        // body: UnfocusView(
-        //   child: isLoading
-        //       ? const Padding(
-        //           padding: EdgeInsets.all(16),
-        //           child: DocFormLoadingView(),
-        //         )
-        //       : Scrollbar(
-        //           child: ListView.builder(
-        //               primary: true,
-        //               addAutomaticKeepAlives: true,
-        //               padding: const EdgeInsets.only(
-        //                   top: 16, left: 16, right: 16, bottom: fabSize + 64),
-        //               shrinkWrap: true,
-        //               keyboardDismissBehavior:
-        //                   ScrollViewKeyboardDismissBehavior.onDrag,
-        //               itemBuilder: (context, index) {
-        //                 if (index == 0 && form.title.isNotEmpty) {
-        //                   return Padding(
-        //                     padding: const EdgeInsets.only(
-        //                       bottom: 24.0,
-        //                     ),
-        //                     child: Text(
-        //                       form.title,
-        //                       style: theme.textTheme.titleLarge
-        //                           ?.copyWith(color: theme.colorScheme.primary),
-        //                       textAlign: TextAlign.center,
-        //                     ),
-        //                   );
-        //                 }
-        //                 return fieldBundles[
-        //                         index - (form.title.isNotEmpty ? 1 : 0)]
-        //                     .view;
-        //               },
-        //               // separatorBuilder: (context, index) =>
-        //               //     const SizedBox(height: 24.0),
-        //               itemCount: listViewCount),
-        //         ),
-        // ),
       ),
     );
   }
@@ -359,11 +327,12 @@ class DocFormViewState extends State<DocFormView>
         () => controller.focusNode?.requestFocus()));
   }
 
-  void onSubmit() {
+  Future<void> onSubmit() async {
     if (validate()) {
-      final formResponse =
-          controller.generateResponse(form: form, itemBundles: fieldBundles);
-      widget.onSubmit?.call(formResponse);
+      if (!(await widget.onSubmit?.call() ?? false)) return;
+      final formResponse = await controller.generateResponse(
+          form: form, itemBundles: fieldBundles);
+      widget.onResponse?.call(formResponse);
     }
   }
 
