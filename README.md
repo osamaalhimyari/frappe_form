@@ -71,7 +71,8 @@ DocFormView(
     localizations: localizations, // To add support for extra localization 
     isLoading: loading, // Whether is some ongoing operation before loading the UI 
     onSubmit: onSubmit, // Callback to get the Form Response
-    controller: controller, // The DocFormController to use for item view and response generation.
+    onCancel: onCancel, // Callback when the user wants to cancel the submission of the Form. Return true to allow the cancellation.
+    controller: controller, // The DocFormController to use for item view and response generation
 )
 ```
 
@@ -83,7 +84,8 @@ DocFormView(
 5. **`bool isLoading`**: use this to indicate there is an ongoing operation, for instance if you need to make an API request to load your **DocForm** you can set `isLoading = true` so the `DocFormView` will show a Shimmer loading effect view.
 6. **`Future<Attachment?> Function()? onAttachmentLoaded`**: To make this package simpler and compatible with all Flutter supported platforms, the feature to load an attachment is delegated to the App, so you have to handle this logic by implementing this function and returning an instance of `Attachment`.
 7. **`ValueChanged<Map<String, dynamic>>? onSubmit`**: This is the callback that will be triggered once the user taps on the Submit button, and you will get a `Map<String, dynamic>` instance with all the answers covered.
-8. **`DocFormController? controller`**: This is the controller to be used for questions and response generation within the `DocFormView`, the purpose of this controller here is to allow you to use an instance of an extension of `DocFormController` so you can override the behavior and widgets.
+8. **`Future<bool> Function()? onCancel`**: This is the callback that will be triggered if the user wants to cancel the submission of the Form. Return true to allow the cancellation.
+9. **`DocFormController? controller`**: This is the controller to be used for questions and response generation within the `DocFormView`, the purpose of this controller here is to allow you to use an instance of an extension of `DocFormController` so you can override the behavior and widgets.
 
 ## Some extra notes
 1. This widget will use the app Theme to build, so if you want to change colors, InputDecorations, etc, you just have to change it in your app Theme. Also all the package widgets are public and exposed so you could override it if necessary.

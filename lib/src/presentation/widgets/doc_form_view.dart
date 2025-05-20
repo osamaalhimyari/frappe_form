@@ -9,6 +9,10 @@ class DocFormView extends StatefulWidget {
   /// Get the FormResponse once the user taps on Submit button.
   final ValueChanged<Map<String, dynamic>>? onSubmit;
 
+  /// Callback when the user wants to cancel the submission of the Form.
+  /// Return true to allow the cancellation.
+  final Future<bool> Function()? onCancel;
+
   /// Necessary callback when Form has fields of type = `attachment`
   /// so the logic of loading an Attachment is handled outside of the logic
   /// of DocFormView
@@ -36,6 +40,7 @@ class DocFormView extends StatefulWidget {
     super.key,
     required this.form,
     this.onSubmit,
+    this.onCancel,
     this.controller,
     this.onAttachmentLoaded,
     this.isLoading = false,
@@ -161,87 +166,101 @@ class DocFormViewState extends State<DocFormView>
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: form.title.isEmpty ? null : Text(form.title),
-        bottom: tabsCount < 2
-            ? null
-            : TabBar.secondary(
-                controller: tabController,
-                isScrollable: true,
-                tabAlignment: TabAlignment.center,
-                // indicatorWeight: 20,
-                // lineIndicatorWeight: 0,
-                // tabsAlignment: CrossAxisAlignment.center,
-                tabs: tabViews,
-                onTap: onTabTap,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, result) {
+        if (didPop) return;
+        onBackPressed(result: result).then((canPop) {
+          if (canPop && context.mounted) {
+            Navigator.of(context).pop(result);
+          }
+        }).onError((error, stackTrace) {
+          debugPrint('Error: $error');
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: form.title.isEmpty ? null : Text(form.title),
+          bottom: tabsCount < 2
+              ? null
+              : TabBar.secondary(
+                  controller: tabController,
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.center,
+                  // indicatorWeight: 20,
+                  // lineIndicatorWeight: 0,
+                  // tabsAlignment: CrossAxisAlignment.center,
+                  tabs: tabViews,
+                  onTap: onTabTap,
+                ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: ValueListenableBuilder(
+          valueListenable: showFAB,
+          builder: (context, value, child) {
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: !showFAB.value ? const SizedBox() : child,
+            );
+          },
+          child: SizedBox(
+            width: 200,
+            key: ValueKey('showFAB: ${showFAB.value}'),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: bottomPadding > 0 ? 0 : 16),
+              child: FloatingActionButton.extended(
+                shape: const StadiumBorder(),
+                backgroundColor: canSubmit ? null : theme.disabledColor,
+                foregroundColor: canSubmit ? null : theme.disabledColor,
+                onPressed: canSubmit ? onSubmit : null,
+                label:
+                    Text(DocFormLocalization.instance.localization.btnSubmit),
               ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ValueListenableBuilder(
-        valueListenable: showFAB,
-        builder: (context, value, child) {
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: !showFAB.value ? const SizedBox() : child,
-          );
-        },
-        child: SizedBox(
-          width: 200,
-          key: ValueKey('showFAB: ${showFAB.value}'),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: bottomPadding > 0 ? 0 : 16),
-            child: FloatingActionButton.extended(
-              shape: const StadiumBorder(),
-              backgroundColor: canSubmit ? null : theme.disabledColor,
-              foregroundColor: canSubmit ? null : theme.disabledColor,
-              onPressed: canSubmit ? onSubmit : null,
-              label: Text(DocFormLocalization.instance.localization.btnSubmit),
             ),
           ),
         ),
+        body: UnfocusView(
+          child: buildBody,
+        ),
+        // body: UnfocusView(
+        //   child: isLoading
+        //       ? const Padding(
+        //           padding: EdgeInsets.all(16),
+        //           child: DocFormLoadingView(),
+        //         )
+        //       : Scrollbar(
+        //           child: ListView.builder(
+        //               primary: true,
+        //               addAutomaticKeepAlives: true,
+        //               padding: const EdgeInsets.only(
+        //                   top: 16, left: 16, right: 16, bottom: fabSize + 64),
+        //               shrinkWrap: true,
+        //               keyboardDismissBehavior:
+        //                   ScrollViewKeyboardDismissBehavior.onDrag,
+        //               itemBuilder: (context, index) {
+        //                 if (index == 0 && form.title.isNotEmpty) {
+        //                   return Padding(
+        //                     padding: const EdgeInsets.only(
+        //                       bottom: 24.0,
+        //                     ),
+        //                     child: Text(
+        //                       form.title,
+        //                       style: theme.textTheme.titleLarge
+        //                           ?.copyWith(color: theme.colorScheme.primary),
+        //                       textAlign: TextAlign.center,
+        //                     ),
+        //                   );
+        //                 }
+        //                 return fieldBundles[
+        //                         index - (form.title.isNotEmpty ? 1 : 0)]
+        //                     .view;
+        //               },
+        //               // separatorBuilder: (context, index) =>
+        //               //     const SizedBox(height: 24.0),
+        //               itemCount: listViewCount),
+        //         ),
+        // ),
       ),
-      body: UnfocusView(
-        child: buildBody,
-      ),
-      // body: UnfocusView(
-      //   child: isLoading
-      //       ? const Padding(
-      //           padding: EdgeInsets.all(16),
-      //           child: DocFormLoadingView(),
-      //         )
-      //       : Scrollbar(
-      //           child: ListView.builder(
-      //               primary: true,
-      //               addAutomaticKeepAlives: true,
-      //               padding: const EdgeInsets.only(
-      //                   top: 16, left: 16, right: 16, bottom: fabSize + 64),
-      //               shrinkWrap: true,
-      //               keyboardDismissBehavior:
-      //                   ScrollViewKeyboardDismissBehavior.onDrag,
-      //               itemBuilder: (context, index) {
-      //                 if (index == 0 && form.title.isNotEmpty) {
-      //                   return Padding(
-      //                     padding: const EdgeInsets.only(
-      //                       bottom: 24.0,
-      //                     ),
-      //                     child: Text(
-      //                       form.title,
-      //                       style: theme.textTheme.titleLarge
-      //                           ?.copyWith(color: theme.colorScheme.primary),
-      //                       textAlign: TextAlign.center,
-      //                     ),
-      //                   );
-      //                 }
-      //                 return fieldBundles[
-      //                         index - (form.title.isNotEmpty ? 1 : 0)]
-      //                     .view;
-      //               },
-      //               // separatorBuilder: (context, index) =>
-      //               //     const SizedBox(height: 24.0),
-      //               itemCount: listViewCount),
-      //         ),
-      // ),
     );
   }
 
@@ -370,6 +389,9 @@ class DocFormViewState extends State<DocFormView>
     super.didChangeMetrics();
     checkKeyboardVisibility();
   }
+
+  Future<bool> onBackPressed({result}) async =>
+      (await widget.onCancel?.call()) ?? true;
 
   @override
   void dispose() {
