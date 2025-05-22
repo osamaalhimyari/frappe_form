@@ -30,7 +30,7 @@ void printGroups(List<DocField> groups) {
 
 void printGroup(DocField group, {String level = ''}) {
   if (kDebugMode) {
-    print('$level> Type: ${group.type?.name}, title: ${group.title}');
+    print('$level> Type: ${group.fieldType}, title: ${group.title}');
   }
   for (final field in group.children) {
     printGroup(field, level: '$level - ');

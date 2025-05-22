@@ -142,7 +142,7 @@ class DocFormController {
     );
 
     if (fieldView == null) {
-      switch (fieldType ?? FieldType.unknown) {
+      switch (fieldType) {
         case FieldType.data:
           fieldView = DocFieldDataView(
             field: field,
@@ -417,7 +417,7 @@ class DocFormController {
       DocFieldBundle fieldBundle) async {
     final fieldType = fieldBundle.field.type;
 
-    dynamic fieldValue = switch (fieldType ?? FieldType.unknown) {
+    dynamic fieldValue = switch (fieldType) {
       // Excluding these types as they are not part of the response
       FieldType.tabBreak ||
       FieldType.columnBreak ||

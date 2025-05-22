@@ -207,7 +207,7 @@ class DocFieldGroupController {
           // Group Type as a child, in that case add the field to the list and
           // break the loop immediately
           if (field.isGroupType) {
-            if (groupType?.canHaveAsChild(field.type!) ?? false) {
+            if (groupType?.canHaveAsChild(field.type) ?? false) {
               fieldsOfGroup.add(field);
             }
             break;

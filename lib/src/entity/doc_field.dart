@@ -26,9 +26,10 @@ class DocField extends DocType {
   final String? label;
   @JsonKey(name: "options")
   final String? options;
-  @JsonKey(
-      name: "fieldtype", unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
-  final FieldType? type;
+  @JsonKey(name: "fieldtype")
+  final String? fieldType;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final FieldType type;
   @JsonKey(name: "hidden")
   final int? hidden;
   @JsonKey(name: "set_only_once")
@@ -66,7 +67,7 @@ class DocField extends DocType {
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<DocField> children;
   @JsonKey(includeFromJson: false, includeToJson: false)
-  final List<String> optionsAsList; // Only for cache
+  final List<String> optionsAsList;
 
   DocField({
     super.name,
@@ -93,7 +94,8 @@ class DocField extends DocType {
     this.fieldName,
     this.label,
     this.options,
-    this.type,
+    FieldType? type,
+    String? fieldType,
     this.hidden,
     this.setOnlyOnce,
     this.required,
@@ -111,7 +113,9 @@ class DocField extends DocType {
     this.initial,
     this.precision,
     List<DocField>? children,
-  })  : children = children ?? [],
+  })  : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
+        fieldType = fieldType ?? type?.name,
+        children = children ?? [],
         optionsAsList = options?.split('\n').toList() ?? [],
         dependsOnEvalList = DependsOnEval.fromExpression(dependsOn);
 
@@ -120,9 +124,9 @@ class DocField extends DocType {
   @override
   String get title => label ?? '';
 
-  bool get isGroupType => type?.isGroup ?? false;
+  bool get isGroupType => type.isGroup;
 
-  bool get isParentGroupType => type?.isParentGroupType ?? false;
+  bool get isParentGroupType => type.isParentGroupType;
 
   bool get isHidden => hidden.asBool;
   bool get isRequired => required.asBool;

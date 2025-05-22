@@ -39,6 +39,7 @@ abstract class _$DocFieldCWProxy {
     String? label,
     String? options,
     FieldType? type,
+    String? fieldType,
     int? hidden,
     int? setOnlyOnce,
     int? required,
@@ -99,6 +100,7 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
     Object? label = const $CopyWithPlaceholder(),
     Object? options = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
+    Object? fieldType = const $CopyWithPlaceholder(),
     Object? hidden = const $CopyWithPlaceholder(),
     Object? setOnlyOnce = const $CopyWithPlaceholder(),
     Object? required = const $CopyWithPlaceholder(),
@@ -218,6 +220,10 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as FieldType?,
+      fieldType: fieldType == const $CopyWithPlaceholder()
+          ? _value.fieldType
+          // ignore: cast_nullable_to_non_nullable
+          : fieldType as String?,
       hidden: hidden == const $CopyWithPlaceholder()
           ? _value.hidden
           // ignore: cast_nullable_to_non_nullable
@@ -330,8 +336,7 @@ DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
       fieldName: json['fieldname'] as String?,
       label: json['label'] as String?,
       options: json['options'] as String?,
-      type: $enumDecodeNullable(_$FieldTypeEnumMap, json['fieldtype'],
-          unknownValue: JsonKey.nullForUndefinedEnumValue),
+      fieldType: json['fieldtype'] as String?,
       hidden: (json['hidden'] as num?)?.toInt(),
       setOnlyOnce: (json['set_only_once'] as num?)?.toInt(),
       required: (json['reqd'] as num?)?.toInt(),
@@ -375,7 +380,7 @@ abstract final class _$DocFieldJsonKeys {
   static const String fieldName = 'fieldname';
   static const String label = 'label';
   static const String options = 'options';
-  static const String type = 'fieldtype';
+  static const String fieldType = 'fieldtype';
   static const String hidden = 'hidden';
   static const String setOnlyOnce = 'set_only_once';
   static const String required = 'reqd';
@@ -425,8 +430,7 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
       if (instance.fieldName case final value?) 'fieldname': value,
       if (instance.label case final value?) 'label': value,
       if (instance.options case final value?) 'options': value,
-      if (_$FieldTypeEnumMap[instance.type] case final value?)
-        'fieldtype': value,
+      if (instance.fieldType case final value?) 'fieldtype': value,
       if (instance.hidden case final value?) 'hidden': value,
       if (instance.setOnlyOnce case final value?) 'set_only_once': value,
       if (instance.required case final value?) 'reqd': value,
@@ -448,50 +452,4 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
 const _$DocTypeTypeEnumMap = {
   DocTypeType.docType: 'DocType',
   DocTypeType.docField: 'DocField',
-};
-
-const _$FieldTypeEnumMap = {
-  FieldType.link: 'Link',
-  FieldType.dynamicLink: 'Dynamic Link',
-  FieldType.check: 'Check',
-  FieldType.select: 'Select',
-  FieldType.table: 'Table',
-  FieldType.attach: 'Attach',
-  FieldType.attachImage: 'Attach Image',
-  FieldType.textEditor: 'Text Editor',
-  FieldType.htmlEditor: 'HTML Editor',
-  FieldType.date: 'Date',
-  FieldType.dateTime: 'Datetime',
-  FieldType.barcode: 'Barcode',
-  FieldType.button: 'Button',
-  FieldType.code: 'Code',
-  FieldType.color: 'Color',
-  FieldType.columnBreak: 'Column Break',
-  FieldType.currency: 'Currency',
-  FieldType.data: 'Data',
-  FieldType.float: 'Float',
-  FieldType.geolocation: 'Geolocation',
-  FieldType.html: 'HTML',
-  FieldType.image: 'Image',
-  FieldType.int: 'Int',
-  FieldType.smallText: 'Small Text',
-  FieldType.longText: 'Long Text',
-  FieldType.text: 'Text',
-  FieldType.phone: 'Phone',
-  FieldType.markdownEditor: 'Markdown Editor',
-  FieldType.password: 'Password',
-  FieldType.percent: 'Percent',
-  FieldType.rating: 'Rating',
-  FieldType.readOnly: 'Read Only',
-  FieldType.sectionBreak: 'Section Break',
-  FieldType.signature: 'Signature',
-  FieldType.tableMultiSelect: 'Table MultiSelect',
-  FieldType.time: 'Time',
-  FieldType.duration: 'Duration',
-  FieldType.tabBreak: 'Tab Break',
-  FieldType.autocomplete: 'Autocomplete',
-  FieldType.heading: 'Heading',
-  FieldType.icon: 'Icon',
-  FieldType.json: 'JSON',
-  FieldType.unknown: 'unknown',
 };

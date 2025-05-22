@@ -38,16 +38,18 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
 
       if (initial.isNotEmpty) {
         controller.text = initial!;
-        try {
-          isValidPhoneNumber = true;
-          final phoneInfo = CustomIntlPhoneField.parse(phoneNumber = initial);
-          initialPhoneNumber = phoneInfo.number;
-          phoneCountry = phoneInfo.country;
-        } catch (e) {
-          if (kDebugMode) {
-            print(e);
-          }
-        }
+      }
+    }
+
+    try {
+      isValidPhoneNumber = true;
+      final phoneInfo =
+          CustomIntlPhoneField.parse(phoneNumber = controller.text);
+      initialPhoneNumber = phoneInfo.number;
+      phoneCountry = phoneInfo.country;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
       }
     }
 
@@ -89,8 +91,11 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
           controller.clear();
           setState(() {});
         }
-        phoneNumber = phone.completeNumber;
-        controller.text = phoneNumber!;
+        if (phone.number.isNotEmpty) {
+          controller.text = '${phone.countryCode}-${phone.number}';
+        } else {
+          controller.text = '';
+        }
       },
       decoration: InputDecoration(
         hintText: DocFormLocalization.instance.localization.textPhone,
