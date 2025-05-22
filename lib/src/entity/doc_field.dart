@@ -136,7 +136,7 @@ class DocField extends DocType {
   DateTime? get defaultAsDateTime => DateTime.tryParse('$initial');
 
   @override
-  List<Object?> get props => [type, name, idx];
+  List<Object?> get props => [fieldType, fieldName, name, idx];
 
   factory DocField.fromJson(Map<String, dynamic> json) =>
       _$DocFieldFromJson(json);
