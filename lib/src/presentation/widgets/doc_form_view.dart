@@ -324,14 +324,12 @@ class DocFormViewState extends State<DocFormView>
       if (isValid && fieldBundle.field.type == FieldType.tabBreak) {
         tabIndex = i;
       }
-      if (!fieldBundle.field.isGroupType) {
-        if (!fieldBundle.controller.validate() && isValid) {
-          isValid = false;
-          indexOffset = tempOffset;
-          controller = fieldBundle.controller;
-        }
-        tempOffset += fieldBundle.controller.size.height;
+      if (!fieldBundle.controller.validate() && isValid) {
+        isValid = false;
+        indexOffset = tempOffset;
+        controller = fieldBundle.controller;
       }
+      tempOffset += fieldBundle.controller.size.height;
       if (fieldBundle.children.isNotEmpty) {
         final result = validateRecursive(fieldBundles: fieldBundle.children!);
         if (!result.isValid && isValid) {
