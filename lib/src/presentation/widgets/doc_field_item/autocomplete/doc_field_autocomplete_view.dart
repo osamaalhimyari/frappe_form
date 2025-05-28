@@ -73,6 +73,8 @@ class DocFieldAutocompleteViewState<SF extends DocFieldAutocompleteView>
     return selectedValue = newAnswer;
   }
 
+  bool get autoOpen => true;
+
   @override
   Widget buildBody(BuildContext context) {
     return Column(
@@ -82,7 +84,7 @@ class DocFieldAutocompleteViewState<SF extends DocFieldAutocompleteView>
           initialValue: TextEditingValue(text: controller.value ?? ''),
           optionsBuilder: (TextEditingValue textEditingValue) =>
               textEditingValue.text.isEmpty
-                  ? []
+                  ? (autoOpen ? values : [])
                   : values.where((String value) =>
                       value.containsIgnoringCase(textEditingValue.text)),
           onSelected: (String value) => controller.value = value,
