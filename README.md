@@ -67,6 +67,7 @@ Just add a `DocFormView` widget to your widget tree and you will have your Frapp
 DocFormView(
     form: form, // A Frappe Form instance
     onAttachmentLoaded: onAttachmentLoaded, // A callback to handle attachment loading (explained below) 
+    actions: actions, // To add custom actions to the AppBar.
     locale: locale, // The specific locale for the Button and validation texts
     localizations: localizations, // To add support for extra localization 
     isLoading: loading, // Whether is some ongoing operation before loading the UI 
@@ -84,10 +85,11 @@ DocFormView(
 4. **`DocFormBaseLocalization? defaultLocalization`**: Indicates what should be the fallback localization if the specified language or the system language is not supported, by default English is the fallback.
 5. **`bool isLoading`**: use this to indicate there is an ongoing operation, for instance if you need to make an API request to load your **DocForm** you can set `isLoading = true` so the `DocFormView` will show a Shimmer loading effect view.
 6. **`Future<Attachment?> Function()? onAttachmentLoaded`**: To make this package simpler and compatible with all Flutter supported platforms, the feature to load an attachment is delegated to the App, so you have to handle this logic by implementing this function and returning an instance of `Attachment`.
-7. **`Future<bool> Function()? onSubmit`**: Callback when the user wants to submit Form. Return true to proceed with the submission, false otherwise.
-8. **`Future<bool> Function()? onCancel`**: Callback when the user wants to cancel the submission of the Form. Return true to allow the cancellation, false otherwise.
-9. **`ValueChanged<Map<String, dynamic>>? onResponse`**: Get the FormResponse after user taps on Submit button and all Form fields has been processed.
-10. **`DocFormController? controller`**: This is the controller to be used for questions and response generation within the `DocFormView`, the purpose of this controller here is to allow you to use an instance of an extension of `DocFormController` so you can override the behavior and widgets.
+7. **`List<Widget>? actions`**: To add custom actions to the AppBar.
+8. **`Future<bool> Function()? onSubmit`**: Callback when the user wants to submit Form. Return true to proceed with the submission, false otherwise.
+9. **`Future<bool> Function()? onCancel`**: Callback when the user wants to cancel the submission of the Form. Return true to allow the cancellation, false otherwise.
+10. **`ValueChanged<Map<String, dynamic>>? onResponse`**: Get the FormResponse after user taps on Submit button and all Form fields has been processed.
+11. **`DocFormController? controller`**: This is the controller to be used for questions and response generation within the `DocFormView`, the purpose of this controller here is to allow you to use an instance of an extension of `DocFormController` so you can override the behavior and widgets.
 
 ## Some extra notes
 1. This widget will use the app Theme to build, so if you want to change colors, InputDecorations, etc, you just have to change it in your app Theme. Also all the package widgets are public and exposed so you could override it if necessary.

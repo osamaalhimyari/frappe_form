@@ -23,6 +23,9 @@ class DocFormView extends StatefulWidget {
   /// of DocFormView
   final Future<Attachment?> Function()? onAttachmentLoaded;
 
+  /// To add custom actions to the AppBar.
+  final List<Widget>? actions;
+
   /// To indicate there is an ongoing loading process
   final bool isLoading;
 
@@ -49,6 +52,7 @@ class DocFormView extends StatefulWidget {
     this.onResponse,
     this.controller,
     this.onAttachmentLoaded,
+    this.actions,
     this.isLoading = false,
     this.defaultLocalization,
     this.localizations,
@@ -205,7 +209,14 @@ class DocFormViewState extends State<DocFormView>
       },
       child: Scaffold(
         appBar: AppBar(
-          title: form.title.isEmpty ? null : Text(form.title),
+          title: form.title.isEmpty
+              ? null
+              : Text(
+                  form.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                ),
+          actions: widget.actions,
           bottom: offstage || tabsCount < 2
               ? null
               : TabBar.secondary(
