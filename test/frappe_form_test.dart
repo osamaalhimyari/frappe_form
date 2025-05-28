@@ -13,7 +13,7 @@ void main() {
   try {
     final groupController = DocFieldGroupController();
     final form = DocForm.fromJson(jsonDecode(form1));
-    final groups = groupController.generateGroups(form.fields);
+    final groups = groupController.generateGroups(form);
     printGroups(groups);
   } catch (e) {
     if (kDebugMode) {

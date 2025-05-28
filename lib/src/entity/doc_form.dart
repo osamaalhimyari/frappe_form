@@ -13,6 +13,8 @@ part 'doc_form.g.dart';
 class DocForm extends DocType {
   @JsonKey(name: "fields")
   final List<DocField> fields;
+  @JsonKey(name: "field_order")
+  final List<String> fieldsOrder;
 
   DocForm({
     super.name,
@@ -34,7 +36,9 @@ class DocForm extends DocType {
     super.docStatus,
     super.description,
     List<DocField>? fields,
-  }) : fields = fields ?? [];
+    List<String>? fieldsOrder,
+  })  : fields = fields ?? [],
+        fieldsOrder = fieldsOrder ?? [];
 
   Map<String, dynamic> toAnswerMap() => {
         _$DocFormJsonKeys.owner: owner,
@@ -43,6 +47,20 @@ class DocForm extends DocType {
         _$DocFormJsonKeys.idx: idx,
         _$DocFormJsonKeys.docType: name,
       };
+
+  void sortFields() {
+    for (int i = 0; i < fieldsOrder.length; ++i) {
+      final String fieldName = fieldsOrder[i];
+      for (int j = i; j < fields.length; ++j) {
+        if (fields[j].fieldName == fieldName) {
+          final tempField = fields[i];
+          fields[i] = fields[j];
+          fields[j] = tempField;
+          break;
+        }
+      }
+    }
+  }
 
   factory DocForm.fromJson(Map<String, dynamic> json) =>
       _$DocFormFromJson(json);

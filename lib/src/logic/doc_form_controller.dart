@@ -31,8 +31,7 @@ class DocFormController {
       {Future<Attachment?> Function()? onAttachmentLoaded}) async {
     List<DocFieldBundle> fieldBundles = [];
     try {
-      List<DocField> fieldGroups =
-          docFieldGroupController.generateGroups(form.fields);
+      List<DocField> fieldGroups = docFieldGroupController.generateGroups(form);
       fieldBundles = await buildFormFieldBundles(
         fields: fieldGroups,
         onAttachmentLoaded: onAttachmentLoaded,

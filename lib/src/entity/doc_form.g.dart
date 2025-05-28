@@ -33,6 +33,7 @@ abstract class _$DocFormCWProxy {
     int? docStatus,
     String? description,
     List<DocField>? fields,
+    List<String>? fieldsOrder,
   });
 }
 
@@ -70,6 +71,7 @@ class _$DocFormCWProxyImpl implements _$DocFormCWProxy {
     Object? docStatus = const $CopyWithPlaceholder(),
     Object? description = const $CopyWithPlaceholder(),
     Object? fields = const $CopyWithPlaceholder(),
+    Object? fieldsOrder = const $CopyWithPlaceholder(),
   }) {
     return DocForm(
       name: name == const $CopyWithPlaceholder()
@@ -148,6 +150,10 @@ class _$DocFormCWProxyImpl implements _$DocFormCWProxy {
           ? _value.fields
           // ignore: cast_nullable_to_non_nullable
           : fields as List<DocField>?,
+      fieldsOrder: fieldsOrder == const $CopyWithPlaceholder()
+          ? _value.fieldsOrder
+          // ignore: cast_nullable_to_non_nullable
+          : fieldsOrder as List<String>?,
     );
   }
 }
@@ -189,6 +195,9 @@ DocForm _$DocFormFromJson(Map<String, dynamic> json) => DocForm(
       fields: (json['fields'] as List<dynamic>?)
           ?.map((e) => DocField.fromJson(e as Map<String, dynamic>))
           .toList(),
+      fieldsOrder: (json['field_order'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 abstract final class _$DocFormJsonKeys {
@@ -211,6 +220,7 @@ abstract final class _$DocFormJsonKeys {
   static const String docStatus = 'docstatus';
   static const String description = 'description';
   static const String fields = 'fields';
+  static const String fieldsOrder = 'field_order';
 }
 
 Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
@@ -239,6 +249,7 @@ Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
       if (instance.docStatus case final value?) 'docstatus': value,
       if (instance.description case final value?) 'description': value,
       'fields': instance.fields,
+      'field_order': instance.fieldsOrder,
     };
 
 const _$DocTypeTypeEnumMap = {

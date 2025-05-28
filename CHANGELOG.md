@@ -9,6 +9,14 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.1.0
+### Added
+- Added support for `actions` widgets on AppBar.
+- Fields sorted according to the `field_order` property in the `DocForm`.
+
+### Changed
+- `DocFieldAutocompleteView` updated to show options on focus.
+
 ## 0.0.1
 ### Added
 - First release

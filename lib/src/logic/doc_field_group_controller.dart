@@ -1,11 +1,13 @@
-import 'package:frappe_form/src/entity/doc_field.dart';
-import 'package:frappe_form/src/entity/enumerator/field_type.dart';
+import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/foundation.dart';
 
 class DocFieldGroupController {
   const DocFieldGroupController();
 
-  List<DocField> generateGroups(List<DocField> fields) {
+  List<DocField> generateGroups(DocForm form) {
+    form.sortFields();
+    List<DocField> fields = form.fields;
+
     List<DocField> parentGroups = [];
     try {
       List<int> parentGroupIndexes = [];
