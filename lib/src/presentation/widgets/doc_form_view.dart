@@ -116,7 +116,7 @@ class DocFormViewState extends State<DocFormView>
     }
   }
 
-  void onCreated(_) {
+  void onCreated(Duration timeStamp) {
     if (!widget.isLoading && scrollController == null) {
       scrollController = PrimaryScrollController.of(context);
       scrollController?.addListener(onScrollListener);
@@ -410,7 +410,7 @@ class DocFormViewState extends State<DocFormView>
     checkKeyboardVisibility();
   }
 
-  Future<bool> onBackPressed({result}) async =>
+  Future<bool> onBackPressed({dynamic result}) async =>
       (await widget.onCancel?.call()) ?? true;
 
   @override

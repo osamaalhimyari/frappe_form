@@ -25,7 +25,7 @@ class _SizeRendererState extends State<SizeRenderer> {
     SchedulerBinding.instance.addPostFrameCallback(onCreated);
   }
 
-  void onCreated(_) {
+  void onCreated(Duration timeStamp) {
     var context = key.currentContext;
     if (context == null) return;
 

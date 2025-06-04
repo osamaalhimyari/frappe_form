@@ -33,10 +33,12 @@ class DocFieldRatingViewState<SF extends DocFieldRatingView>
 
   void onRatingUpdate(double rating) => controller.value = rating / 5;
 
+  double get initialRating => (controller.value ?? 0) * 5;
+
   @override
   Widget buildBody(BuildContext context) {
     return RatingBar(
-      initialRating: controller.value ?? 0,
+      initialRating: initialRating,
       minRating: 0,
       maxRating: 5,
       itemCount: 5,

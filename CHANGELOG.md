@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.1.1
+### Fixed
+- Fixed an issue with the `DocFieldRatingView` that was not setting the initial rating correctly. 
+
 ## 0.1.0
 ### Added
 - Added support for `actions` widgets on AppBar.

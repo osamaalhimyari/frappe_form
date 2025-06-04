@@ -237,7 +237,7 @@ class PickerUtils {
         maxDuration: maxDuration,
       );
 
-  static showPermissionExplanation(
+  static void showPermissionExplanation(
       {required BuildContext context, String? message}) {
     showDialog(
         context: context,
