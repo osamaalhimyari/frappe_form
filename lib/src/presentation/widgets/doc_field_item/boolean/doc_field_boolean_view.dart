@@ -9,10 +9,9 @@ class DocFieldBooleanView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomValueController<bool>(
-                  focusNode: FocusNode(),
-                ));
+          controller:
+              controller ?? CustomValueController<bool>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldBooleanViewState();

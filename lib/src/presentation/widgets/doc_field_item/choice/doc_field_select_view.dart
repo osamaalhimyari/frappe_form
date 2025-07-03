@@ -12,10 +12,9 @@ class DocFieldSelectView extends DocFieldView {
     super.dependsOnController,
     this.isOpen = false,
   }) : super(
-            controller: controller ??
-                CustomValueController<String>(
-                  focusNode: FocusNode(),
-                ));
+          controller: controller ??
+              CustomValueController<String>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldSelectViewState();
@@ -90,11 +89,7 @@ class DocFieldSelectViewState<SF extends DocFieldSelectView>
         if (isOpen) ...[
           const SizedBox(height: 8.0),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
-              bottom: 4.0,
-            ),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
             child: Text(
               DocFormLocalization.instance.localization.textOtherOption,
               style: theme.textTheme.titleSmall,
@@ -117,7 +112,7 @@ class DocFieldSelectViewState<SF extends DocFieldSelectView>
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.sentences,
           ),
-        ]
+        ],
       ],
     );
   }

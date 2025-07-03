@@ -10,10 +10,9 @@ class DocFieldRatingView extends DocFieldView {
     CustomValueController<double>? controller,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomValueController<double>(
-                  focusNode: FocusNode(),
-                ));
+          controller: controller ??
+              CustomValueController<double>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldRatingViewState();
@@ -47,18 +46,9 @@ class DocFieldRatingViewState<SF extends DocFieldRatingView>
       allowHalfRating: true,
       glowColor: Colors.yellow,
       ratingWidget: RatingWidget(
-        full: const Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        half: const Icon(
-          Icons.star_half,
-          color: Colors.amber,
-        ),
-        empty: const Icon(
-          Icons.star_outline,
-          color: Colors.amber,
-        ),
+        full: const Icon(Icons.star, color: Colors.amber),
+        half: const Icon(Icons.star_half, color: Colors.amber),
+        empty: const Icon(Icons.star_outline, color: Colors.amber),
       ),
       // itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
       onRatingUpdate: onRatingUpdate,

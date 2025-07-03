@@ -17,8 +17,6 @@ class DocFieldAnswer {
         name.isEmpty /*|| (fieldValue?.toString().isEmpty ?? true)*/) {
       return {};
     }
-    return {
-      name!: (value?.toString().isEmpty ?? true) ? null : value,
-    };
+    return {name!: (value?.toString().isEmpty ?? true) ? null : value};
   }
 }

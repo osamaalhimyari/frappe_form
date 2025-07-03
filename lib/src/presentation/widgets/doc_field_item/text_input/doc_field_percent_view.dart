@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 05/06/25.
 class DocFieldPercentView extends DocFieldTextFieldView {
-  DocFieldPercentView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldPercentView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldPercentViewState();
@@ -19,8 +20,9 @@ class DocFieldPercentViewState<SF extends DocFieldPercentView>
   @override
   void initState() {
     super.initState();
-    controller.validations.addAll(
-        [ValidationUtils.positiveNumberValidation(required: isRequired)]);
+    controller.validations.addAll([
+      ValidationUtils.positiveNumberValidation(required: isRequired),
+    ]);
   }
 
   @override

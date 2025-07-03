@@ -5,8 +5,7 @@ enum DocFieldDependsOnBehavior {
   all,
 
   /// Enable the question when any of the dependsOn criteria are satisfied.
-  any,
-  ;
+  any;
 
   static const defaultValue = any;
 
@@ -17,6 +16,7 @@ enum DocFieldDependsOnBehavior {
       isAny ? currentValue || newValue : currentValue && newValue;
 
   static DocFieldDependsOnBehavior? valueOf(String? name) =>
-      DocFieldDependsOnBehavior.values
-          .firstWhereOrNull((value) => value.name == name);
+      DocFieldDependsOnBehavior.values.firstWhereOrNull(
+        (value) => value.name == name,
+      );
 }

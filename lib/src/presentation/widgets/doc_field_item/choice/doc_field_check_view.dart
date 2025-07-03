@@ -9,10 +9,9 @@ class DocFieldCheckView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomValueController<int>(
-                  focusNode: FocusNode(),
-                ));
+          controller:
+              controller ?? CustomValueController<int>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldCheckViewState();
@@ -52,6 +51,9 @@ class DocFieldCheckViewState<SF extends DocFieldCheckView>
 
   @override
   EdgeInsetsGeometry get defaultPadding => EdgeInsets.zero;
+
+  @override
+  Widget? buildTitleView(BuildContext context) => null;
 
   @override
   Widget buildBody(BuildContext context) {

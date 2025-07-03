@@ -4,10 +4,8 @@ import 'package:flutter/services.dart';
 ///  • Limits input to at most [decimals] digits after the decimal point,
 ///  • Optionally allows a leading '+' or '-' if [allowSigned] is true.
 class DecimalTextInputFormatter extends TextInputFormatter {
-  DecimalTextInputFormatter({
-    this.decimals = 2,
-    this.allowSigned = false,
-  }) : assert(decimals >= 0, 'Decimal range must be non-negative');
+  DecimalTextInputFormatter({this.decimals = 2, this.allowSigned = false})
+      : assert(decimals >= 0, 'Decimal range must be non-negative');
 
   /// how many decimals to allow
   final int decimals;

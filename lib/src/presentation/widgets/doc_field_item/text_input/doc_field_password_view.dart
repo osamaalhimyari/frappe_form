@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 05/06/25.
 class DocFieldPasswordView extends DocFieldTextFieldView {
-  DocFieldPasswordView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldPasswordView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldPasswordViewState();

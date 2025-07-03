@@ -9,6 +9,17 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.2.0
+### Added
+- Added "Next" and "Back" buttons to the `DocForm` for easier navigation between tabs.
+- Added support for html formatting on descriptions and Heading.
+
+### Changed
+- Changed the description location on Sections and Columns to be below the title instead of below the content.
+
+### Fixed
+- Fixed an issue with the label on Checkbox fields.
+
 ## 0.1.2
 ### Changed
 - `html_editor_enhanced` dependency updated to latest.

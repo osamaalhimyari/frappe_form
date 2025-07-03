@@ -22,13 +22,15 @@ class DocFieldGroupController {
       // If no Tab fields are found, then just create a pseudo Tab group to make
       // all the fields grouped in a single group
       if (parentGroupIndexes.isEmpty) {
-        parentGroups.add(DocField(
-          // No name nor label as this is a pseudo field
-          // fieldName: '',
-          // label: '',
-          type: FieldType.tabBreak,
-          children: fields,
-        ));
+        parentGroups.add(
+          DocField(
+            // No name nor label as this is a pseudo field
+            // fieldName: '',
+            // label: '',
+            type: FieldType.tabBreak,
+            children: fields,
+          ),
+        );
       } else {
         // Otherwise create a parent group for each Tab field including all the fields
         // in between
@@ -38,11 +40,11 @@ class DocFieldGroupController {
               ? parentGroupIndexes[i + 1]
               : fields.length;
           final parentGroupField = fields[parentGroupIndex];
-          final groupFields =
-              fields.sublist(parentGroupIndex + 1, nextParentGroupIndex);
-          parentGroups.add(parentGroupField.copyWith(
-            children: groupFields,
-          ));
+          final groupFields = fields.sublist(
+            parentGroupIndex + 1,
+            nextParentGroupIndex,
+          );
+          parentGroups.add(parentGroupField.copyWith(children: groupFields));
         }
       }
 
@@ -61,11 +63,13 @@ class DocFieldGroupController {
           if (fieldsOfGroup.isNotEmpty &&
               fieldsOfGroup.last.type == FieldType.columnBreak) {
             final fieldGroup = fieldsOfGroup.last;
-            fieldGroup.children.addAll(extractFieldsOfGroup(
-              fields: parentGroup.children,
-              groupType: fieldGroup.type,
-              groupIndex: i + fieldsOfGroup.length,
-            ));
+            fieldGroup.children.addAll(
+              extractFieldsOfGroup(
+                fields: parentGroup.children,
+                groupType: fieldGroup.type,
+                groupIndex: i + fieldsOfGroup.length,
+              ),
+            );
           }
 
           // Case where there is another Column after a Section Group has been created
@@ -73,15 +77,11 @@ class DocFieldGroupController {
           if (field.type == FieldType.columnBreak &&
               childGroups.isNotEmpty &&
               childGroups.last.type == FieldType.sectionBreak) {
-            childGroups.last.children.add(generateGroup(
-              field: field,
-              fields: fieldsOfGroup,
-            ));
+            childGroups.last.children.add(
+              generateGroup(field: field, fields: fieldsOfGroup),
+            );
           } else {
-            childGroups.add(generateGroup(
-              field: field,
-              fields: fieldsOfGroup,
-            ));
+            childGroups.add(generateGroup(field: field, fields: fieldsOfGroup));
           }
 
           // Finds the deepest field in the already created child tree groups to
@@ -171,12 +171,7 @@ class DocFieldGroupController {
     // So we create a Dummy column break to hold the fields inside the section
     return DocField(
       type: FieldType.sectionBreak,
-      children: [
-        DocField(
-          type: FieldType.columnBreak,
-          children: fields,
-        )
-      ],
+      children: [DocField(type: FieldType.columnBreak, children: fields)],
     );
   }
 

@@ -3,8 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 enum FeatureType {
   @JsonValue('Feature')
-  feature('Feature'),
-  ;
+  feature('Feature');
 
   final String name;
   const FeatureType(this.name);

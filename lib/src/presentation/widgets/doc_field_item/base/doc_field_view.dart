@@ -3,6 +3,7 @@ import 'package:frappe_form/src/entity/doc_field.dart';
 import 'package:frappe_form/src/logic/utils/text_utils.dart';
 import 'package:frappe_form/src/model/doc_field_depends_on_controller.dart';
 import 'package:frappe_form/src/presentation/utils/validation_utils.dart';
+import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
 import 'package:frappe_form/src/presentation/widgets/size_renderer.dart';
 
 /// Created by luis901101 on 04/21/25.
@@ -11,12 +12,13 @@ abstract class DocFieldView extends StatefulWidget {
   final DocField field;
   final List<DocFieldView>? children;
   final DocFieldDependsOnController? dependsOnController;
-  const DocFieldView(
-      {super.key,
-      required this.controller,
-      required this.field,
-      this.children,
-      this.dependsOnController});
+  const DocFieldView({
+    super.key,
+    required this.controller,
+    required this.field,
+    this.children,
+    this.dependsOnController,
+  });
 }
 
 abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
@@ -79,16 +81,17 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
 
   Widget? buildTitleView(BuildContext context) {
     if (field.title.isEmpty) return null;
+    final fieldRadius = (theme.inputDecorationTheme.border
+            is OutlineInputBorder)
+        ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
+        : const BorderRadius.all(Radius.circular(8));
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
+      padding: EdgeInsets.only(
+        left: fieldRadius.topLeft.x / 2,
+        right: fieldRadius.topRight.x / 2,
         bottom: 4.0,
       ),
-      child: Text(
-        field.title,
-        style: theme.textTheme.titleSmall,
-      ),
+      child: Text(field.title, style: theme.textTheme.titleSmall),
     );
   }
 
@@ -104,11 +107,11 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
         left: inputBorderRadius.bottomLeft.x / 2,
         right: inputBorderRadius.bottomLeft.x / 2,
       ),
-      child: Text(
-        field.description!,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.outline,
-        ),
+      child: CustomHtml(
+        data: field.description!,
+        style: theme.textTheme.bodyMedium
+            ?.copyWith(color: theme.colorScheme.outline)
+            .asHtmlStyle,
       ),
     );
   }

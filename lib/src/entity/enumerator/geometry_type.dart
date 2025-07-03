@@ -7,8 +7,7 @@ enum GeometryType {
   @JsonValue('LineString')
   lineString('LineString'),
   @JsonValue('Polygon')
-  polygon('Polygon'),
-  ;
+  polygon('Polygon');
 
   final String name;
   const GeometryType(this.name);

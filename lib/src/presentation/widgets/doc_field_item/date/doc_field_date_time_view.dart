@@ -27,10 +27,9 @@ class DocFieldDateTimeView extends DocFieldView {
     required this.type,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomValueController<DateTime>(
-                  focusNode: FocusNode(),
-                ));
+          controller: controller ??
+              CustomValueController<DateTime>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldDateTimeViewState();
@@ -68,30 +67,37 @@ class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
             if (type.requiresDate)
               Expanded(
                 flex: 60,
-                child: StatefulBuilder(builder: (context, setState) {
-                  return ElevatedButton.icon(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return ElevatedButton.icon(
                       icon: const Icon(Icons.calendar_month),
-                      label: Text(dateTime?.formattedDate() ??
-                          DocFormLocalization.instance.localization.textDate),
+                      label: Text(
+                        dateTime?.formattedDate() ??
+                            DocFormLocalization.instance.localization.textDate,
+                      ),
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: openDatePicker);
-                }),
+                      onPressed: openDatePicker,
+                    );
+                  },
+                ),
               ),
-            if (type.isDateTime)
-              const Spacer(
-                flex: 2,
-              ),
+            if (type.isDateTime) const Spacer(flex: 2),
             if (type.requiresTime)
               Expanded(
                 flex: 40,
-                child: StatefulBuilder(builder: (context, setState) {
-                  return ElevatedButton.icon(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return ElevatedButton.icon(
                       icon: const Icon(Icons.access_time_rounded),
-                      label: Text(dateTime?.formattedTime() ??
-                          DocFormLocalization.instance.localization.textTime),
+                      label: Text(
+                        dateTime?.formattedTime() ??
+                            DocFormLocalization.instance.localization.textTime,
+                      ),
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: openTimePicker);
-                }),
+                      onPressed: openTimePicker,
+                    );
+                  },
+                ),
               ),
           ],
         ),

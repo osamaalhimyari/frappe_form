@@ -17,25 +17,27 @@ class DocGeolocation {
   @JsonKey(name: "features")
   final List<Feature>? features;
 
-  DocGeolocation({
-    this.type,
-    this.features,
-  });
+  DocGeolocation({this.type, this.features});
 
-  factory DocGeolocation.fromLatLng(
-      {required double latitude, required double longitude}) {
-    return DocGeolocation(type: GeolocationType.featureCollection, features: [
-      Feature(
-        type: FeatureType.feature,
-        // Setting a GeometryProperty is required so Frappe properly renders
-        // the map, no matter the GeometryProperty is empty.
-        properties: GeometryProperty(),
-        geometry: Geometry(
-          type: GeometryType.point,
-          coordinates: [longitude, latitude],
+  factory DocGeolocation.fromLatLng({
+    required double latitude,
+    required double longitude,
+  }) {
+    return DocGeolocation(
+      type: GeolocationType.featureCollection,
+      features: [
+        Feature(
+          type: FeatureType.feature,
+          // Setting a GeometryProperty is required so Frappe properly renders
+          // the map, no matter the GeometryProperty is empty.
+          properties: GeometryProperty(),
+          geometry: Geometry(
+            type: GeometryType.point,
+            coordinates: [longitude, latitude],
+          ),
         ),
-      )
-    ]);
+      ],
+    );
   }
 
   factory DocGeolocation.fromJson(Map<String, dynamic> json) {
@@ -65,11 +67,7 @@ class Feature {
   @JsonKey(name: "geometry")
   final Geometry? geometry;
 
-  Feature({
-    this.type,
-    this.properties,
-    this.geometry,
-  });
+  Feature({this.type, this.properties, this.geometry});
 
   factory Feature.fromJson(Map<String, dynamic> json) {
     return _$FeatureFromJson(json);
@@ -88,10 +86,7 @@ class Geometry {
   @JsonKey(name: "coordinates")
   final List<double>? coordinates;
 
-  Geometry({
-    this.type,
-    this.coordinates,
-  });
+  Geometry({this.type, this.coordinates});
 
   factory Geometry.fromJson(Map<String, dynamic> json) {
     return _$GeometryFromJson(json);
@@ -106,15 +101,14 @@ class Geometry {
 @CopyWith()
 class GeometryProperty {
   @JsonKey(
-      name: "point_type", unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+    name: "point_type",
+    unknownEnumValue: JsonKey.nullForUndefinedEnumValue,
+  )
   final GeometryPropertyType? pointType;
   @JsonKey(name: "radius")
   final double? radius;
 
-  GeometryProperty({
-    this.pointType,
-    this.radius,
-  });
+  GeometryProperty({this.pointType, this.radius});
 
   factory GeometryProperty.fromJson(Map<String, dynamic> json) {
     return _$GeometryPropertyFromJson(json);

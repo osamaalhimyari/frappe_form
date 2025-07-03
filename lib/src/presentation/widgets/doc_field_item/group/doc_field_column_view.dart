@@ -1,5 +1,6 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
+import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
 
 /// Created by luis901101 on 04/23/25.
 class DocFieldColumnView extends DocFieldView {
@@ -20,11 +21,27 @@ class DocFieldColumnViewState<SF extends DocFieldColumnView>
   Widget? buildTitleView(BuildContext context) => null;
 
   @override
+  Widget? buildDescriptionView(BuildContext context) => null;
+
+  @override
   Widget buildBody(BuildContext context) {
+    List<Widget> columnChildren = [
+      if (field.description.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: CustomHtml(
+            data: field.description!,
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(color: theme.colorScheme.outline)
+                .asHtmlStyle,
+          ),
+        ),
+      ...?children,
+    ];
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: children!.map((itemView) => itemView).toList(),
+      children: columnChildren.map((itemView) => itemView).toList(),
     );
   }
 }

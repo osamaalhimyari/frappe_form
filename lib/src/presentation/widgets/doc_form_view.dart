@@ -64,14 +64,15 @@ class DocFormView extends StatefulWidget {
 }
 
 class DocFormViewState extends State<DocFormView>
-    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   late final DocFormController controller;
   static const fabSize = kFloatingActionButtonMargin + 56;
   ThemeData theme = ThemeData();
   ScrollController? scrollController;
   bool isKeyboardVisible = false;
   bool scrollReachedBottom = false;
-  late final TabController tabController;
+  late TabController tabController;
+  ValueNotifier<int> tabIndex = ValueNotifier<int>(0);
   int tabsCount = 0;
   final showFAB = ValueNotifier<bool>(false);
   DocForm get form => widget.form;
@@ -97,6 +98,7 @@ class DocFormViewState extends State<DocFormView>
   void initState() {
     super.initState();
     controller = widget.controller ?? DocFormController();
+    tabController = TabController(vsync: this, length: 0, initialIndex: 0);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback(onCreated);
     bottomPadding = FlutterViewUtils.get().padding.bottom;
@@ -112,7 +114,6 @@ class DocFormViewState extends State<DocFormView>
         locale: locale,
       );
       buildFormFields();
-      checkScrollOnInit();
     }
   }
 
@@ -125,7 +126,7 @@ class DocFormViewState extends State<DocFormView>
   }
 
   void checkScrollOnInit() {
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       if (scrollController?.hasClients ?? false) {
         onScrollListener();
       }
@@ -148,17 +149,25 @@ class DocFormViewState extends State<DocFormView>
     }
   }
 
+  void onTabScrollListener() {
+    tabIndex.value = tabController.index;
+  }
+
   Future<void> buildFormFields() async {
-    fieldBundles = await controller.buildFormFields(form,
-        onAttachmentLoaded: widget.onAttachmentLoaded);
+    fieldBundles = await controller.buildFormFields(
+      form,
+      onAttachmentLoaded: widget.onAttachmentLoaded,
+    );
     tabsCount = fieldBundles.length;
     tabController = TabController(
       vsync: this,
       length: tabsCount,
-      initialIndex: 0,
+      initialIndex: tabIndex.value,
     );
+    tabController.addListener(onTabScrollListener);
     setLoading(false, offstage: tabsCount > 1);
     renderAllTabs();
+    checkScrollOnInit();
   }
 
   // This is a workaround to make sure all Tabs are built so all fields evaluate
@@ -190,8 +199,6 @@ class DocFormViewState extends State<DocFormView>
     }
   }
 
-  bool get canSubmit => !isLoading && widget.onSubmit != null;
-
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
@@ -211,11 +218,7 @@ class DocFormViewState extends State<DocFormView>
         appBar: AppBar(
           title: form.title.isEmpty
               ? null
-              : Text(
-                  form.title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                ),
+              : Text(form.title, textAlign: TextAlign.center, maxLines: 2),
           actions: widget.actions,
           bottom: offstage || tabsCount < 2
               ? null
@@ -239,28 +242,83 @@ class DocFormViewState extends State<DocFormView>
               child: !showFAB.value ? const SizedBox() : child,
             );
           },
-          child: SizedBox(
-            width: 200,
-            key: ValueKey('showFAB: ${showFAB.value}'),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: bottomPadding > 0 ? 0 : 16),
-              child: FloatingActionButton.extended(
-                shape: const StadiumBorder(),
-                backgroundColor: canSubmit ? null : theme.disabledColor,
-                foregroundColor: canSubmit ? null : theme.disabledColor,
-                onPressed: canSubmit ? onSubmit : null,
-                label:
-                    Text(DocFormLocalization.instance.localization.btnSubmit),
-              ),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding > 0 ? 0 : 16),
+            child: ValueListenableBuilder(
+              valueListenable: tabIndex,
+              builder: (context, value, child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (showNavButtons) ...[
+                      backButton,
+                      const SizedBox(width: 16),
+                    ],
+                    submitButton,
+                    if (showNavButtons) ...[
+                      const SizedBox(width: 16),
+                      nextButton,
+                    ],
+                  ],
+                );
+              },
             ),
           ),
         ),
-        body: UnfocusView(
-          child: buildBody,
-        ),
+        body: UnfocusView(child: buildBody),
       ),
     );
   }
+
+  bool get showSubmitButton => tabController.index == tabController.length - 1;
+  bool get canSubmit => !isLoading && widget.onSubmit != null;
+  bool get showNavButtons => tabController.length > 1;
+  bool get canGoNext => tabController.index < tabController.length - 1;
+  bool get canGoBack => tabController.index > 0;
+
+  Widget get submitButton => AnimatedSize(
+        duration: const Duration(milliseconds: 300),
+        child: SizedBox(
+          key: ValueKey('submit-btn-$showSubmitButton'),
+          width: showSubmitButton ? 200 : 0,
+          height: showSubmitButton ? null : 0,
+          child: FloatingActionButton.extended(
+            shape: const StadiumBorder(),
+            backgroundColor: canSubmit ? null : theme.disabledColor,
+            foregroundColor: canSubmit ? null : theme.disabledColor,
+            onPressed: canSubmit ? onSubmit : null,
+            label: Text(
+              showSubmitButton
+                  ? DocFormLocalization.instance.localization.btnSubmit
+                  : '',
+            ),
+          ),
+        ),
+      );
+
+  Widget get nextButton => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: FloatingActionButton(
+          key: ValueKey('next-btn-$canGoNext'),
+          shape: const StadiumBorder(),
+          backgroundColor: canGoNext ? null : theme.disabledColor,
+          foregroundColor: canGoNext ? null : theme.disabledColor,
+          onPressed: canGoNext ? onNextTab : null,
+          child: Icon(Icons.arrow_forward_ios_rounded),
+        ),
+      );
+
+  Widget get backButton => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: FloatingActionButton(
+          key: ValueKey('back-btn-$canGoBack'),
+          shape: const StadiumBorder(),
+          backgroundColor: canGoBack ? null : theme.disabledColor,
+          foregroundColor: canGoBack ? null : theme.disabledColor,
+          onPressed: canGoBack ? onPreviousTab : null,
+          child: Icon(Icons.arrow_back_ios_new_rounded),
+        ),
+      );
 
   List<Widget> get tabContentViews => fieldBundles.map(tabContentView).toList();
   Widget tabContentView(DocFieldBundle fieldBundle) {
@@ -269,7 +327,11 @@ class DocFormViewState extends State<DocFormView>
         primary: true,
         addAutomaticKeepAlives: true,
         padding: const EdgeInsets.only(
-            top: 16, left: 16, right: 16, bottom: fabSize + 64),
+          top: 16,
+          left: 16,
+          right: 16,
+          bottom: fabSize + 64,
+        ),
         // shrinkWrap: true,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (context, index) {
@@ -289,13 +351,8 @@ class DocFormViewState extends State<DocFormView>
     );
     if (isLoading) return loadingView;
     final view = switch (tabsCount) {
-      0 => Center(
-          child: Text('No form available'),
-        ),
-      _ => TabBarView(
-          controller: tabController,
-          children: tabContentViews,
-        ),
+      0 => Center(child: Text('No form available')),
+      _ => TabBarView(controller: tabController, children: tabContentViews),
     };
 
     return offstage
@@ -314,17 +371,16 @@ class DocFormViewState extends State<DocFormView>
     if (!validation.isValid) {
       setState(() {});
       scrollToField(
-          controller: validation.controller,
-          indexOffset: validation.offset,
-          tabIndex: validation.tabIndex);
+        controller: validation.controller,
+        indexOffset: validation.offset,
+        tabIndex: validation.tabIndex,
+      );
     }
     return validation.isValid;
   }
 
   ({bool isValid, double offset, FieldController? controller, int tabIndex})
-      validateRecursive({
-    required List<DocFieldBundle> fieldBundles,
-  }) {
+      validateRecursive({required List<DocFieldBundle> fieldBundles}) {
     bool isValid = true;
     FieldController? controller;
     double tempOffset = 0;
@@ -354,37 +410,58 @@ class DocFormViewState extends State<DocFormView>
       isValid: isValid,
       offset: indexOffset,
       controller: controller,
-      tabIndex: tabIndex
+      tabIndex: tabIndex,
     );
   }
 
-  Future<void> scrollToField(
-      {required FieldController? controller,
-      required double indexOffset,
-      required int tabIndex}) async {
+  Future<void> scrollToField({
+    required FieldController? controller,
+    required double indexOffset,
+    required int tabIndex,
+  }) async {
     if (controller == null) return;
     if (tabIndex != tabController.index) {
       tabController.animateTo(tabIndex);
       await Future.delayed(const Duration(milliseconds: 300));
     }
-    scrollController?.animateTo(indexOffset,
-        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+    scrollController?.animateTo(
+      indexOffset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
     Future.delayed(const Duration(milliseconds: 200), () {
       final fieldContext = controller.key.currentContext;
       if (fieldContext == null || !fieldContext.mounted) return;
-      Scrollable.ensureVisible(fieldContext,
-          duration: const Duration(milliseconds: 100), curve: Curves.ease);
-    }).whenComplete(() => Future.delayed(const Duration(milliseconds: 100),
-        () => controller.focusNode?.requestFocus()));
+      Scrollable.ensureVisible(
+        fieldContext,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.ease,
+      );
+    }).whenComplete(
+      () => Future.delayed(
+        const Duration(milliseconds: 100),
+        () => controller.focusNode?.requestFocus(),
+      ),
+    );
   }
 
   Future<void> onSubmit() async {
     if (validate()) {
       if (!(await widget.onSubmit?.call() ?? false)) return;
       final formResponse = await controller.generateResponse(
-          form: form, itemBundles: fieldBundles);
+        form: form,
+        itemBundles: fieldBundles,
+      );
       widget.onResponse?.call(formResponse);
     }
+  }
+
+  Future<void> onNextTab() async {
+    tabController.animateTo(tabController.index + 1);
+  }
+
+  Future<void> onPreviousTab() async {
+    tabController.animateTo(tabController.index - 1);
   }
 
   void updateFABVisibility() {
@@ -418,6 +495,7 @@ class DocFormViewState extends State<DocFormView>
     showFAB.dispose();
     WidgetsBinding.instance.removeObserver(this);
     scrollController?.removeListener(onScrollListener);
+    tabController.removeListener(onTabScrollListener);
     for (final item in fieldBundles) {
       item.controller.focusNode?.dispose();
     }

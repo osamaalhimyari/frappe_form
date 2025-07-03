@@ -216,8 +216,7 @@ enum FieldType {
 
   /// Only for internal use
   @JsonValue('unknown')
-  unknown('unknown'),
-  ;
+  unknown('unknown');
 
   final String name;
   const FieldType(this.name);

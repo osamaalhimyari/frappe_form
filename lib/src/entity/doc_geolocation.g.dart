@@ -13,10 +13,7 @@ abstract class _$DocGeolocationCWProxy {
   /// ```dart
   /// DocGeolocation(...).copyWith(id: 12, name: "My name")
   /// ````
-  DocGeolocation call({
-    GeolocationType? type,
-    List<Feature>? features,
-  });
+  DocGeolocation call({GeolocationType? type, List<Feature>? features});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDocGeolocation.copyWith(...)`.
@@ -119,10 +116,7 @@ abstract class _$GeometryCWProxy {
   /// ```dart
   /// Geometry(...).copyWith(id: 12, name: "My name")
   /// ````
-  Geometry call({
-    GeometryType? type,
-    List<double>? coordinates,
-  });
+  Geometry call({GeometryType? type, List<double>? coordinates});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfGeometry.copyWith(...)`.
@@ -169,10 +163,7 @@ abstract class _$GeometryPropertyCWProxy {
   /// ```dart
   /// GeometryProperty(...).copyWith(id: 12, name: "My name")
   /// ````
-  GeometryProperty call({
-    GeometryPropertyType? pointType,
-    double? radius,
-  });
+  GeometryProperty call({GeometryPropertyType? pointType, double? radius});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfGeometryProperty.copyWith(...)`.
@@ -218,8 +209,11 @@ extension $GeometryPropertyCopyWith on GeometryProperty {
 
 DocGeolocation _$DocGeolocationFromJson(Map<String, dynamic> json) =>
     DocGeolocation(
-      type: $enumDecodeNullable(_$GeolocationTypeEnumMap, json['type'],
-          unknownValue: JsonKey.nullForUndefinedEnumValue),
+      type: $enumDecodeNullable(
+        _$GeolocationTypeEnumMap,
+        json['type'],
+        unknownValue: JsonKey.nullForUndefinedEnumValue,
+      ),
       features: (json['features'] as List<dynamic>?)
           ?.map((e) => Feature.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -230,7 +224,9 @@ abstract final class _$DocGeolocationJsonKeys {
   static const String features = 'features';
 }
 
-Map<String, dynamic> _$DocGeolocationToJson(DocGeolocation instance) =>
+Map<String, dynamic> _$DocGeolocationToJson(
+  DocGeolocation instance,
+) =>
     <String, dynamic>{
       if (_$GeolocationTypeEnumMap[instance.type] case final value?)
         'type': value,
@@ -242,8 +238,11 @@ const _$GeolocationTypeEnumMap = {
 };
 
 Feature _$FeatureFromJson(Map<String, dynamic> json) => Feature(
-      type: $enumDecodeNullable(_$FeatureTypeEnumMap, json['type'],
-          unknownValue: JsonKey.nullForUndefinedEnumValue),
+      type: $enumDecodeNullable(
+        _$FeatureTypeEnumMap,
+        json['type'],
+        unknownValue: JsonKey.nullForUndefinedEnumValue,
+      ),
       properties: json['properties'] == null
           ? null
           : GeometryProperty.fromJson(
@@ -265,13 +264,14 @@ Map<String, dynamic> _$FeatureToJson(Feature instance) => <String, dynamic>{
       if (instance.geometry case final value?) 'geometry': value,
     };
 
-const _$FeatureTypeEnumMap = {
-  FeatureType.feature: 'Feature',
-};
+const _$FeatureTypeEnumMap = {FeatureType.feature: 'Feature'};
 
 Geometry _$GeometryFromJson(Map<String, dynamic> json) => Geometry(
-      type: $enumDecodeNullable(_$GeometryTypeEnumMap, json['type'],
-          unknownValue: JsonKey.nullForUndefinedEnumValue),
+      type: $enumDecodeNullable(
+        _$GeometryTypeEnumMap,
+        json['type'],
+        unknownValue: JsonKey.nullForUndefinedEnumValue,
+      ),
       coordinates: (json['coordinates'] as List<dynamic>?)
           ?.map((e) => (e as num).toDouble())
           .toList(),
@@ -296,8 +296,10 @@ const _$GeometryTypeEnumMap = {
 GeometryProperty _$GeometryPropertyFromJson(Map<String, dynamic> json) =>
     GeometryProperty(
       pointType: $enumDecodeNullable(
-          _$GeometryPropertyTypeEnumMap, json['point_type'],
-          unknownValue: JsonKey.nullForUndefinedEnumValue),
+        _$GeometryPropertyTypeEnumMap,
+        json['point_type'],
+        unknownValue: JsonKey.nullForUndefinedEnumValue,
+      ),
       radius: (json['radius'] as num?)?.toDouble(),
     );
 

@@ -188,8 +188,11 @@ DocForm _$DocFormFromJson(Map<String, dynamic> json) => DocForm(
       showTitleFieldInLink: (json['show_title_field_in_link'] as num?)?.toInt(),
       translatedDocType: (json['translated_doctype'] as num?)?.toInt(),
       allowAutoRepeat: (json['allow_auto_repeat'] as num?)?.toInt(),
-      docType: $enumDecodeNullable(_$DocTypeTypeEnumMap, json['doctype'],
-          unknownValue: JsonKey.nullForUndefinedEnumValue),
+      docType: $enumDecodeNullable(
+        _$DocTypeTypeEnumMap,
+        json['doctype'],
+        unknownValue: JsonKey.nullForUndefinedEnumValue,
+      ),
       docStatus: (json['docstatus'] as num?)?.toInt(),
       description: json['description'] as String?,
       fields: (json['fields'] as List<dynamic>?)

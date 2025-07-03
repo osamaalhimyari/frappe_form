@@ -12,10 +12,9 @@ class DocFieldAutocompleteView extends DocFieldView {
     super.dependsOnController,
     this.isOpen = false,
   }) : super(
-            controller: controller ??
-                CustomValueController<String>(
-                  focusNode: FocusNode(),
-                ));
+          controller: controller ??
+              CustomValueController<String>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldAutocompleteViewState();
@@ -85,18 +84,16 @@ class DocFieldAutocompleteViewState<SF extends DocFieldAutocompleteView>
           optionsBuilder: (TextEditingValue textEditingValue) =>
               textEditingValue.text.isEmpty
                   ? (autoOpen ? values : [])
-                  : values.where((String value) =>
-                      value.containsIgnoringCase(textEditingValue.text)),
+                  : values.where(
+                      (String value) =>
+                          value.containsIgnoringCase(textEditingValue.text),
+                    ),
           onSelected: (String value) => controller.value = value,
         ),
         if (isOpen) ...[
           const SizedBox(height: 8.0),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
-              bottom: 4.0,
-            ),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
             child: Text(
               DocFormLocalization.instance.localization.textOtherOption,
               style: theme.textTheme.titleSmall,
@@ -119,7 +116,7 @@ class DocFieldAutocompleteViewState<SF extends DocFieldAutocompleteView>
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.sentences,
           ),
-        ]
+        ],
       ],
     );
   }

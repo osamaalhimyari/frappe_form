@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 04/23/25.
 class DocFieldLongTextView extends DocFieldTextFieldView {
-  DocFieldLongTextView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldLongTextView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldLongTextViewState();

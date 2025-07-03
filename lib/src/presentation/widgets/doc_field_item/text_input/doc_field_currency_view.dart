@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 05/06/25.
 class DocFieldCurrencyView extends DocFieldTextFieldView {
-  DocFieldCurrencyView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldCurrencyView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldCurrencyViewState();
@@ -19,8 +20,9 @@ class DocFieldCurrencyViewState<SF extends DocFieldCurrencyView>
   @override
   void initState() {
     super.initState();
-    controller.validations
-        .addAll([ValidationUtils.numberValidation(required: isRequired)]);
+    controller.validations.addAll([
+      ValidationUtils.numberValidation(required: isRequired),
+    ]);
   }
 
   @override

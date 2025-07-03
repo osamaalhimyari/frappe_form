@@ -14,10 +14,9 @@ class DocFieldAttachmentView extends DocFieldView {
     required this.onAttachmentLoaded,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomValueController<Attachment>(
-                  focusNode: FocusNode(),
-                ));
+          controller: controller ??
+              CustomValueController<Attachment>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldAttachmentViewState();
@@ -48,26 +47,22 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Center(
-                  child:
-                      ((value?.isImage ?? false) && (value?.hasSource ?? false))
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              clipBehavior: Clip.hardEdge,
-                              child: !kIsWeb && value!.path.isNotEmpty
-                                  ? Image.file(
-                                      File(value?.path ?? ''),
-                                    )
-                                  : Image.network(
-                                      value?.url ?? value?.path ?? '',
-                                    ),
-                            )
-                          : Icon(
-                              (value?.mediaType?.endsWith('jpeg') ?? false)
-                                  ? Icons.image
-                                  : Icons.file_copy,
-                              color: theme.disabledColor,
-                              size: 96,
-                            ),
+                  child: ((value?.isImage ?? false) &&
+                          (value?.hasSource ?? false))
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          clipBehavior: Clip.hardEdge,
+                          child: !kIsWeb && value!.path.isNotEmpty
+                              ? Image.file(File(value?.path ?? ''))
+                              : Image.network(value?.url ?? value?.path ?? ''),
+                        )
+                      : Icon(
+                          (value?.mediaType?.endsWith('jpeg') ?? false)
+                              ? Icons.image
+                              : Icons.file_copy,
+                          color: theme.disabledColor,
+                          size: 96,
+                        ),
                 ),
               ),
             ),
@@ -84,25 +79,29 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
                 child: AnimatedSize(
                   duration: const Duration(milliseconds: 300),
                   child: SizedBox(
-                    width:
-                        mediaQuery.size.width.percent(value == null ? 80 : 40),
+                    width: mediaQuery.size.width.percent(
+                      value == null ? 80 : 40,
+                    ),
                     child: ElevatedButton.icon(
                       onPressed: isLoading ? null : onBtnUpload,
                       icon: Icon(
-                          value == null ? Icons.upload_rounded : Icons.refresh),
-                      label: Text(value == null
-                          ? DocFormLocalization.instance.localization.btnUpload
-                          : DocFormLocalization
-                              .instance.localization.btnChange),
+                        value == null ? Icons.upload_rounded : Icons.refresh,
+                      ),
+                      label: Text(
+                        value == null
+                            ? DocFormLocalization
+                                .instance.localization.btnUpload
+                            : DocFormLocalization
+                                .instance.localization.btnChange,
+                      ),
                     ),
                   ),
                 ),
               ),
               AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  child: SizedBox(
-                    width: value == null ? 0 : 8,
-                  )),
+                duration: const Duration(milliseconds: 300),
+                child: SizedBox(width: value == null ? 0 : 8),
+              ),
               Flexible(
                 flex: value == null ? 0 : 1,
                 child: AnimatedSize(
@@ -119,7 +118,8 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
                       ),
                       icon: const Icon(Icons.delete_forever_rounded),
                       label: Text(
-                          DocFormLocalization.instance.localization.btnRemove),
+                        DocFormLocalization.instance.localization.btnRemove,
+                      ),
                     ),
                   ),
                 ),

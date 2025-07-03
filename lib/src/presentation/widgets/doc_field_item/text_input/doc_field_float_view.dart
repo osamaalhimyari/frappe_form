@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 04/21/25.
 class DocFieldFloatView extends DocFieldTextFieldView {
-  DocFieldFloatView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldFloatView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldFloatViewState();
@@ -19,8 +20,9 @@ class DocFieldFloatViewState<SF extends DocFieldFloatView>
   @override
   void initState() {
     super.initState();
-    controller.validations
-        .addAll([ValidationUtils.numberValidation(required: isRequired)]);
+    controller.validations.addAll([
+      ValidationUtils.numberValidation(required: isRequired),
+    ]);
   }
 
   @override

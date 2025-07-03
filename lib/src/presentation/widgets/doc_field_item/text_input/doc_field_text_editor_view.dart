@@ -40,9 +40,11 @@ class DocFieldTextEditorViewState<SF extends DocFieldTextEditorView>
     final fillColor = theme.inputDecorationTheme.fillColor;
     return HtmlEditor(
       controller: htmlController, //required
-      callbacks: Callbacks(onChangeContent: (html) {
-        controller.text = html ?? '';
-      }),
+      callbacks: Callbacks(
+        onChangeContent: (html) {
+          controller.text = html ?? '';
+        },
+      ),
       htmlEditorOptions: HtmlEditorOptions(
         hint: '',
         initialText: controller.text,
@@ -50,12 +52,13 @@ class DocFieldTextEditorViewState<SF extends DocFieldTextEditorView>
         disabled: isReadOnly,
       ),
       otherOptions: OtherOptions(
-          height: 400,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            border: border,
-            color: fillColor,
-          )),
+        height: 400,
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          border: border,
+          color: fillColor,
+        ),
+      ),
     );
   }
 }

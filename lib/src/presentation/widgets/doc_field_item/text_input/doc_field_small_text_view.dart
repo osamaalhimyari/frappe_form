@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 04/21/25.
 class DocFieldSmallTextView extends DocFieldTextFieldView {
-  DocFieldSmallTextView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldSmallTextView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldSmallTextViewState();

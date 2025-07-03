@@ -30,7 +30,9 @@ class DependsOnEval {
   }
 
   static void _analyzeConditionExpression(
-      String expression, List<DependsOnEval> list) {
+    String expression,
+    List<DependsOnEval> list,
+  ) {
     bool hasCondition = false;
     for (final condition in DocFieldDependsOnCondition.values) {
       final conditionExpression = expression.split(condition.name);

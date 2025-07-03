@@ -5,8 +5,7 @@ enum GeometryPropertyType {
   @JsonValue('circle')
   circle('circle'),
   @JsonValue('circlemarker')
-  circleMarker('circlemarker'),
-  ;
+  circleMarker('circlemarker');
 
   final String name;
   const GeometryPropertyType(this.name);

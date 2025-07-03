@@ -5,8 +5,7 @@ enum DocTypeType {
   @JsonValue('DocType')
   docType('DocType'),
   @JsonValue('DocField')
-  docField('DocField'),
-  ;
+  docField('DocField');
 
   final String name;
   const DocTypeType(this.name);

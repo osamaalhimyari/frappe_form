@@ -17,13 +17,13 @@ enum DocFieldDependsOnOperator {
   greaterOrEquals('>='),
 
   /// True if whether at least no answer has a value that is less or equal to the dependsOn answer.
-  lessOrEquals('<='),
-  ;
+  lessOrEquals('<=');
 
   final String name;
   const DocFieldDependsOnOperator(this.name);
 
   static DocFieldDependsOnOperator? valueOf(String? name) =>
-      DocFieldDependsOnOperator.values
-          .firstWhereOrNull((value) => value.name == name);
+      DocFieldDependsOnOperator.values.firstWhereOrNull(
+        (value) => value.name == name,
+      );
 }

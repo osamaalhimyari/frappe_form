@@ -38,8 +38,9 @@ class DocFieldDependsOnController {
       dynamic expectedValue = dependsOnBundle.expectedAnswer;
       List<dynamic> controllerValues = [];
       if (controller.rawValue is DocGeolocation) {
-        final answerOption =
-            jsonEncode((controller.rawValue as DocGeolocation).toJson());
+        final answerOption = jsonEncode(
+          (controller.rawValue as DocGeolocation).toJson(),
+        );
         controllerValues = [answerOption];
       } else {
         // Any other possible controller value can be treated as dynamic
@@ -60,16 +61,20 @@ class DocFieldDependsOnController {
         case DocFieldDependsOnOperator.equals:
           enabled = _behavior.check(
             enabled,
-            controllerValues.firstWhereOrNull((controllerValue) =>
-                    controllerValue?.toString() == expectedValue?.toString()) !=
+            controllerValues.firstWhereOrNull(
+                  (controllerValue) =>
+                      controllerValue?.toString() == expectedValue?.toString(),
+                ) !=
                 null,
           );
           break;
         case DocFieldDependsOnOperator.notEquals:
           enabled = _behavior.check(
             enabled,
-            controllerValues.firstWhereOrNull((controllerValue) =>
-                    controllerValue?.toString() != expectedValue?.toString()) !=
+            controllerValues.firstWhereOrNull(
+                  (controllerValue) =>
+                      controllerValue?.toString() != expectedValue?.toString(),
+                ) !=
                 null,
           );
           break;
@@ -78,7 +83,8 @@ class DocFieldDependsOnController {
             enabled,
             expectedValueAsNum != null &&
                 controllerValuesAsNum.firstWhereOrNull(
-                        (value) => value > expectedValueAsNum) !=
+                      (value) => value > expectedValueAsNum,
+                    ) !=
                     null,
           );
           break;
@@ -87,7 +93,8 @@ class DocFieldDependsOnController {
             enabled,
             expectedValueAsNum != null &&
                 controllerValuesAsNum.firstWhereOrNull(
-                        (value) => value < expectedValueAsNum) !=
+                      (value) => value < expectedValueAsNum,
+                    ) !=
                     null,
           );
           break;
@@ -96,7 +103,8 @@ class DocFieldDependsOnController {
             enabled,
             expectedValueAsNum != null &&
                 controllerValuesAsNum.firstWhereOrNull(
-                        (value) => value >= expectedValueAsNum) !=
+                      (value) => value >= expectedValueAsNum,
+                    ) !=
                     null,
           );
           break;
@@ -105,7 +113,8 @@ class DocFieldDependsOnController {
             enabled,
             expectedValueAsNum != null &&
                 controllerValuesAsNum.firstWhereOrNull(
-                        (value) => value <= expectedValueAsNum) !=
+                      (value) => value <= expectedValueAsNum,
+                    ) !=
                     null,
           );
           break;

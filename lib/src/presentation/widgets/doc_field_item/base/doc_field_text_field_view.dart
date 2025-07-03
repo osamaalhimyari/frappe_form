@@ -9,10 +9,9 @@ abstract class DocFieldTextFieldView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomTextEditingController(
-                  focusNode: FocusNode(),
-                ));
+          controller:
+              controller ?? CustomTextEditingController(focusNode: FocusNode()),
+        );
 }
 
 abstract class DocFieldTextFieldViewState<SF extends DocFieldTextFieldView>
@@ -63,8 +62,9 @@ abstract class DocFieldTextFieldViewState<SF extends DocFieldTextFieldView>
       inputFormatters: formatDecimals > 0
           ? [
               DecimalTextInputFormatter(
-                  decimals: formatDecimals,
-                  allowSigned: keyboardType?.signed ?? false),
+                decimals: formatDecimals,
+                allowSigned: keyboardType?.signed ?? false,
+              ),
             ]
           : null,
       obscuringCharacter: obscuringCharacter,

@@ -56,17 +56,20 @@ class CustomIntlPhoneField extends IntlPhoneField {
                   .instance.localization.exceptionInvalidPhoneNumber,
           pickerDialogStyle: pickerDialogStyle ??
               PickerDialogStyle(
-                  searchFieldInputDecoration: InputDecoration(
-                      hintText: DocFormLocalization
-                          .instance.localization.textSearchPhoneCountryCode)),
+                searchFieldInputDecoration: InputDecoration(
+                  hintText: DocFormLocalization
+                      .instance.localization.textSearchPhoneCountryCode,
+                ),
+              ),
         );
 
   static String get defaultInitialCountryCode =>
       DocFormLocalization.instance.localization.locale.countryCode ?? 'US';
   static Country get defaultInitialCountry {
     return countries.firstWhere(
-        (country) => country.code == defaultInitialCountryCode,
-        orElse: () => countries.first);
+      (country) => country.code == defaultInitialCountryCode,
+      orElse: () => countries.first,
+    );
   }
 
   static PhoneInfo parse(String? number) {
@@ -84,10 +87,11 @@ class CustomIntlPhoneField extends IntlPhoneField {
       return false;
     }, orElse: () => defaultInitialCountry);
     return PhoneInfo(
-        number: tempNumber.length >= country.dialCode.length
-            ? tempNumber.substring(country.dialCode.length)
-            : tempNumber,
-        country: country);
+      number: tempNumber.length >= country.dialCode.length
+          ? tempNumber.substring(country.dialCode.length)
+          : tempNumber,
+      country: country,
+    );
   }
 }
 
@@ -95,10 +99,7 @@ class PhoneInfo {
   String? number;
   Country? country;
 
-  PhoneInfo({
-    this.number,
-    this.country,
-  });
+  PhoneInfo({this.number, this.country});
 
   String get completeNumber =>
       '${country?.dialCode != null ? '+${country?.dialCode}' : ''}$number';

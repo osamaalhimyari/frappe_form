@@ -4,11 +4,12 @@ import 'package:frappe_form/src/presentation/utils/validation_utils.dart';
 
 /// Created by luis901101 on 04/23/25.
 class DocFieldIntView extends DocFieldTextFieldView {
-  DocFieldIntView(
-      {super.key,
-      super.controller,
-      required super.field,
-      super.dependsOnController});
+  DocFieldIntView({
+    super.key,
+    super.controller,
+    required super.field,
+    super.dependsOnController,
+  });
 
   @override
   State createState() => DocFieldIntViewState();
@@ -19,8 +20,9 @@ class DocFieldIntViewState<SF extends DocFieldIntView>
   @override
   void initState() {
     super.initState();
-    controller.validations.addAll(
-        [ValidationUtils.positiveNumberValidation(required: isRequired)]);
+    controller.validations.addAll([
+      ValidationUtils.positiveNumberValidation(required: isRequired),
+    ]);
   }
 
   @override

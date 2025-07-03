@@ -23,55 +23,51 @@ class DocFormLoadingView extends StatelessWidget {
       color: Colors.white,
     );
     final shimmerGradient = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.centerRight,
-        colors: <Color>[
-          baseColor,
-          baseColor,
-          highlightColor,
-          baseColor,
-          baseColor,
-        ],
-        stops: const <double>[
-          0.0,
-          0.35,
-          0.5,
-          0.65,
-          1.0
-        ]);
+      begin: Alignment.topLeft,
+      end: Alignment.centerRight,
+      colors: <Color>[
+        baseColor,
+        baseColor,
+        highlightColor,
+        baseColor,
+        baseColor,
+      ],
+      stops: const <double>[0.0, 0.35, 0.5, 0.65, 1.0],
+    );
     return ListView.separated(
-        primary: false,
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        separatorBuilder: (context, index) => const SizedBox(height: 20.0),
-        itemBuilder: (context, index) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: shimmerFieldRadius.topLeft.x > 4 ? 4.0 : 0,
-                    right: shimmerFieldRadius.topLeft.x > 4 ? 4.0 : 0,
-                    bottom: 8.0,
-                  ),
-                  child: Shimmer(
-                    gradient: shimmerGradient,
-                    child: Container(
-                      width: 100.0 + (index.isEven ? 100 : 0),
-                      height: 18,
-                      decoration: shimmerDecoration,
-                    ),
-                  ),
-                ),
-                Shimmer(
-                  gradient: shimmerGradient,
-                  child: Container(
-                    width: double.infinity,
-                    height: 48,
-                    decoration: shimmerDecoration,
-                  ),
-                ),
-              ],
+      primary: false,
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      separatorBuilder: (context, index) => const SizedBox(height: 20.0),
+      itemBuilder: (context, index) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: shimmerFieldRadius.topLeft.x > 4 ? 4.0 : 0,
+              right: shimmerFieldRadius.topLeft.x > 4 ? 4.0 : 0,
+              bottom: 8.0,
             ),
-        itemCount: 20);
+            child: Shimmer(
+              gradient: shimmerGradient,
+              child: Container(
+                width: 100.0 + (index.isEven ? 100 : 0),
+                height: 18,
+                decoration: shimmerDecoration,
+              ),
+            ),
+          ),
+          Shimmer(
+            gradient: shimmerGradient,
+            child: Container(
+              width: double.infinity,
+              height: 48,
+              decoration: shimmerDecoration,
+            ),
+          ),
+        ],
+      ),
+      itemCount: 20,
+    );
   }
 }

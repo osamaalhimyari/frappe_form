@@ -5,21 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:frappe_form/src/logic/utils/text_utils.dart';
 import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
-enum CustomButton {
-  none,
-  always,
-  onText,
-}
+enum CustomButton { none, always, onText }
 
-enum CustomButtonDefaultAction {
-  none,
-  clear,
-  passwordToggle,
-}
+enum CustomButtonDefaultAction { none, clear, passwordToggle }
 
 class CustomTextField extends StatefulWidget {
   static Widget _defaultContextMenuBuilder(
-      BuildContext context, EditableTextState editableTextState) {
+    BuildContext context,
+    EditableTextState editableTextState,
+  ) {
     return AdaptiveTextSelectionToolbar.editableText(
       editableTextState: editableTextState,
     );
@@ -166,15 +160,15 @@ class CustomTextField extends StatefulWidget {
     this.onValidate,
     bool autoMultiline = false,
   })  : decoration = (decoration ??= const InputDecoration()).copyWith(
-//      enabledBorder: OutlineInputBorder(
-//        borderRadius: BorderRadius.circular(R.dimens.radiusMedium),
-//        borderSide: BorderSide(color: Colors.transparent)
-//      ),
-//      focusedBorder: OutlineInputBorder(
-//        borderRadius: BorderRadius.circular(R.dimens.radiusMedium),
-//        borderSide: BorderSide(color: R.colors.colorPrimary)
-//      ),
-//      filled: true,
+          //      enabledBorder: OutlineInputBorder(
+          //        borderRadius: BorderRadius.circular(R.dimens.radiusMedium),
+          //        borderSide: BorderSide(color: Colors.transparent)
+          //      ),
+          //      focusedBorder: OutlineInputBorder(
+          //        borderRadius: BorderRadius.circular(R.dimens.radiusMedium),
+          //        borderSide: BorderSide(color: R.colors.colorPrimary)
+          //      ),
+          //      filled: true,
           errorMaxLines: decoration.errorMaxLines ?? 4,
         ),
         keyboardType = autoMultiline ? TextInputType.multiline : keyboardType,
@@ -275,17 +269,11 @@ class CustomTextFieldState<S extends CustomTextField> extends State<S> {
 
   Widget get customButtonIcon {
     if (widget.customButtonIcon != null) {
-      return Icon(
-        widget.customButtonIcon,
-        color: widget.customButtonColor,
-      );
+      return Icon(widget.customButtonIcon, color: widget.customButtonColor);
     }
     switch (widget.customButtonDefaultAction) {
       case CustomButtonDefaultAction.clear:
-        return Icon(
-          Icons.clear,
-          color: widget.customButtonColor,
-        );
+        return Icon(Icons.clear, color: widget.customButtonColor);
       case CustomButtonDefaultAction.passwordToggle:
         return Icon(
           obscureText ? Icons.visibility_off : Icons.visibility,
@@ -339,8 +327,9 @@ class CustomTextFieldState<S extends CustomTextField> extends State<S> {
       String currentErrorMessage = controller.error ?? '';
       String newErrorMessage = widget.onValidate?.call(value) ?? '';
       if (currentErrorMessage != newErrorMessage) {
-        controller
-            .setError(newErrorMessage.isNotEmpty ? newErrorMessage : null);
+        controller.setError(
+          newErrorMessage.isNotEmpty ? newErrorMessage : null,
+        );
         return true;
       }
     } else {

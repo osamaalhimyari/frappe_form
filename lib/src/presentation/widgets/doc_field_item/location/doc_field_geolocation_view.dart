@@ -10,10 +10,9 @@ class DocFieldGeolocationView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-            controller: controller ??
-                CustomValueController<DocGeolocation>(
-                  focusNode: FocusNode(),
-                ));
+          controller: controller ??
+              CustomValueController<DocGeolocation>(focusNode: FocusNode()),
+        );
 
   @override
   State createState() => DocFieldGeolocationViewState();
@@ -41,8 +40,9 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
     if (controller.value == null) {
       try {
         if (field.initial?.toString().isNotEmpty ?? false) {
-          final initial =
-              DocGeolocation.fromJsonString(field.initial!.toString());
+          final initial = DocGeolocation.fromJsonString(
+            field.initial!.toString(),
+          );
           controller.value = initial;
         }
       } catch (e) {
@@ -91,7 +91,9 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
                 maxLength: maxLength,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.numberWithOptions(
-                    signed: true, decimal: true),
+                  signed: true,
+                  decimal: true,
+                ),
                 onSubmitted: (_) {
                   latController.focusNode?.unfocus();
                   lngController.focusNode?.requestFocus();
@@ -115,7 +117,9 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
                 maxLength: maxLength,
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.numberWithOptions(
-                    signed: true, decimal: true),
+                  signed: true,
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   labelText:
                       DocFormLocalization.instance.localization.textLongitude,

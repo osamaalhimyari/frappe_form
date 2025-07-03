@@ -14,9 +14,7 @@ class DocFieldTabView extends DocFieldView implements PreferredSizeWidget {
   State createState() => DocFieldSectionViewState();
 
   @override
-  Size get preferredSize => Tab(
-        text: field.title,
-      ).preferredSize;
+  Size get preferredSize => Tab(text: field.title).preferredSize;
 }
 
 class DocFieldTabItemViewState<SF extends DocFieldTabView>
@@ -26,8 +24,6 @@ class DocFieldTabItemViewState<SF extends DocFieldTabView>
 
   @override
   Widget buildBody(BuildContext context) {
-    return Tab(
-      text: field.title,
-    );
+    return Tab(text: field.title);
   }
 }

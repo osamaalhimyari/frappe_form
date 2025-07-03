@@ -1,5 +1,6 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
+import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
 
 /// Created by luis901101 on 04/21/25.
 class DocFieldSectionView extends DocFieldView {
@@ -26,6 +27,9 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
   Widget? buildTitleView(BuildContext context) => null;
 
   @override
+  Widget? buildDescriptionView(BuildContext context) => null;
+
+  @override
   Widget buildBody(BuildContext context) {
     final color = theme.colorScheme.surfaceContainer;
     final borderColor = theme.colorScheme.onSurface;
@@ -37,57 +41,73 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
           .x;
     }
     // TODO: support for different ways of presenting the group UI, like using card or container with custom border radius, etc.
-    return LayoutBuilder(builder: (context, constraints) {
-      final screenWidth = constraints.maxWidth;
-      itemWidthInfo.clear();
-      maxItemRowCount = 1;
-      maxRows = 1;
-      if (screenWidth > 1200) {
-        maxItemRowCount = 3;
-        itemWidthInfo[3] = (screenWidth / 3) - (3 + 1) * itemSpacing;
-      }
-      if (screenWidth > 600) {
-        if (maxItemRowCount == 1) {
-          maxItemRowCount = 2;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        itemWidthInfo.clear();
+        maxItemRowCount = 1;
+        maxRows = 1;
+        if (screenWidth > 1200) {
+          maxItemRowCount = 3;
+          itemWidthInfo[3] = (screenWidth / 3) - (3 + 1) * itemSpacing;
         }
-        itemWidthInfo[2] = (screenWidth / 2) - (2 + 1) * itemSpacing;
-      }
-      maxRows = ((children?.length ?? 0) / maxItemRowCount).ceil();
-      return Stack(
-        alignment: Alignment.topLeft,
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.5, color: borderColor),
-              borderRadius: BorderRadius.circular(borderRadius),
-              color: color,
+        if (screenWidth > 600) {
+          if (maxItemRowCount == 1) {
+            maxItemRowCount = 2;
+          }
+          itemWidthInfo[2] = (screenWidth / 2) - (2 + 1) * itemSpacing;
+        }
+        maxRows = ((children?.length ?? 0) / maxItemRowCount).ceil();
+        List<Widget> sectionChildren = [
+          if (field.description.isNotEmpty)
+            SizedBox(
+              width: double.infinity,
+              child: CustomHtml(
+                data: field.description!,
+                style: theme.textTheme.titleMedium?.asHtmlStyle,
+              ),
             ),
-            padding: EdgeInsets.only(
+          ...?children,
+        ];
+        return Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5, color: borderColor),
+                borderRadius: BorderRadius.circular(borderRadius),
+                color: color,
+              ),
+              padding: EdgeInsets.only(
                 left: 16,
                 right: 16,
-                top: groupTitleHeight != null ? groupTitleHeight! : 24),
-            margin: const EdgeInsets.only(top: 14),
-            child: children == null
-                ? null
-                // Instead of Column, we use Wrap to allow for a more flexible layout
-                : Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    spacing: itemSpacing,
-                    runSpacing: itemSpacing,
-                    children: List.generate(children?.length ?? 0, (index) {
-                      return SizedBox(
-                        width:
-                            getItemWidth(screenWidth, index, children!.length),
-                        child: children![index],
-                      );
-                    }),
-                  ),
-          ),
-          if (field.title.isNotEmpty)
-            Positioned(
+                top: groupTitleHeight != null ? groupTitleHeight! : 24,
+              ),
+              margin: const EdgeInsets.only(top: 14),
+              child: sectionChildren.isEmpty
+                  ? null
+                  // Instead of Column, we use Wrap to allow for a more flexible layout
+                  : Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      runAlignment: WrapAlignment.start,
+                      spacing: itemSpacing,
+                      runSpacing: itemSpacing,
+                      children: List.generate(sectionChildren.length, (index) {
+                        return SizedBox(
+                          width: getItemWidth(
+                            screenWidth,
+                            index,
+                            sectionChildren.length,
+                          ),
+                          child: sectionChildren[index],
+                        );
+                      }),
+                    ),
+            ),
+            if (field.title.isNotEmpty)
+              Positioned(
                 left: 16,
                 right: 16,
                 top: 0,
@@ -108,10 +128,12 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
                       ),
                     ),
                   ),
-                )),
-        ],
-      );
-    });
+                ),
+              ),
+          ],
+        );
+      },
+    );
   }
 
   double? getItemWidth(double screenWidth, int index, int length) {
