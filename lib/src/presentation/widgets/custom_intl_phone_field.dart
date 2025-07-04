@@ -77,6 +77,7 @@ class CustomIntlPhoneField extends IntlPhoneField {
     final tempNumber = (number.startsWith('+') ? number.substring(1) : number)
         .replaceAll('(', '')
         .replaceAll(')', '')
+        .replaceAll('-', '')
         .replaceAll(' ', '');
     final country = countries.firstWhere((country) {
       if (tempNumber.startsWith(country.dialCode)) {

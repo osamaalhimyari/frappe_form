@@ -51,8 +51,8 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
         }
       }
     }
-    latitude = controller.value?.features?.first.geometry?.coordinates?[0];
-    longitude = controller.value?.features?.first.geometry?.coordinates?[1];
+    latitude = controller.value?.features?.first.geometry?.latitude;
+    longitude = controller.value?.features?.first.geometry?.longitude;
   }
 
   void initControllers() {

@@ -48,7 +48,7 @@ class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
   void initState() {
     super.initState();
     if (dateTime == null) {
-      final DateTime? initial = field.defaultAsDateTime;
+      final DateTime? initial = field.initialAsDateTime;
       if (initial != null) {
         dateTime = initial;
       }

@@ -229,15 +229,6 @@ enum FieldType {
         _ => false,
       };
 
-  bool get isAnswerable => switch (this) {
-        FieldType.tabBreak ||
-        FieldType.sectionBreak ||
-        FieldType.columnBreak ||
-        FieldType.heading =>
-          false,
-        _ => true,
-      };
-
   /// - No type can have the same type as child
   /// - Tab Break can have any type as child
   /// - Section Break can have any type as child except Tab Break

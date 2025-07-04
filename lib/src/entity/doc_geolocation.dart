@@ -88,6 +88,14 @@ class Geometry {
 
   Geometry({this.type, this.coordinates});
 
+  double? get latitude => type == GeometryType.point && coordinates?.length == 2
+      ? coordinates![1]
+      : null;
+  double? get longitude =>
+      type == GeometryType.point && coordinates?.length == 2
+          ? coordinates![0]
+          : null;
+
   factory Geometry.fromJson(Map<String, dynamic> json) {
     return _$GeometryFromJson(json);
   }

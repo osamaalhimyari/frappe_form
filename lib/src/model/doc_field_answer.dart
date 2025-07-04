@@ -13,8 +13,7 @@ class DocFieldAnswer {
   DocFieldAnswer({required this.type, this.name, this.value});
 
   Map<String, dynamic> toAnswerMap() {
-    if (!(type?.isAnswerable ?? false) ||
-        name.isEmpty /*|| (fieldValue?.toString().isEmpty ?? true)*/) {
+    if (name.isEmpty || (value?.toString().isEmpty ?? true)) {
       return {};
     }
     return {name!: (value?.toString().isEmpty ?? true) ? null : value};

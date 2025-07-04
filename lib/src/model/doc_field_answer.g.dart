@@ -13,7 +13,11 @@ abstract class _$DocFieldAnswerCWProxy {
   /// ```dart
   /// DocFieldAnswer(...).copyWith(id: 12, name: "My name")
   /// ````
-  DocFieldAnswer call({FieldType? type, String? name, dynamic value});
+  DocFieldAnswer call({
+    FieldType? type,
+    String? name,
+    dynamic value,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDocFieldAnswer.copyWith(...)`.

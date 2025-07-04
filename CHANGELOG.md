@@ -9,6 +9,15 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.2.1
+### Changed
+- Improved answer generation to ignore null values.
+
+### Fixed
+- Fixed issue with DocFieldPhoneView parsing initial phone number with hyphens.
+- Fixed issue with DocFieldGeolocationView initial value that was taking coordinates in the wrong order.
+- Fixed issue with scroll controller when using multiple tabs.
+
 ## 0.2.0
 ### Added
 - Added "Next" and "Back" buttons to the `DocForm` for easier navigation between tabs.

@@ -8,6 +8,11 @@ class DocFieldGroupController {
     form.sortFields();
     List<DocField> fields = form.fields;
 
+    // Clear all the children of the fields to start fresh
+    for (final field in form.fields) {
+      field.children.clear();
+    }
+
     List<DocField> parentGroups = [];
     try {
       List<int> parentGroupIndexes = [];

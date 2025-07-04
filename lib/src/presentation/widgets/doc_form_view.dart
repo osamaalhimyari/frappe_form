@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +69,7 @@ class DocFormViewState extends State<DocFormView>
   late final DocFormController controller;
   static const fabSize = kFloatingActionButtonMargin + 56;
   ThemeData theme = ThemeData();
-  ScrollController? scrollController;
+  List<ScrollController> scrollControllers = [];
   bool isKeyboardVisible = false;
   bool scrollReachedBottom = false;
   late TabController tabController;
@@ -118,25 +119,21 @@ class DocFormViewState extends State<DocFormView>
   }
 
   void onCreated(Duration timeStamp) {
-    if (!widget.isLoading && scrollController == null) {
-      scrollController = PrimaryScrollController.of(context);
-      scrollController?.addListener(onScrollListener);
-    }
     checkScrollOnInit();
   }
 
   void checkScrollOnInit() {
     Future.delayed(const Duration(milliseconds: 1000), () {
-      if (scrollController?.hasClients ?? false) {
+      if (scrollController.hasClients) {
         onScrollListener();
       }
     });
   }
 
   void onScrollListener() {
-    if (scrollController!.hasClients &&
-        scrollController!.position.pixels >=
-            scrollController!.position.maxScrollExtent - fabSize) {
+    if (scrollController.hasClients &&
+        scrollController.offset >=
+            scrollController.position.maxScrollExtent - fabSize) {
       if (!scrollReachedBottom) {
         scrollReachedBottom = true;
         updateFABVisibility();
@@ -150,7 +147,9 @@ class DocFormViewState extends State<DocFormView>
   }
 
   void onTabScrollListener() {
-    tabIndex.value = tabController.index;
+    if (tabIndex.value != tabController.index) {
+      tabIndex.value = tabController.index;
+    }
   }
 
   Future<void> buildFormFields() async {
@@ -165,9 +164,26 @@ class DocFormViewState extends State<DocFormView>
       initialIndex: tabIndex.value,
     );
     tabController.addListener(onTabScrollListener);
+    clearScrollControllers();
+    scrollControllers = List.generate(tabController.length,
+        (index) => ScrollController()..addListener(onScrollListener));
     setLoading(false, offstage: tabsCount > 1);
     renderAllTabs();
     checkScrollOnInit();
+  }
+
+  void clearScrollControllers() {
+    for (final controller in scrollControllers) {
+      controller.dispose();
+    }
+    scrollControllers.clear();
+  }
+
+  ScrollController get scrollController {
+    if (tabController.index < scrollControllers.length) {
+      return scrollControllers[tabController.index];
+    }
+    return ScrollController();
   }
 
   // This is a workaround to make sure all Tabs are built so all fields evaluate
@@ -190,12 +206,14 @@ class DocFormViewState extends State<DocFormView>
   Widget tabView(DocFieldBundle fieldBundle) =>
       Tab(text: fieldBundle.field.title);
   void onTabTap(int index) {
-    if (index == tabController.index) {
-      PrimaryScrollController.of(context).animateTo(
-        0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+    if (index == tabIndex.value) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        scrollController.animateTo(
+          0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      });
     }
   }
 
@@ -320,12 +338,16 @@ class DocFormViewState extends State<DocFormView>
         ),
       );
 
-  List<Widget> get tabContentViews => fieldBundles.map(tabContentView).toList();
-  Widget tabContentView(DocFieldBundle fieldBundle) {
+  List<Widget> get tabContentViews =>
+      fieldBundles.mapIndexed(tabContentView).toList();
+  Widget tabContentView(int index, DocFieldBundle fieldBundle) {
+    final controller = scrollControllers[index];
     return Scrollbar(
+      controller: controller,
       child: ListView.builder(
-        primary: true,
+        controller: controller,
         addAutomaticKeepAlives: true,
+        physics: AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(
           top: 16,
           left: 16,
@@ -358,7 +380,7 @@ class DocFormViewState extends State<DocFormView>
     return offstage
         ? Stack(
             children: [
-              Offstage(child: view),
+              // Offstage(child: view),
               loadingView,
             ],
           )
@@ -424,7 +446,7 @@ class DocFormViewState extends State<DocFormView>
       tabController.animateTo(tabIndex);
       await Future.delayed(const Duration(milliseconds: 300));
     }
-    scrollController?.animateTo(
+    scrollController.animateTo(
       indexOffset,
       duration: const Duration(milliseconds: 300),
       curve: Curves.ease,
@@ -494,8 +516,8 @@ class DocFormViewState extends State<DocFormView>
   void dispose() {
     showFAB.dispose();
     WidgetsBinding.instance.removeObserver(this);
-    scrollController?.removeListener(onScrollListener);
-    tabController.removeListener(onTabScrollListener);
+    clearScrollControllers();
+    tabController.dispose();
     for (final item in fieldBundles) {
       item.controller.focusNode?.dispose();
     }

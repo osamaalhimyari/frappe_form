@@ -133,7 +133,7 @@ class DocField extends DocType {
   int? get maxLength => (length ?? 0) == 0 ? null : length!;
   int? get precisionDecimals => precision?.asInt;
 
-  DateTime? get defaultAsDateTime => DateTime.tryParse('$initial');
+  DateTime? get initialAsDateTime => DateTime.tryParse('$initial');
 
   @override
   List<Object?> get props => [fieldType, fieldName, name, idx];
