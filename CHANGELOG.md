@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.3.0
+### Changed
+- Improved scrollToField function
+
 ## 0.2.1
 ### Changed
 - Improved answer generation to ignore null values.

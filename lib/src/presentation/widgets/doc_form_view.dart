@@ -123,6 +123,7 @@ class DocFormViewState extends State<DocFormView>
   }
 
   void checkScrollOnInit() {
+    if (loading) return;
     Future.delayed(const Duration(milliseconds: 1000), () {
       if (scrollController.hasClients) {
         onScrollListener();
@@ -442,29 +443,33 @@ class DocFormViewState extends State<DocFormView>
     required int tabIndex,
   }) async {
     if (controller == null) return;
+    Duration delay = Duration.zero;
     if (tabIndex != tabController.index) {
       tabController.animateTo(tabIndex);
-      await Future.delayed(const Duration(milliseconds: 300));
+      delay = const Duration(milliseconds: 300);
     }
-    scrollController.animateTo(
-      indexOffset,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.ease,
-    );
-    Future.delayed(const Duration(milliseconds: 200), () {
-      final fieldContext = controller.key.currentContext;
-      if (fieldContext == null || !fieldContext.mounted) return;
-      Scrollable.ensureVisible(
-        fieldContext,
-        duration: const Duration(milliseconds: 100),
+    Future.delayed(delay, () {
+      scrollController.animateTo(
+        indexOffset,
+        duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
-    }).whenComplete(
-      () => Future.delayed(
-        const Duration(milliseconds: 100),
-        () => controller.focusNode?.requestFocus(),
-      ),
-    );
+    }).whenComplete(() {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        final fieldContext = controller.key.currentContext;
+        if (fieldContext == null || !fieldContext.mounted) return;
+        Scrollable.ensureVisible(
+          fieldContext,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.ease,
+        );
+      }).whenComplete(
+        () => Future.delayed(
+          const Duration(milliseconds: 100),
+          () => controller.focusNode?.requestFocus(),
+        ),
+      );
+    });
   }
 
   Future<void> onSubmit() async {
