@@ -283,7 +283,7 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
       initial: initial == const $CopyWithPlaceholder()
           ? _value.initial
           // ignore: cast_nullable_to_non_nullable
-          : initial as Object?,
+          : initial,
       precision: precision == const $CopyWithPlaceholder()
           ? _value.precision
           // ignore: cast_nullable_to_non_nullable
@@ -354,50 +354,6 @@ DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
       initial: json['default'],
       precision: json['precision'] as String?,
     );
-
-abstract final class _$DocFieldJsonKeys {
-  static const String name = 'name';
-  static const String creation = 'creation';
-  static const String modified = 'modified';
-  static const String modifiedBy = 'modified_by';
-  static const String owner = 'owner';
-  static const String idx = 'idx';
-  static const String module = 'module';
-  static const String sortField = 'sort_field';
-  static const String sortOrder = 'sort_order';
-  static const String readOnly = 'read_only';
-  static const String maxAttachments = 'max_attachments';
-  static const String isSubmittable = 'is_submittable';
-  static const String showTitleFieldInLink = 'show_title_field_in_link';
-  static const String translatedDocType = 'translated_doctype';
-  static const String allowAutoRepeat = 'allow_auto_repeat';
-  static const String docType = 'doctype';
-  static const String docStatus = 'docstatus';
-  static const String description = 'description';
-  static const String parent = 'parent';
-  static const String parentField = 'parentfield';
-  static const String parentType = 'parenttype';
-  static const String fieldName = 'fieldname';
-  static const String label = 'label';
-  static const String options = 'options';
-  static const String fieldType = 'fieldtype';
-  static const String hidden = 'hidden';
-  static const String setOnlyOnce = 'set_only_once';
-  static const String required = 'reqd';
-  static const String bold = 'bold';
-  static const String collapsible = 'collapsible';
-  static const String unique = 'unique';
-  static const String dependsOn = 'depends_on';
-  static const String inListView = 'in_list_view';
-  static const String length = 'length';
-  static const String translatable = 'translatable';
-  static const String hideDays = 'hide_days';
-  static const String hideSeconds = 'hide_seconds';
-  static const String nonNegative = 'non_negative';
-  static const String sortOptions = 'sort_options';
-  static const String initial = 'default';
-  static const String precision = 'precision';
-}
 
 Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
       if (instance.name case final value?) 'name': value,

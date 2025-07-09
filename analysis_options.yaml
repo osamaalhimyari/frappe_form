@@ -17,7 +17,7 @@ analyzer:
     - build/**
     - .dart_tool/**
     - lib/generated/**
-    - "**/*.g.dart"
+#    - "**/*.g.dart"
 
 linter:
   # The lint rules applied to this project can be customized in the

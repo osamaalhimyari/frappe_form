@@ -4,6 +4,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
 import 'package:frappe_form/src/logic/utils/num_utils.dart';
+import 'package:frappe_form/src/logic/utils/param_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'doc_type.g.dart';
@@ -19,9 +20,9 @@ class DocType with EquatableMixin {
   final DateTime? modified;
   @JsonKey(name: "modified_by")
   final String? modifiedBy;
-  @JsonKey(name: "owner")
+  @JsonKey(name: ParamUtils.owner)
   final String? owner;
-  @JsonKey(name: "idx")
+  @JsonKey(name: ParamUtils.idx)
   final int? idx;
   @JsonKey(name: "module")
   final String? module;
@@ -41,9 +42,11 @@ class DocType with EquatableMixin {
   final int? translatedDocType;
   @JsonKey(name: "allow_auto_repeat")
   final int? allowAutoRepeat;
-  @JsonKey(name: "doctype", unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  @JsonKey(
+      name: ParamUtils.docType,
+      unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final DocTypeType? docType;
-  @JsonKey(name: "docstatus")
+  @JsonKey(name: ParamUtils.docStatus)
   final int? docStatus;
   @JsonKey(name: "description")
   final String? description;

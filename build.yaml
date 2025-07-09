@@ -21,7 +21,7 @@ targets:
           #          generic_argument_factories: false
           #          ignore_unannotated: false
           include_if_null: false
-          create_json_keys: true
+#          create_json_keys: true
         generate_for:
           - '**/entity/*.dart'
           - '**/model/*.dart'

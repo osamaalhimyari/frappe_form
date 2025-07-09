@@ -79,13 +79,6 @@ Attachment _$AttachmentFromJson(Map<String, dynamic> json) => Attachment(
       base64: json['base64'] as String?,
     );
 
-abstract final class _$AttachmentJsonKeys {
-  static const String mediaType = 'mediaType';
-  static const String path = 'path';
-  static const String url = 'url';
-  static const String base64 = 'base64';
-}
-
 Map<String, dynamic> _$AttachmentToJson(Attachment instance) =>
     <String, dynamic>{
       if (instance.mediaType case final value?) 'mediaType': value,

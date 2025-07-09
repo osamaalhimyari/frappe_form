@@ -200,29 +200,6 @@ DocForm _$DocFormFromJson(Map<String, dynamic> json) => DocForm(
           .toList(),
     );
 
-abstract final class _$DocFormJsonKeys {
-  static const String name = 'name';
-  static const String creation = 'creation';
-  static const String modified = 'modified';
-  static const String modifiedBy = 'modified_by';
-  static const String owner = 'owner';
-  static const String idx = 'idx';
-  static const String module = 'module';
-  static const String sortField = 'sort_field';
-  static const String sortOrder = 'sort_order';
-  static const String readOnly = 'read_only';
-  static const String maxAttachments = 'max_attachments';
-  static const String isSubmittable = 'is_submittable';
-  static const String showTitleFieldInLink = 'show_title_field_in_link';
-  static const String translatedDocType = 'translated_doctype';
-  static const String allowAutoRepeat = 'allow_auto_repeat';
-  static const String docType = 'doctype';
-  static const String docStatus = 'docstatus';
-  static const String description = 'description';
-  static const String fields = 'fields';
-  static const String fieldsOrder = 'field_order';
-}
-
 Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
       if (instance.name case final value?) 'name': value,
       if (instance.creation?.toIso8601String() case final value?)

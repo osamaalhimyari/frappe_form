@@ -4,6 +4,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:frappe_form/src/entity/doc_field.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
+import 'package:frappe_form/src/logic/utils/param_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'doc_form.g.dart';
@@ -41,11 +42,10 @@ class DocForm extends DocType {
         fieldsOrder = fieldsOrder ?? [];
 
   Map<String, dynamic> toAnswerMap() => {
-        _$DocFormJsonKeys.owner: owner,
-        // _$DocFormJsonKeys.modifiedBy: modifiedBy,
-        _$DocFormJsonKeys.docStatus: docStatus,
-        _$DocFormJsonKeys.idx: idx,
-        _$DocFormJsonKeys.docType: name,
+        ParamUtils.owner: owner,
+        ParamUtils.docStatus: docStatus,
+        ParamUtils.idx: idx,
+        ParamUtils.docType: name,
       };
 
   void sortFields() {

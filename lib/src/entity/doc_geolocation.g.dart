@@ -225,11 +225,6 @@ DocGeolocation _$DocGeolocationFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-abstract final class _$DocGeolocationJsonKeys {
-  static const String type = 'type';
-  static const String features = 'features';
-}
-
 Map<String, dynamic> _$DocGeolocationToJson(DocGeolocation instance) =>
     <String, dynamic>{
       if (_$GeolocationTypeEnumMap[instance.type] case final value?)
@@ -253,12 +248,6 @@ Feature _$FeatureFromJson(Map<String, dynamic> json) => Feature(
           : Geometry.fromJson(json['geometry'] as Map<String, dynamic>),
     );
 
-abstract final class _$FeatureJsonKeys {
-  static const String type = 'type';
-  static const String properties = 'properties';
-  static const String geometry = 'geometry';
-}
-
 Map<String, dynamic> _$FeatureToJson(Feature instance) => <String, dynamic>{
       if (_$FeatureTypeEnumMap[instance.type] case final value?) 'type': value,
       if (instance.properties case final value?) 'properties': value,
@@ -276,11 +265,6 @@ Geometry _$GeometryFromJson(Map<String, dynamic> json) => Geometry(
           ?.map((e) => (e as num).toDouble())
           .toList(),
     );
-
-abstract final class _$GeometryJsonKeys {
-  static const String type = 'type';
-  static const String coordinates = 'coordinates';
-}
 
 Map<String, dynamic> _$GeometryToJson(Geometry instance) => <String, dynamic>{
       if (_$GeometryTypeEnumMap[instance.type] case final value?) 'type': value,
@@ -300,11 +284,6 @@ GeometryProperty _$GeometryPropertyFromJson(Map<String, dynamic> json) =>
           unknownValue: JsonKey.nullForUndefinedEnumValue),
       radius: (json['radius'] as num?)?.toDouble(),
     );
-
-abstract final class _$GeometryPropertyJsonKeys {
-  static const String pointType = 'point_type';
-  static const String radius = 'radius';
-}
 
 Map<String, dynamic> _$GeometryPropertyToJson(GeometryProperty instance) =>
     <String, dynamic>{
