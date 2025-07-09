@@ -17,6 +17,21 @@ class DocFieldSelectView extends DocFieldView {
         );
 
   @override
+  CustomValueController<String> get controller =>
+      super.controller as CustomValueController<String>;
+
+  @override
+  void initController() {
+    super.initController();
+    if (controller.value == null) {
+      final initial = field.initial?.toString();
+      if (initial.isNotEmpty) {
+        controller.value = initial;
+      }
+    }
+  }
+
+  @override
   State createState() => DocFieldSelectViewState();
 }
 
@@ -30,13 +45,6 @@ class DocFieldSelectViewState<SF extends DocFieldSelectView>
   void initState() {
     super.initState();
     values.addAll(field.optionsAsList);
-    if (controller.value == null) {
-      final initial = field.initial?.toString();
-
-      if (initial.isNotEmpty) {
-        controller.value = initial;
-      }
-    }
   }
 
   String? get selectedValue => controller.value;

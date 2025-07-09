@@ -12,13 +12,26 @@ abstract class DocFieldView extends StatefulWidget {
   final DocField field;
   final List<DocFieldView>? children;
   final DocFieldDependsOnController? dependsOnController;
-  const DocFieldView({
+  DocFieldView({
     super.key,
     required this.controller,
     required this.field,
     this.children,
     this.dependsOnController,
-  });
+  }) {
+    initController();
+  }
+
+  bool get isRequired => field.isRequired;
+  int? get maxLength => field.maxLength;
+
+  void initController() {
+    controller.validations.addAll([
+      if (isRequired) ValidationUtils.requiredFieldValidation,
+      if ((maxLength ?? 0) > 0)
+        ValidationUtils.maxLengthValidation(maxLength: maxLength!),
+    ]);
+  }
 }
 
 abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
@@ -32,8 +45,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   DocField get field => widget.field;
   List<DocFieldView>? get children => widget.children;
 
-  bool get isRequired => field.isRequired;
-  bool get isReadOnly => field.isRadOnly;
+  bool get isReadOnly => field.isReadOnly;
   int? get maxLength => field.maxLength;
   @override
   bool get wantKeepAlive => false;
@@ -48,9 +60,6 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     if (handleControllerErrorManually) {
       controller.addListener(onControllerErrorChanged);
     }
-    controller.validations.addAll([
-      if (isRequired) ValidationUtils.requiredFieldValidation,
-    ]);
     isEnabled =
         dependsOnController?.init(onEnabledChangedListener: onEnabled) ?? true;
   }

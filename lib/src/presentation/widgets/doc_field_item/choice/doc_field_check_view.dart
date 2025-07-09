@@ -14,6 +14,16 @@ class DocFieldCheckView extends DocFieldView {
         );
 
   @override
+  CustomValueController<int> get controller =>
+      super.controller as CustomValueController<int>;
+
+  @override
+  void initController() {
+    super.initController();
+    controller.value ??= field.initial?.toString().asInt;
+  }
+
+  @override
   State createState() => DocFieldCheckViewState();
 }
 
@@ -22,18 +32,6 @@ class DocFieldCheckViewState<SF extends DocFieldCheckView>
   @override
   CustomValueController<int> get controller =>
       super.controller as CustomValueController<int>;
-
-  @override
-  void initState() {
-    super.initState();
-    if (controller.value == null) {
-      final initial = field.initial?.toString().asInt;
-
-      if (initial != null) {
-        controller.value = initial;
-      }
-    }
-  }
 
   int? get selectedValue => controller.value;
   set selectedValue(int? value) => controller.value = value;

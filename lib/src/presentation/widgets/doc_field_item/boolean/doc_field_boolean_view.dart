@@ -14,6 +14,16 @@ class DocFieldBooleanView extends DocFieldView {
         );
 
   @override
+  CustomValueController<bool> get controller =>
+      super.controller as CustomValueController<bool>;
+
+  @override
+  void initController() {
+    super.initController();
+    controller.value ??= field.initial?.toString().asBool;
+  }
+
+  @override
   State createState() => DocFieldBooleanViewState();
 }
 
@@ -22,22 +32,13 @@ class DocFieldBooleanViewState<SF extends DocFieldBooleanView>
   @override
   CustomValueController<bool> get controller =>
       super.controller as CustomValueController<bool>;
-  bool get value => controller.value ??= false;
-  set value(bool value) => controller.value = value;
-
-  @override
-  void initState() {
-    super.initState();
-    if (controller.value == null) {
-      final initial = field.initial?.toString().asBool ?? false;
-      value = initial;
-    }
-  }
+  bool? get value => controller.value;
+  set value(bool? value) => controller.value = value;
 
   @override
   Widget buildBody(BuildContext context) {
     return SwitchListTile(
-      value: value,
+      value: value ?? false,
       onChanged:
           isReadOnly ? null : (value) => setState(() => this.value = value),
       title: field.title.isEmpty ? null : Text(field.title),

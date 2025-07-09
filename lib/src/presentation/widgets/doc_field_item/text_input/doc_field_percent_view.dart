@@ -12,19 +12,19 @@ class DocFieldPercentView extends DocFieldTextFieldView {
   });
 
   @override
-  State createState() => DocFieldPercentViewState();
-}
-
-class DocFieldPercentViewState<SF extends DocFieldPercentView>
-    extends DocFieldTextFieldViewState<SF> {
-  @override
-  void initState() {
-    super.initState();
+  void initController() {
+    super.initController();
     controller.validations.addAll([
       ValidationUtils.positiveNumberValidation(required: isRequired),
     ]);
   }
 
+  @override
+  State createState() => DocFieldPercentViewState();
+}
+
+class DocFieldPercentViewState<SF extends DocFieldPercentView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   TextInputType? get keyboardType =>
       const TextInputType.numberWithOptions(signed: false, decimal: true);

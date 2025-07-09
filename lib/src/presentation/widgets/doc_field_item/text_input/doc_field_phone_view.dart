@@ -16,6 +16,21 @@ class DocFieldPhoneView extends DocFieldView {
         );
 
   @override
+  CustomTextEditingController get controller =>
+      super.controller as CustomTextEditingController;
+
+  @override
+  void initController() {
+    super.initController();
+    if (controller.text.isEmpty) {
+      final initial = field.initial?.toString();
+      if (initial.isNotEmpty) {
+        controller.text = initial!;
+      }
+    }
+  }
+
+  @override
   State createState() => DocFieldPhoneViewState();
 }
 
@@ -32,14 +47,6 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
   @override
   void initState() {
     super.initState();
-    if (controller.text.isEmpty) {
-      final initial = field.initial?.toString();
-
-      if (initial.isNotEmpty) {
-        controller.text = initial!;
-      }
-    }
-
     try {
       isValidPhoneNumber = true;
       final phoneInfo = CustomIntlPhoneField.parse(
@@ -52,11 +59,6 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
         print(e);
       }
     }
-
-    controller.validations.addAll([
-      if ((maxLength ?? 0) > 0)
-        ValidationUtils.maxLengthValidation(maxLength: maxLength!),
-    ]);
   }
 
   TextInputType? get keyboardType => TextInputType.text;

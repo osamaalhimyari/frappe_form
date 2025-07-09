@@ -15,6 +15,29 @@ class DocFieldGeolocationView extends DocFieldView {
         );
 
   @override
+  CustomValueController<DocGeolocation> get controller =>
+      super.controller as CustomValueController<DocGeolocation>;
+
+  @override
+  void initController() {
+    super.initController();
+    if (controller.value == null) {
+      try {
+        if (field.initial?.toString().isNotEmpty ?? false) {
+          final initial = DocGeolocation.fromJsonString(
+            field.initial!.toString(),
+          );
+          controller.value = initial;
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+  }
+
+  @override
   State createState() => DocFieldGeolocationViewState();
 }
 
@@ -37,20 +60,6 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
   }
 
   void initValue() {
-    if (controller.value == null) {
-      try {
-        if (field.initial?.toString().isNotEmpty ?? false) {
-          final initial = DocGeolocation.fromJsonString(
-            field.initial!.toString(),
-          );
-          controller.value = initial;
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
-      }
-    }
     latitude = controller.value?.features?.first.geometry?.latitude;
     longitude = controller.value?.features?.first.geometry?.longitude;
   }

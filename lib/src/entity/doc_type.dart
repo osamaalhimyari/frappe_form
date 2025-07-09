@@ -69,7 +69,7 @@ class DocType with EquatableMixin {
     this.description,
   });
 
-  bool get isRadOnly => readOnly.asBool;
+  bool get isReadOnly => readOnly.asBool;
 
   String get title => name ?? '';
 

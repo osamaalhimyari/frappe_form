@@ -15,6 +15,16 @@ class DocFieldRatingView extends DocFieldView {
         );
 
   @override
+  CustomValueController<double> get controller =>
+      super.controller as CustomValueController<double>;
+
+  @override
+  void initController() {
+    super.initController();
+    controller.value ??= field.initial?.toString().asDouble;
+  }
+
+  @override
   State createState() => DocFieldRatingViewState();
 }
 
@@ -23,12 +33,6 @@ class DocFieldRatingViewState<SF extends DocFieldRatingView>
   @override
   CustomValueController<double> get controller =>
       super.controller as CustomValueController<double>;
-
-  @override
-  void initState() {
-    super.initState();
-    controller.value ??= field.initial?.toString().asDouble;
-  }
 
   void onRatingUpdate(double rating) => controller.value = rating / 5;
 
@@ -42,7 +46,7 @@ class DocFieldRatingViewState<SF extends DocFieldRatingView>
       maxRating: 5,
       itemCount: 5,
       direction: Axis.horizontal,
-      ignoreGestures: field.isRadOnly,
+      ignoreGestures: field.isReadOnly,
       allowHalfRating: true,
       glowColor: Colors.yellow,
       ratingWidget: RatingWidget(

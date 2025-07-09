@@ -12,19 +12,19 @@ class DocFieldFloatView extends DocFieldTextFieldView {
   });
 
   @override
-  State createState() => DocFieldFloatViewState();
-}
-
-class DocFieldFloatViewState<SF extends DocFieldFloatView>
-    extends DocFieldTextFieldViewState<SF> {
-  @override
-  void initState() {
-    super.initState();
+  void initController() {
+    super.initController();
     controller.validations.addAll([
       ValidationUtils.numberValidation(required: isRequired),
     ]);
   }
 
+  @override
+  State createState() => DocFieldFloatViewState();
+}
+
+class DocFieldFloatViewState<SF extends DocFieldFloatView>
+    extends DocFieldTextFieldViewState<SF> {
   @override
   TextInputType? get keyboardType =>
       const TextInputType.numberWithOptions(signed: true, decimal: true);

@@ -12,6 +12,25 @@ abstract class DocFieldTextFieldView extends DocFieldView {
           controller:
               controller ?? CustomTextEditingController(focusNode: FocusNode()),
         );
+
+  @override
+  CustomTextEditingController get controller =>
+      super.controller as CustomTextEditingController;
+
+  @override
+  void initController() {
+    super.initController();
+    if (controller.text.isEmpty) {
+      final initial = field.initial?.toString();
+      if (initial.isNotEmpty) {
+        controller.text = initial!;
+      }
+    }
+    controller.validations.addAll([
+      if ((maxLength ?? 0) > 0)
+        ValidationUtils.maxLengthValidation(maxLength: maxLength!),
+    ]);
+  }
 }
 
 abstract class DocFieldTextFieldViewState<SF extends DocFieldTextFieldView>
@@ -19,22 +38,6 @@ abstract class DocFieldTextFieldViewState<SF extends DocFieldTextFieldView>
   @override
   CustomTextEditingController get controller =>
       super.controller as CustomTextEditingController;
-  @override
-  void initState() {
-    super.initState();
-    if (controller.text.isEmpty) {
-      final initial = field.initial?.toString();
-
-      if (initial.isNotEmpty) {
-        controller.text = initial!;
-      }
-    }
-
-    controller.validations.addAll([
-      if ((maxLength ?? 0) > 0)
-        ValidationUtils.maxLengthValidation(maxLength: maxLength!),
-    ]);
-  }
 
   TextInputType? get keyboardType => TextInputType.text;
   TextInputAction? get textInputAction => TextInputAction.next;

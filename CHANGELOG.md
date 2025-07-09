@@ -11,7 +11,8 @@ Types of changes
 
 ## 0.3.0
 ### Changed
-- Improved scrollToField function
+- Improved scrollToField function.
+- Improved DocFieldView controller initialization.
 
 ## 0.2.1
 ### Changed

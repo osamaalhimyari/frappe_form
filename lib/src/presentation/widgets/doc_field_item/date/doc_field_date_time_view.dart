@@ -32,6 +32,16 @@ class DocFieldDateTimeView extends DocFieldView {
         );
 
   @override
+  CustomValueController<DateTime> get controller =>
+      super.controller as CustomValueController<DateTime>;
+
+  @override
+  void initController() {
+    super.initController();
+    controller.value ??= field.initialAsDateTime;
+  }
+
+  @override
   State createState() => DocFieldDateTimeViewState();
 }
 
@@ -43,17 +53,6 @@ class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
   DateTimeType get type => widget.type;
   DateTime? get dateTime => controller.value;
   set dateTime(DateTime? value) => controller.value = value;
-
-  @override
-  void initState() {
-    super.initState();
-    if (dateTime == null) {
-      final DateTime? initial = field.initialAsDateTime;
-      if (initial != null) {
-        dateTime = initial;
-      }
-    }
-  }
 
   @override
   Widget buildBody(BuildContext context) {
