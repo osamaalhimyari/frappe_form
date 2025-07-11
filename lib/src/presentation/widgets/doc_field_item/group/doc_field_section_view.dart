@@ -1,6 +1,5 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
-import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
 
 /// Created by luis901101 on 04/21/25.
 class DocFieldSectionView extends DocFieldView {
@@ -57,18 +56,36 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
           }
           itemWidthInfo[2] = (screenWidth / 2) - (2 + 1) * itemSpacing;
         }
-        maxRows = ((children?.length ?? 0) / maxItemRowCount).ceil();
-        List<Widget> sectionChildren = [
-          if (field.description.isNotEmpty)
-            SizedBox(
-              width: double.infinity,
-              child: CustomHtml(
-                data: field.description!,
-                style: theme.textTheme.titleMedium?.asHtmlStyle,
-              ),
-            ),
-          ...?children,
-        ];
+        maxRows = (children.length / maxItemRowCount).ceil();
+        final Widget? descriptionView = field.description.isEmpty
+            ? null
+            : SizedBox(
+                width: double.infinity,
+                child: CustomHtml(
+                  data: field.description!,
+                  style: theme.textTheme.titleMedium?.asHtmlStyle,
+                ),
+              );
+        final Widget? childrenView = children.isEmpty
+            ? null
+            // Instead of Column, we use Wrap to allow for a more flexible layout
+            : Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                runAlignment: WrapAlignment.start,
+                spacing: itemSpacing,
+                runSpacing: itemSpacing,
+                children: List.generate(children.length, (index) {
+                  return SizedBox(
+                    width: getItemWidth(
+                      screenWidth,
+                      index,
+                      children.length,
+                    ),
+                    child: children[index],
+                  );
+                }),
+              );
         return Stack(
           alignment: Alignment.topLeft,
           children: [
@@ -85,26 +102,21 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
                 top: groupTitleHeight != null ? groupTitleHeight! : 24,
               ),
               margin: const EdgeInsets.only(top: 14),
-              child: sectionChildren.isEmpty
+              child: descriptionView == null && childrenView == null
                   ? null
-                  // Instead of Column, we use Wrap to allow for a more flexible layout
-                  : Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      spacing: itemSpacing,
-                      runSpacing: itemSpacing,
-                      children: List.generate(sectionChildren.length, (index) {
-                        return SizedBox(
-                          width: getItemWidth(
-                            screenWidth,
-                            index,
-                            sectionChildren.length,
-                          ),
-                          child: sectionChildren[index],
-                        );
-                      }),
-                    ),
+                  : descriptionView != null
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            descriptionView,
+                            if (childrenView != null)
+                              Padding(
+                                padding: EdgeInsets.only(top: itemSpacing),
+                                child: childrenView,
+                              ),
+                          ],
+                        )
+                      : childrenView,
             ),
             if (field.title.isNotEmpty)
               Positioned(

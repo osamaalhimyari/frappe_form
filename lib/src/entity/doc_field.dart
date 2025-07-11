@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:frappe_form/src/entity/doc_form.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
 import 'package:frappe_form/src/entity/enumerator/field_type.dart';
@@ -14,60 +15,66 @@ part 'doc_field.g.dart';
 @JsonSerializable()
 @CopyWith()
 class DocField extends DocType {
-  @JsonKey(name: "parent")
+  @JsonKey(name: 'parent')
   final String? parent;
-  @JsonKey(name: "parentfield")
+  @JsonKey(name: 'parentfield')
   final String? parentField;
-  @JsonKey(name: "parenttype")
+  @JsonKey(name: 'parenttype')
   final String? parentType;
-  @JsonKey(name: "fieldname")
+  @JsonKey(name: 'fieldname')
   final String? fieldName;
-  @JsonKey(name: "label")
+  @JsonKey(name: 'label')
   final String? label;
-  @JsonKey(name: "options")
+  @JsonKey(name: 'options')
   final String? options;
-  @JsonKey(name: "fieldtype")
+  @JsonKey(name: 'fieldtype')
   final String? fieldType;
   @JsonKey(includeFromJson: false, includeToJson: false)
   final FieldType type;
-  @JsonKey(name: "hidden")
+  @JsonKey(name: 'hidden')
   final int? hidden;
-  @JsonKey(name: "set_only_once")
+  @JsonKey(name: 'set_only_once')
   final int? setOnlyOnce;
-  @JsonKey(name: "reqd")
+  @JsonKey(name: 'reqd')
   final int? required;
-  @JsonKey(name: "bold")
+  @JsonKey(name: 'bold')
   final int? bold;
-  @JsonKey(name: "collapsible")
+  @JsonKey(name: 'collapsible')
   final int? collapsible;
-  @JsonKey(name: "unique")
+  @JsonKey(name: 'unique')
   final int? unique;
-  @JsonKey(name: "depends_on")
+  @JsonKey(name: 'depends_on')
   final String? dependsOn;
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<DependsOnEval> dependsOnEvalList; // Only for cache
-  @JsonKey(name: "in_list_view")
+  @JsonKey(name: 'in_list_view')
   final int? inListView;
-  @JsonKey(name: "length")
+  @JsonKey(name: 'length')
   final int? length;
-  @JsonKey(name: "translatable")
+  @JsonKey(name: 'translatable')
   final int? translatable;
-  @JsonKey(name: "hide_days")
+  @JsonKey(name: 'hide_days')
   final int? hideDays;
-  @JsonKey(name: "hide_seconds")
+  @JsonKey(name: 'hide_seconds')
   final int? hideSeconds;
-  @JsonKey(name: "non_negative")
+  @JsonKey(name: 'non_negative')
   final int? nonNegative;
-  @JsonKey(name: "sort_options")
+  @JsonKey(name: 'sort_options')
   final int? sortOptions;
-  @JsonKey(name: "default")
+  @JsonKey(name: 'default')
   final Object? initial;
-  @JsonKey(name: "precision")
+  @JsonKey(name: 'precision')
   final String? precision;
+  @JsonKey(name: 'child_table')
+  final Object? childTable;
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<DocField> children;
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<String> optionsAsList;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final DateTime? initialAsDateTime;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final DocForm? childForm;
 
   DocField({
     super.name,
@@ -112,12 +119,15 @@ class DocField extends DocType {
     this.sortOptions,
     this.initial,
     this.precision,
+    this.childTable,
     List<DocField>? children,
   })  : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
         fieldType = fieldType ?? type?.name,
         children = children ?? [],
         optionsAsList = options?.split('\n').toList() ?? [],
-        dependsOnEvalList = DependsOnEval.fromExpression(dependsOn);
+        dependsOnEvalList = DependsOnEval.fromExpression(dependsOn),
+        initialAsDateTime = DateTime.tryParse('$initial'),
+        childForm = DocForm.fromJsonObject(childTable);
 
   factory DocField.dummy() => DocField();
 
@@ -132,8 +142,6 @@ class DocField extends DocType {
   bool get isRequired => required.asBool;
   int? get maxLength => (length ?? 0) == 0 ? null : length!;
   int? get precisionDecimals => precision?.asInt;
-
-  DateTime? get initialAsDateTime => DateTime.tryParse('$initial');
 
   @override
   List<Object?> get props => [fieldType, fieldName, name, idx];

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:flutter/foundation.dart';
 import 'package:frappe_form/src/entity/doc_field.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
@@ -12,9 +13,9 @@ part 'doc_form.g.dart';
 @JsonSerializable()
 @CopyWith()
 class DocForm extends DocType {
-  @JsonKey(name: "fields")
+  @JsonKey(name: 'fields')
   final List<DocField> fields;
-  @JsonKey(name: "field_order")
+  @JsonKey(name: 'field_order')
   final List<String> fieldsOrder;
 
   DocForm({
@@ -42,10 +43,10 @@ class DocForm extends DocType {
         fieldsOrder = fieldsOrder ?? [];
 
   Map<String, dynamic> toAnswerMap() => {
-        ParamUtils.owner: owner,
-        ParamUtils.docStatus: docStatus,
-        ParamUtils.idx: idx,
-        ParamUtils.docType: name,
+        if (owner != null) ParamUtils.owner: owner,
+        if (docStatus != null) ParamUtils.docStatus: docStatus,
+        if (idx != null) ParamUtils.idx: idx,
+        if (name != null) ParamUtils.docType: name,
       };
 
   void sortFields() {
@@ -67,6 +68,25 @@ class DocForm extends DocType {
 
   factory DocForm.fromJsonString(String json) =>
       DocForm.fromJson(jsonDecode(json));
+
+  static DocForm? fromJsonObject(Object? json) {
+    if (json != null) {
+      try {
+        if (json is String) {
+          return DocForm.fromJsonString(json.toString());
+        }
+        if (json is Map) {
+          return DocForm.fromJson(json as Map<String, dynamic>);
+        }
+        if (json is DocForm) {
+          return json;
+        }
+      } catch (e) {
+        if (kDebugMode) print(e);
+      }
+    }
+    return null;
+  }
 
   @override
   Map<String, dynamic> toJson() {

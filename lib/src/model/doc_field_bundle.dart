@@ -6,17 +6,17 @@ class DocFieldBundle {
   /// Use it just to group views
   final String? groupId;
   final DocField field;
-  final List<DocFieldBundle>? children;
+  final List<DocFieldBundle> children;
   final FieldController controller;
   final DocFieldView view;
 
-  const DocFieldBundle({
+  DocFieldBundle({
     this.groupId,
     required this.field,
-    this.children,
+    List<DocFieldBundle>? children,
     required this.controller,
     required this.view,
-  });
+  }) : children = children ?? <DocFieldBundle>[];
 
   /// Returns linkId of the form [field] prefixed by its parent item
   /// link ids, showing a unique id for this form [field].

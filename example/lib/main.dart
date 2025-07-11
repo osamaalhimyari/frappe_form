@@ -64,8 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
     (name: 'French', value: Locale('fr', 'FR')),
   ];
   final List<({String name, String value})> forms = [
-    (name: 'Sample Structure', value: DocFormSamples.sampleStructure),
-    (name: 'Taste Tester', value: DocFormSamples.tasteTester),
+    (name: 'Supported Fields Test', value: DocFormSamples.fieldTest),
+    (name: 'Table Test', value: DocFormSamples.tableTest),
   ];
   final List<({String name, InputDecorationTheme value})>
       inputDecorationThemes = [
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Locale? selectedLocale;
-  String selectedForm = DocFormSamples.sampleStructure;
+  String selectedForm = DocFormSamples.fieldTest;
   InputDecorationTheme? selectedInputDecorationTheme = InputDecorationTheme();
   final extraLocalizations = [DocFormFrLocalization()];
   ThemeData theme = ThemeData();

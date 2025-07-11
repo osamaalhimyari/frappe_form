@@ -21,7 +21,7 @@ class DocFieldCheckListViewState<SF extends DocFieldCheckListView>
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: children?.map((itemView) => itemView).toList() ?? [],
+      children: children.map((itemView) => itemView).toList(),
     );
   }
 }

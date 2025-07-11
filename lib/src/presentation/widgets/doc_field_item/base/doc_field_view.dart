@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frappe_form/src/entity/doc_field.dart';
 import 'package:frappe_form/src/logic/utils/text_utils.dart';
+import 'package:frappe_form/src/model/doc_field_bundle.dart';
 import 'package:frappe_form/src/model/doc_field_depends_on_controller.dart';
 import 'package:frappe_form/src/presentation/utils/validation_utils.dart';
 import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
@@ -10,15 +11,18 @@ import 'package:frappe_form/src/presentation/widgets/size_renderer.dart';
 abstract class DocFieldView extends StatefulWidget {
   final FieldController controller;
   final DocField field;
-  final List<DocFieldView>? children;
+  final List<DocFieldView> children;
+  final List<DocFieldBundle> childrenBundles;
   final DocFieldDependsOnController? dependsOnController;
   DocFieldView({
     super.key,
     required this.controller,
     required this.field,
-    this.children,
+    List<DocFieldView>? children,
+    List<DocFieldBundle>? childrenBundle,
     this.dependsOnController,
-  }) {
+  })  : children = children ?? <DocFieldView>[],
+        childrenBundles = childrenBundle ?? <DocFieldBundle>[] {
     initController();
   }
 
@@ -43,7 +47,8 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   DocFieldDependsOnController? get dependsOnController =>
       widget.dependsOnController;
   DocField get field => widget.field;
-  List<DocFieldView>? get children => widget.children;
+  List<DocFieldView> get children => widget.children;
+  List<DocFieldBundle> get childrenBundles => widget.childrenBundles;
 
   bool get isReadOnly => field.isReadOnly;
   int? get maxLength => field.maxLength;

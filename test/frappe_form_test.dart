@@ -11,7 +11,7 @@ String form1 = r'''
 
 void main() {
   try {
-    final groupController = DocFieldGroupController();
+    final groupController = const DocFieldGroupController();
     final form = DocForm.fromJson(jsonDecode(form1));
     final groups = groupController.generateGroups(form);
     printGroups(groups);

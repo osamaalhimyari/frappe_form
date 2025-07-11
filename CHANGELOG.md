@@ -9,6 +9,13 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.4.0
+### Added
+- Added support for new field `Table`.
+
+### Changed
+- Updated example project.
+
 ## 0.3.0
 ### Changed
 - Improved scrollToField function.

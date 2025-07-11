@@ -17,7 +17,7 @@ class DependsOnEval {
     if (expression == null || expression.isEmpty) return [];
     final List<DependsOnEval> list = [];
     try {
-      final dependsOnParts = expression.split("eval:");
+      final dependsOnParts = expression.split('eval:');
       if (dependsOnParts.length <= 1) return [];
       final evalExpression = dependsOnParts[1];
       _analyzeConditionExpression(evalExpression, list);

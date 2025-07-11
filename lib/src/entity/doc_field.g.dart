@@ -56,6 +56,7 @@ abstract class _$DocFieldCWProxy {
     int? sortOptions,
     Object? initial,
     String? precision,
+    Object? childTable,
     List<DocField>? children,
   });
 }
@@ -117,6 +118,7 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
     Object? sortOptions = const $CopyWithPlaceholder(),
     Object? initial = const $CopyWithPlaceholder(),
     Object? precision = const $CopyWithPlaceholder(),
+    Object? childTable = const $CopyWithPlaceholder(),
     Object? children = const $CopyWithPlaceholder(),
   }) {
     return DocField(
@@ -288,6 +290,10 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
           ? _value.precision
           // ignore: cast_nullable_to_non_nullable
           : precision as String?,
+      childTable: childTable == const $CopyWithPlaceholder()
+          ? _value.childTable
+          // ignore: cast_nullable_to_non_nullable
+          : childTable,
       children: children == const $CopyWithPlaceholder()
           ? _value.children
           // ignore: cast_nullable_to_non_nullable
@@ -353,6 +359,7 @@ DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
       sortOptions: (json['sort_options'] as num?)?.toInt(),
       initial: json['default'],
       precision: json['precision'] as String?,
+      childTable: json['child_table'],
     );
 
 Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
@@ -403,6 +410,7 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
       if (instance.sortOptions case final value?) 'sort_options': value,
       if (instance.initial case final value?) 'default': value,
       if (instance.precision case final value?) 'precision': value,
+      if (instance.childTable case final value?) 'child_table': value,
     };
 
 const _$DocTypeTypeEnumMap = {

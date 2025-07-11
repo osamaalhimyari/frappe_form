@@ -12,35 +12,35 @@ part 'doc_type.g.dart';
 @JsonSerializable()
 @CopyWith()
 class DocType with EquatableMixin {
-  @JsonKey(name: "name")
+  @JsonKey(name: 'name')
   final String? name;
-  @JsonKey(name: "creation")
+  @JsonKey(name: 'creation')
   final DateTime? creation;
-  @JsonKey(name: "modified")
+  @JsonKey(name: 'modified')
   final DateTime? modified;
-  @JsonKey(name: "modified_by")
+  @JsonKey(name: 'modified_by')
   final String? modifiedBy;
   @JsonKey(name: ParamUtils.owner)
   final String? owner;
   @JsonKey(name: ParamUtils.idx)
   final int? idx;
-  @JsonKey(name: "module")
+  @JsonKey(name: 'module')
   final String? module;
-  @JsonKey(name: "sort_field")
+  @JsonKey(name: 'sort_field')
   final String? sortField;
-  @JsonKey(name: "sort_order")
+  @JsonKey(name: 'sort_order')
   final String? sortOrder;
-  @JsonKey(name: "read_only")
+  @JsonKey(name: 'read_only')
   final int? readOnly;
-  @JsonKey(name: "max_attachments")
+  @JsonKey(name: 'max_attachments')
   final int? maxAttachments;
-  @JsonKey(name: "is_submittable")
+  @JsonKey(name: 'is_submittable')
   final int? isSubmittable;
-  @JsonKey(name: "show_title_field_in_link")
+  @JsonKey(name: 'show_title_field_in_link')
   final int? showTitleFieldInLink;
-  @JsonKey(name: "translated_doctype")
+  @JsonKey(name: 'translated_doctype')
   final int? translatedDocType;
-  @JsonKey(name: "allow_auto_repeat")
+  @JsonKey(name: 'allow_auto_repeat')
   final int? allowAutoRepeat;
   @JsonKey(
       name: ParamUtils.docType,
@@ -48,7 +48,7 @@ class DocType with EquatableMixin {
   final DocTypeType? docType;
   @JsonKey(name: ParamUtils.docStatus)
   final int? docStatus;
-  @JsonKey(name: "description")
+  @JsonKey(name: 'description')
   final String? description;
 
   DocType({

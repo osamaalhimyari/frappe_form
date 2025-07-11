@@ -99,7 +99,7 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
                 enabled: !isReadOnly,
                 maxLength: maxLength,
                 textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.numberWithOptions(
+                keyboardType: const TextInputType.numberWithOptions(
                   signed: true,
                   decimal: true,
                 ),
@@ -125,7 +125,7 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
                 enabled: !isReadOnly,
                 maxLength: maxLength,
                 textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(
+                keyboardType: const TextInputType.numberWithOptions(
                   signed: true,
                   decimal: true,
                 ),

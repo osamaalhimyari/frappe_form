@@ -224,7 +224,8 @@ enum FieldType {
   bool get isGroup => switch (this) {
         FieldType.tabBreak ||
         FieldType.sectionBreak ||
-        FieldType.columnBreak =>
+        FieldType.columnBreak ||
+        FieldType.table =>
           true,
         _ => false,
       };
@@ -240,13 +241,14 @@ enum FieldType {
 
   /// - No type can have the same type as child
   /// - Tab Break can have any type as child
-  /// - Section Break can have any type as child except Tab Break
+  /// - Section Break and Table can have any type as child except Tab Break
   /// - Column Break can have any type as child except Tab Break and Section Break
   bool canHaveAsChild(FieldType type) =>
       this != type &&
       switch (this) {
         FieldType.tabBreak => true,
-        FieldType.sectionBreak => type != FieldType.tabBreak,
+        FieldType.table => true,
+        FieldType.sectionBreak || FieldType.table => type != FieldType.tabBreak,
         FieldType.columnBreak =>
           type != FieldType.tabBreak && type != FieldType.sectionBreak,
         _ => false,

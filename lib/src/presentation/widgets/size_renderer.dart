@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class SizeRenderer extends StatefulWidget {
-  final Widget child;
   final Function(Size size, GlobalKey key) onSizeRendered;
+  final bool listenContinuously;
+  final Widget child;
 
   const SizeRenderer({
     super.key,
     required this.onSizeRendered,
+    this.listenContinuously = false,
     required this.child,
   });
 
@@ -17,12 +19,14 @@ class SizeRenderer extends StatefulWidget {
 
 class _SizeRendererState extends State<SizeRenderer> {
   final key = GlobalKey();
-  Size oldSize = Size.zero;
+  Size currentSize = Size.zero;
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback(onCreated);
+    if (!widget.listenContinuously) {
+      SchedulerBinding.instance.addPostFrameCallback(onCreated);
+    }
   }
 
   void onCreated(Duration timeStamp) {
@@ -30,14 +34,20 @@ class _SizeRendererState extends State<SizeRenderer> {
     if (context == null) return;
 
     var newSize = context.size;
-    if (newSize == null || oldSize == newSize) return;
+    if (newSize == null || currentSize == newSize) return;
 
-    oldSize = newSize;
+    currentSize = newSize;
     widget.onSizeRendered(newSize, key);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(key: key, child: widget.child);
+    if (widget.listenContinuously) {
+      SchedulerBinding.instance.addPostFrameCallback(onCreated);
+    }
+    return SizedBox(
+      key: key,
+      child: widget.child,
+    );
   }
 }

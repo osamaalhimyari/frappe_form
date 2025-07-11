@@ -1,6 +1,5 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
-import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
 
 /// Created by luis901101 on 04/23/25.
 class DocFieldColumnView extends DocFieldView {
@@ -36,7 +35,7 @@ class DocFieldColumnViewState<SF extends DocFieldColumnView>
                 .asHtmlStyle,
           ),
         ),
-      ...?children,
+      ...children,
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,

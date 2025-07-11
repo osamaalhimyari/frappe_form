@@ -12,9 +12,9 @@ part 'doc_geolocation.g.dart';
 @JsonSerializable()
 @CopyWith()
 class DocGeolocation {
-  @JsonKey(name: "type", unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final GeolocationType? type;
-  @JsonKey(name: "features")
+  @JsonKey(name: 'features')
   final List<Feature>? features;
 
   DocGeolocation({this.type, this.features});
@@ -60,11 +60,11 @@ class DocGeolocation {
 @JsonSerializable()
 @CopyWith()
 class Feature {
-  @JsonKey(name: "type", unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final FeatureType? type;
-  @JsonKey(name: "properties")
+  @JsonKey(name: 'properties')
   final GeometryProperty? properties;
-  @JsonKey(name: "geometry")
+  @JsonKey(name: 'geometry')
   final Geometry? geometry;
 
   Feature({this.type, this.properties, this.geometry});
@@ -81,9 +81,9 @@ class Feature {
 @JsonSerializable()
 @CopyWith()
 class Geometry {
-  @JsonKey(name: "type", unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  @JsonKey(name: 'type', unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final GeometryType? type;
-  @JsonKey(name: "coordinates")
+  @JsonKey(name: 'coordinates')
   final List<double>? coordinates;
 
   Geometry({this.type, this.coordinates});
@@ -109,11 +109,11 @@ class Geometry {
 @CopyWith()
 class GeometryProperty {
   @JsonKey(
-    name: "point_type",
+    name: 'point_type',
     unknownEnumValue: JsonKey.nullForUndefinedEnumValue,
   )
   final GeometryPropertyType? pointType;
-  @JsonKey(name: "radius")
+  @JsonKey(name: 'radius')
   final double? radius;
 
   GeometryProperty({this.pointType, this.radius});

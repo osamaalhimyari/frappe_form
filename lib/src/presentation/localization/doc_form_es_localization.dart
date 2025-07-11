@@ -4,7 +4,7 @@ import 'package:frappe_form/src/presentation/localization/doc_form_base_localiza
 
 /// Spanish localizations
 class DocFormEsLocalization extends DocFormBaseLocalization {
-  DocFormEsLocalization() : super(Locale('es', 'ES'));
+  DocFormEsLocalization() : super(const Locale('es', 'ES'));
 
   @override
   String get btnSubmit => 'Enviar';

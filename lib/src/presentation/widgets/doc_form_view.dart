@@ -208,10 +208,10 @@ class DocFormViewState extends State<DocFormView>
       Tab(text: fieldBundle.field.title);
   void onTabTap(int index) {
     if (index == tabIndex.value) {
-      Future.delayed(Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 100), () {
         scrollController.animateTo(
           0,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       });
@@ -323,7 +323,7 @@ class DocFormViewState extends State<DocFormView>
           backgroundColor: canGoNext ? null : theme.disabledColor,
           foregroundColor: canGoNext ? null : theme.disabledColor,
           onPressed: canGoNext ? onNextTab : null,
-          child: Icon(Icons.arrow_forward_ios_rounded),
+          child: const Icon(Icons.arrow_forward_ios_rounded),
         ),
       );
 
@@ -335,7 +335,7 @@ class DocFormViewState extends State<DocFormView>
           backgroundColor: canGoBack ? null : theme.disabledColor,
           foregroundColor: canGoBack ? null : theme.disabledColor,
           onPressed: canGoBack ? onPreviousTab : null,
-          child: Icon(Icons.arrow_back_ios_new_rounded),
+          child: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       );
 
@@ -348,7 +348,7 @@ class DocFormViewState extends State<DocFormView>
       child: ListView.builder(
         controller: controller,
         addAutomaticKeepAlives: true,
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(
           top: 16,
           left: 16,
@@ -358,11 +358,11 @@ class DocFormViewState extends State<DocFormView>
         // shrinkWrap: true,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemBuilder: (context, index) {
-          return fieldBundle.children?[index].view;
+          return fieldBundle.children[index].view;
         },
         // separatorBuilder: (context, index) =>
         //     const SizedBox(height: 24.0),
-        itemCount: fieldBundle.children?.length,
+        itemCount: fieldBundle.children.length,
       ),
     );
   }
@@ -374,7 +374,7 @@ class DocFormViewState extends State<DocFormView>
     );
     if (isLoading) return loadingView;
     final view = switch (tabsCount) {
-      0 => Center(child: Text('No form available')),
+      0 => const Center(child: Text('No form available')),
       _ => TabBarView(controller: tabController, children: tabContentViews),
     };
 
@@ -421,7 +421,7 @@ class DocFormViewState extends State<DocFormView>
       }
       tempOffset += fieldBundle.controller.size.height;
       if (fieldBundle.children.isNotEmpty) {
-        final result = validateRecursive(fieldBundles: fieldBundle.children!);
+        final result = validateRecursive(fieldBundles: fieldBundle.children);
         if (!result.isValid && isValid) {
           isValid = false;
           indexOffset += result.offset;

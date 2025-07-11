@@ -6,12 +6,10 @@ class DocFieldGroupController {
 
   List<DocField> generateGroups(DocForm form) {
     form.sortFields();
-    List<DocField> fields = form.fields;
-
-    // Clear all the children of the fields to start fresh
-    for (final field in form.fields) {
-      field.children.clear();
-    }
+    // Create a copy of the fields to avoid modifying the original form
+    // and clear the children of each field to start fresh
+    List<DocField> fields =
+        form.fields.map((field) => field.copyWith()..children.clear()).toList();
 
     List<DocField> parentGroups = [];
     try {
@@ -197,13 +195,13 @@ class DocFieldGroupController {
     List<DocField> fieldsOfGroup = [];
     for (int i = groupIndex; i < fields.length; ++i) {
       DocField field = fields[i];
-      // If the current field type is groupType we are looking for, then start
-      // searching for the group fields at the next index
+      // If the current field type is the groupType we are looking for,
+      // then start searching for the group fields at the next index
       if (groupType == null || field.type == groupType) {
         for (int j = groupType == null ? i : i + 1; j < fields.length; ++j) {
           field = fields[j];
           // While the current field type is not a Group Type means it belongs
-          // to the groupType we are searching, so we added to the list
+          // to the groupType we are searching, so we add it to the list
           // otherwise we break the loop
           // There are special cases where a Group Type can have another
           // Group Type as a child, in that case add the field to the list and

@@ -324,10 +324,15 @@ class DocFormController {
             dependsOnController: dependsOnController,
           );
           break;
+        case FieldType.table:
+          fieldView = DocFieldTableView(
+            field: field,
+            dependsOnController: dependsOnController,
+          );
+          break;
         //TODO: pending implementation
         case FieldType.link:
         case FieldType.dynamicLink:
-        case FieldType.table:
         case FieldType.barcode:
         case FieldType.button:
         case FieldType.code:
@@ -415,16 +420,48 @@ class DocFormController {
   }) async {
     List<DocFieldAnswer> fieldAnswers = [];
     for (final fieldBundle in fieldBundles) {
-      final fieldAnswer = await generateFieldAnswer(fieldBundle);
-      if (fieldAnswer != null) {
-        fieldAnswers.add(fieldAnswer);
+      if (fieldBundle.field.type == FieldType.table) {
+        final tableFieldAnswer = await generateTableFieldAnswer(
+          fieldBundle: fieldBundle,
+        );
+        if (tableFieldAnswer != null) {
+          fieldAnswers.add(tableFieldAnswer);
+        }
+      } else {
+        final fieldAnswer = await generateFieldAnswer(fieldBundle);
+        if (fieldAnswer != null) {
+          fieldAnswers.add(fieldAnswer);
+        }
+        fieldAnswers.addAll(
+          await generateFieldAnswers(fieldBundles: fieldBundle.children),
+        );
       }
-      fieldAnswers.addAll(
-        await generateFieldAnswers(fieldBundles: fieldBundle.children ?? []),
-      );
     }
 
     return fieldAnswers;
+  }
+
+  Future<DocFieldAnswer?> generateTableFieldAnswer({
+    required DocFieldBundle fieldBundle,
+  }) async {
+    if (fieldBundle.field.type != FieldType.table) {
+      return generateFieldAnswer(fieldBundle);
+    }
+    List<List<DocFieldAnswer>> fieldAnswersLists = [];
+    for (final fieldBundle in fieldBundle.view.childrenBundles) {
+      List<DocFieldAnswer> fieldAnswers = await generateFieldAnswers(
+        fieldBundles: [fieldBundle],
+      );
+      if (fieldAnswers.isNotEmpty) {
+        fieldAnswersLists.add(fieldAnswers);
+      }
+    }
+
+    return DocFieldAnswer(
+      type: fieldBundle.field.type,
+      name: fieldBundle.field.fieldName,
+      value: fieldAnswersLists,
+    );
   }
 
   Future<DocFieldAnswer?> generateFieldAnswer(

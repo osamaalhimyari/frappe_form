@@ -35,9 +35,9 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | Currency | :white_check_mark: |
 | Rating | :white_check_mark: |
 | Heading | :white_check_mark: |
+| Table | :white_check_mark: |  _(relies on having a `child_table` property that contains the JSON DocType definition of the referenced DocType)_  
 | Link | :ballot_box_with_check: |  
 | Dynamic Link | :ballot_box_with_check: |  
-| Table | :ballot_box_with_check: |  
 | Barcode | :ballot_box_with_check: |  
 | Button | :ballot_box_with_check: |  
 | Code | :ballot_box_with_check: |  

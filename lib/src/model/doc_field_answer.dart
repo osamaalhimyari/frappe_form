@@ -12,10 +12,53 @@ class DocFieldAnswer {
 
   DocFieldAnswer({required this.type, this.name, this.value});
 
+  // List<Map<String, dynamic>> _toAnswerMap(List items) {
+  //   if(items.isEmpty) return [];
+  //   List<Map<String, dynamic>> mapList = [];
+  //   for (var item in value as List) {
+  //     final result = _toAnswerMap(item);
+  //     if(result.isEmpty) continue;
+  //     mapList.add(result);
+  //   }
+  //
+  //   return {};
+  // }
+
   Map<String, dynamic> toAnswerMap() {
     if (name.isEmpty || (value?.toString().isEmpty ?? true)) {
       return {};
     }
-    return {name!: (value?.toString().isEmpty ?? true) ? null : value};
+    dynamic valueParsed;
+    if (value is List) {
+      List<Map<String, dynamic>> mapList = [];
+      for (var item in value as List) {
+        if (item == null) continue;
+        if (item is List<DocFieldAnswer>) {
+          Map<String, dynamic> itemMap = {};
+          for (final itemField in item) {
+            final mapValue = itemField.toAnswerMap();
+            if (mapValue.isEmpty) continue;
+            itemMap.addAll(mapValue);
+          }
+          if (itemMap.isNotEmpty) {
+            mapList.add(itemMap);
+          }
+        } else if (item is DocFieldAnswer) {
+          final mapValue = item.toAnswerMap();
+          if (mapValue.isEmpty) continue;
+          mapList.add(mapValue);
+        } else if (item is Map<String, dynamic>) {
+          if (item.isEmpty) continue;
+          mapList.add(item);
+        }
+      }
+      if (mapList.isNotEmpty) {
+        valueParsed = mapList;
+      }
+    } else {
+      valueParsed = value;
+    }
+    if (valueParsed == null) return {};
+    return {name!: valueParsed};
   }
 }
