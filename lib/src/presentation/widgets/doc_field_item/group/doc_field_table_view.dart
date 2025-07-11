@@ -7,6 +7,7 @@ class DocFieldTableView extends DocFieldView {
     super.key,
     required super.field,
     super.children,
+    super.childrenBundles,
     super.dependsOnController,
   }) : super(controller: DummyController());
 
@@ -147,11 +148,11 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   }
 
   Future<void> onAdd() async {
-    // Get the all the children from the child table as DocFieldBundle
+    // Get all the children from the child table as DocFieldBundle
     List<DocFieldBundle> childrenFieldBundles =
         await docFormController.buildFormFields(field.childForm ?? DocForm());
 
-    // Get the first child bundle if it exists, a Child Table must only have one Parent Group
+    // Get the first child bundle if exists, a Child Table must only have one Parent Group which must be a Tab Break
     final DocFieldBundle? parentChildBundle = childrenFieldBundles.firstOrNull;
 
     // Get the children of the parent bundle, we ignore the parent bundle itself, because we only want the children, so no Tabs will be rendered here.

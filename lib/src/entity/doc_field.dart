@@ -5,6 +5,7 @@ import 'package:frappe_form/src/entity/doc_form.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
 import 'package:frappe_form/src/entity/enumerator/field_type.dart';
+import 'package:frappe_form/src/logic/utils/iterable_utils.dart';
 import 'package:frappe_form/src/logic/utils/num_utils.dart';
 import 'package:frappe_form/src/logic/utils/text_utils.dart';
 import 'package:frappe_form/src/model/depends_on_eval.dart';
@@ -124,7 +125,11 @@ class DocField extends DocType {
   })  : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
         fieldType = fieldType ?? type?.name,
         children = children ?? [],
-        optionsAsList = options?.split('\n').toList() ?? [],
+        optionsAsList = options
+                ?.split('\n')
+                .mapWhere((item) => item, (item) => item.isNotEmpty)
+                .toList() ??
+            [],
         dependsOnEvalList = DependsOnEval.fromExpression(dependsOn),
         initialAsDateTime = DateTime.tryParse('$initial'),
         childForm = DocForm.fromJsonObject(childTable);

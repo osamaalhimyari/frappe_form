@@ -19,10 +19,10 @@ abstract class DocFieldView extends StatefulWidget {
     required this.controller,
     required this.field,
     List<DocFieldView>? children,
-    List<DocFieldBundle>? childrenBundle,
+    List<DocFieldBundle>? childrenBundles,
     this.dependsOnController,
   })  : children = children ?? <DocFieldView>[],
-        childrenBundles = childrenBundle ?? <DocFieldBundle>[] {
+        childrenBundles = childrenBundles ?? <DocFieldBundle>[] {
     initController();
   }
 
