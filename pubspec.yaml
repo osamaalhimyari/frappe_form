@@ -1,6 +1,6 @@
 name: frappe_form
 description: "A library to render Frappe DocForm and generate a response"
-version: 0.4.0
+version: 0.4.1
 repository: https://github.com/luis901101/frappe_form
 issue_tracker: https://github.com/luis901101/frappe_form/issues
 topics:
@@ -18,7 +18,7 @@ dependencies:
   collection: ^1.19.1
   shimmer: ^3.0.0
   flutter_rating_bar: ^4.0.1
-  html_editor_enhanced: ^2.7.0
+  html_editor_enhanced: ^2.7.1
   intl: '>=0.19.0 <1.0.0'
   intl_phone_field: ^3.2.0
   validators: ^3.0.0

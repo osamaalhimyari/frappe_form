@@ -51,7 +51,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   List<DocFieldBundle> get childrenBundles => widget.childrenBundles;
 
   bool get isReadOnly => field.isReadOnly;
-  int? get maxLength => field.maxLength;
+  int? get maxLength => widget.maxLength;
   @override
   bool get wantKeepAlive => false;
 

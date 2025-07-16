@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.4.1
+### Fixed
+- Fixed `maxLength` validation to 140 chars max for `Data` field _(according to official docs)_ when no `length` is specified.
+
 ## 0.4.0
 ### Added
 - Added support for new field `Table`.
