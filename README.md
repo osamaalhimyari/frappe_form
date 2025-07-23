@@ -53,11 +53,13 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | JSON | :ballot_box_with_check: |  
 
 ## Supported extra features
-1. Depends on evaluations
-2. Required fields
-3. Read only fields
-4. Description
-5. Default value
+1. **Mandatory Depends On (JS)** expressions for validations
+2. **Read Only Depends On (JS)** expressions for validations
+3. **Display Depends On (JS)** expressions for validations
+4. Required fields
+5. Read only fields
+6. Description
+7. Default value
 
 
 ## How to use
