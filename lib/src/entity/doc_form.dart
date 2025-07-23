@@ -28,7 +28,6 @@ class DocForm extends DocType {
     super.module,
     super.sortField,
     super.sortOrder,
-    super.readOnly,
     super.maxAttachments,
     super.isSubmittable,
     super.showTitleFieldInLink,

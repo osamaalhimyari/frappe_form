@@ -91,6 +91,7 @@ class DocFieldSelectViewState<SF extends DocFieldSelectView>
         CustomDropDownButtonFormField.buildDropDown<String>(
           controller: controller,
           values: values,
+          disabled: isReadOnly,
           onChanged: onSelectedValueChanged,
           nameResolver: valueNameResolver,
         ),

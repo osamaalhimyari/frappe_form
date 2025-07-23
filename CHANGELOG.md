@@ -9,6 +9,17 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.5.0
+### Added
+- Added support for **Mandatory Depends On (JS)** expressions in fields _(`mandatory_depends_on` property)_.
+- Added support for **Read Only Depends On (JS)** expressions in fields _(`read_only_depends_on` property)_.
+
+### Changed
+- Improved support for **Display Depends On (JS)** expressions in fields _(`depends_on` property)_.
+
+### Fixed
+- Fixed issue with content scrolling to ensure submit button to properly appear show up.
+
 ## 0.4.1
 ### Fixed
 - Fixed `maxLength` validation to 140 chars max for `Data` field _(according to official docs)_ when no `length` is specified.

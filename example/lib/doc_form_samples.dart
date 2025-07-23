@@ -30,11 +30,12 @@ class DocFormSamples {
       "date",
       "time",
       "date_time",
-      "dropdown_tab",
+      "select_tab",
       "section_break_cwwe",
       "autocomplete",
       "select",
       "check_liked_option_3",
+      "select_how_much",
       "tab_4_tab",
       "section_break_viat",
       "attach",
@@ -42,16 +43,20 @@ class DocFormSamples {
       "miscellaneous",
       "section_break_omsq",
       "rating",
-      "check",
+      "check_1",
+      "check_2",
+      "check_3",
+      "none_of_the_above_check",
+      "none_of_the_above_text",
       "geolocation",
       "custom_fields_tab",
-      "photos_gallery_section",
+      "gallery_section",
       "photo_1",
       "photo_2",
       "photo_3",
-      "photo_4",
-      "photo_5",
-      "photo_6",
+      "video_1",
+      "video_2",
+      "video_3",
       "place",
       "location",
       "place_data",
@@ -175,9 +180,9 @@ class DocFormSamples {
         "label": "Date time"
       },
       {
-        "fieldname": "dropdown_tab",
+        "fieldname": "select_tab",
         "fieldtype": "Tab Break",
-        "label": "Dropdown"
+        "label": "Select"
       },
       {
         "description": "A section with multiple dropdowns",
@@ -204,6 +209,13 @@ class DocFormSamples {
         "fieldname": "check_liked_option_3",
         "fieldtype": "Check",
         "label": "Liked option 3?"
+      },
+      {
+        "depends_on": "eval:doc.check_liked_option_3==1 && doc.select=='Option 3'",
+        "fieldname": "select_how_much",
+        "fieldtype": "Select",
+        "label": "How much",
+        "options": "Little bit\nNormal\nToo much"
       },
       {
         "fieldname": "tab_4_tab",
@@ -242,9 +254,38 @@ class DocFormSamples {
       },
       {
         "default": "0",
-        "fieldname": "check",
+        "fieldname": "check_1",
         "fieldtype": "Check",
-        "label": "Check"
+        "label": "Check 1",
+        "read_only_depends_on": "eval:doc.none_of_the_above_check == 1"
+      },
+      {
+        "default": "0",
+        "fieldname": "check_2",
+        "fieldtype": "Check",
+        "label": "Check 2",
+        "read_only_depends_on": "eval:doc.none_of_the_above_check == 1"
+      },
+      {
+        "default": "0",
+        "fieldname": "check_3",
+        "fieldtype": "Check",
+        "label": "Check 3",
+        "read_only_depends_on": "eval:doc.none_of_the_above_check == 1"
+      },
+      {
+        "default": "0",
+        "description": "Check this to test dependency eval: display, read only and mandatory",
+        "fieldname": "none_of_the_above_check",
+        "fieldtype": "Check",
+        "label": "None of the above"
+      },
+      {
+        "depends_on": "eval:doc.none_of_the_above_check == 1",
+        "fieldname": "none_of_the_above_text",
+        "fieldtype": "Small Text",
+        "label": "Your own answer",
+        "mandatory_depends_on": "eval:doc.none_of_the_above_check == 1"
       },
       {
         "fieldname": "geolocation",
@@ -257,9 +298,9 @@ class DocFormSamples {
         "label": "Custom fields"
       },
       {
-        "fieldname": "photos_gallery_section",
+        "fieldname": "gallery_section",
         "fieldtype": "Section Break",
-        "label": "Photos Gallery",
+        "label": "Photos and Video Gallery",
         "options": "{\n    \"type\": \"GALLERY\"\n}"
       },
       {
@@ -269,28 +310,31 @@ class DocFormSamples {
       },
       {
         "fieldname": "photo_2",
-        "fieldtype": "Attach Image",
+        "fieldtype": "Attach",
         "label": "Photo 2"
       },
       {
         "fieldname": "photo_3",
-        "fieldtype": "Attach Image",
+        "fieldtype": "Attach",
         "label": "Photo 3"
       },
       {
-        "fieldname": "photo_4",
-        "fieldtype": "Attach Image",
-        "label": "Photo 4"
+        "fieldname": "video_1",
+        "fieldtype": "Attach",
+        "label": "Video 1",
+        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
       },
       {
-        "fieldname": "photo_5",
-        "fieldtype": "Attach Image",
-        "label": "Photo 5"
+        "fieldname": "video_2",
+        "fieldtype": "Attach",
+        "label": "Video 2",
+        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
       },
       {
-        "fieldname": "photo_6",
-        "fieldtype": "Attach Image",
-        "label": "Photo 6"
+        "fieldname": "video_3",
+        "fieldtype": "Attach",
+        "label": "Video 3",
+        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
       },
       {
         "fieldname": "place",
@@ -348,7 +392,7 @@ class DocFormSamples {
           "fields": [
             {
               "fieldname": "ingredient",
-              "fieldtype": "Data",
+              "fieldtype": "Small Text",
               "in_list_view": 1,
               "label": "Ingredient"
             },
@@ -367,7 +411,7 @@ class DocFormSamples {
           "index_web_pages_for_search": 1,
           "istable": 1,
           "links": [],
-          "modified": "2025-06-26 13:11:20.657458",
+          "modified": "2025-07-16 14:37:15.069235",
           "modified_by": "Administrator",
           "module": "Culinary Forms",
           "name": "Recipe Evaluation Ingredients",
@@ -415,13 +459,13 @@ class DocFormSamples {
             {
               "fieldname": "section_break_mtto",
               "fieldtype": "Section Break",
-              "options": "{\n\"type\": \"GALLERY\"\n}"
+              "options": "{\n\"type\": \"GALLERY\", \n     \"maxCount\": 1\n}"
             }
           ],
           "index_web_pages_for_search": 1,
           "istable": 1,
           "links": [],
-          "modified": "2025-07-10 16:14:36.937022",
+          "modified": "2025-07-14 13:13:11.443549",
           "modified_by": "Administrator",
           "module": "Culinary Forms",
           "name": "Recipe Evaluation Media Uploads",
@@ -435,11 +479,11 @@ class DocFormSamples {
     ],
     "index_web_pages_for_search": 1,
     "links": [],
-    "modified": "2025-07-10 07:45:09.999743",
-    "modified_by": "user@mail.com",
+    "modified": "2025-07-23 10:49:15.127673",
+    "modified_by": "luis@flckn.com",
     "module": "Culinary Forms",
     "name": "FieldTest",
-    "owner": "user@mail.com",
+    "owner": "luis@flckn.com",
     "permissions": [
       {
         "create": 1,

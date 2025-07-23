@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:frappe_form/frappe_form.dart';
 
@@ -14,11 +13,10 @@ class DocFormController {
   /// [DocFieldView] widgets.
   ///
   /// [dependsOnController] needs to be passed to the returned [DocFieldView]
-  /// otherwise the dependsOn functionality of for that DocField will not work.
+  /// otherwise the dependsOn functionality for that DocField will not work.
   /// assuming that form item has dependsOn values
   Future<DocFieldView?> Function(
     DocField field,
-    DocFieldDependsOnController? dependsOnController,
     Future<Attachment?> Function()? onAttachmentLoaded,
   )? onBuildFieldView;
 
@@ -40,12 +38,42 @@ class DocFormController {
         fields: fieldGroups,
         onAttachmentLoaded: onAttachmentLoaded,
       );
+      handleDependsOnLogic(fieldBundles: fieldBundles);
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
     return fieldBundles;
+  }
+
+  void handleDependsOnLogic({required List<DocFieldBundle> fieldBundles}) {
+    for (final fieldBundle in fieldBundles) {
+      handleDependsOnLogicRecursively(
+          fieldBundle: fieldBundle, fieldBundles: fieldBundles);
+    }
+  }
+
+  void handleDependsOnLogicRecursively(
+      {required DocFieldBundle fieldBundle,
+      required List<DocFieldBundle> fieldBundles}) {
+    fieldBundle.view.dependsOnController.requiredDependsOn =
+        DocFieldDependsOnBundle.fromExpression(
+            fieldBundle.field.requiredDependsOn, fieldBundles);
+    fieldBundle.view.dependsOnController.readOnlyDependsOn =
+        DocFieldDependsOnBundle.fromExpression(
+            fieldBundle.field.readOnlyDependsOn, fieldBundles);
+    fieldBundle.view.dependsOnController.visibilityDependsOn =
+        DocFieldDependsOnBundle.fromExpression(
+            fieldBundle.field.visibilityDependsOn, fieldBundles);
+    for (final fieldChild in fieldBundle.children) {
+      handleDependsOnLogicRecursively(
+          fieldBundle: fieldChild, fieldBundles: fieldBundles);
+    }
+    for (final fieldChild in fieldBundle.view.childrenBundles) {
+      handleDependsOnLogicRecursively(
+          fieldBundle: fieldChild, fieldBundles: fieldBundles);
+    }
   }
 
   Future<List<DocFieldBundle>> buildFormFieldBundles({
@@ -58,18 +86,9 @@ class DocFormController {
     try {
       for (int i = 0; i < fields.length; i++) {
         final field = fields[i];
-        DocFieldDependsOnController? dependsOnController =
-            getDependsOnController(
-          item: field,
-          itemBundles: [
-            ...(alreadyBuiltFieldBundles ?? []),
-            ...fieldBundles,
-          ],
-        );
 
         final fieldBundle = await buildFormFieldBundle(
           field: field,
-          dependsOnController: dependsOnController,
           onAttachmentLoaded: onAttachmentLoaded,
           groupId: groupId,
           alreadyBuiltItemBundles: [
@@ -89,42 +108,8 @@ class DocFormController {
     return fieldBundles;
   }
 
-  DocFieldDependsOnController? getDependsOnController({
-    required DocField item,
-    required List<DocFieldBundle> itemBundles,
-  }) {
-    DocFieldDependsOnController? controller;
-    if (item.dependsOnEvalList.isNotEmpty) {
-      List<DocFieldDependsOnBundle> list = [];
-      for (final dependsOnEval in item.dependsOnEvalList) {
-        final controller = itemBundles
-            .firstWhereOrNull(
-              (itemBundle) =>
-                  itemBundle.field.fieldName == dependsOnEval.fieldName,
-            )
-            ?.controller;
-        if (controller == null) {
-          continue;
-        }
-        list.add(
-          DocFieldDependsOnBundle(
-            controller: controller,
-            operator: dependsOnEval.operator,
-            expectedAnswer: dependsOnEval.expectedAnswer,
-          ),
-        );
-      }
-      if (list.isNotEmpty) {
-        controller = DocFieldDependsOnController(dependsOnBundleList: list);
-      }
-    }
-
-    return controller;
-  }
-
   Future<DocFieldBundle?> buildFormFieldBundle({
     required DocField field,
-    DocFieldDependsOnController? dependsOnController,
     Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltItemBundles,
@@ -145,7 +130,6 @@ class DocFormController {
 
     fieldView = await onBuildFieldView?.call(
       field,
-      dependsOnController,
       onAttachmentLoaded,
     );
 
@@ -154,97 +138,81 @@ class DocFormController {
         case FieldType.data:
           fieldView = DocFieldDataView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.text:
           fieldView = DocFieldTextView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.smallText:
           fieldView = DocFieldSmallTextView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.longText:
           fieldView = DocFieldLongTextView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.textEditor:
           fieldView = DocFieldTextEditorView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.markdownEditor:
           fieldView = DocFieldMarkdownEditorView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.int:
           fieldView = DocFieldIntView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.float:
           fieldView = DocFieldFloatView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.percent:
           fieldView = DocFieldPercentView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.currency:
           fieldView = DocFieldCurrencyView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.check:
           fieldView = DocFieldCheckView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.select:
           fieldView = DocFieldSelectView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.autocomplete:
           fieldView = DocFieldAutocompleteView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.phone:
           fieldView = DocFieldPhoneView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.password:
           fieldView = DocFieldPasswordView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.geolocation:
           fieldView = DocFieldGeolocationView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.date:
@@ -252,7 +220,6 @@ class DocFormController {
         case FieldType.dateTime:
           fieldView = DocFieldDateTimeView(
             field: field,
-            dependsOnController: dependsOnController,
             type: DateTimeType.fromFieldType(fieldType),
           );
           break;
@@ -261,26 +228,22 @@ class DocFormController {
           fieldView = DocFieldAttachmentView(
             field: field,
             onAttachmentLoaded: onAttachmentLoaded,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.heading:
           fieldView = DocFieldHeadingView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.tabBreak:
           fieldView = DocFieldTabView(
             field: field,
-            dependsOnController: dependsOnController,
             children: children.map((itemBundle) => itemBundle.view).toList(),
           );
           break;
         case FieldType.columnBreak:
           fieldView = DocFieldColumnView(
             field: field,
-            dependsOnController: dependsOnController,
             children: children.map((itemBundle) => itemBundle.view).toList(),
           );
           break;
@@ -314,20 +277,17 @@ class DocFormController {
           }
           fieldView = DocFieldSectionView(
             field: field,
-            dependsOnController: dependsOnController,
             children: finalChildrenViews,
           );
           break;
         case FieldType.rating:
           fieldView = DocFieldRatingView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         case FieldType.table:
           fieldView = DocFieldTableView(
             field: field,
-            dependsOnController: dependsOnController,
           );
           break;
         //TODO: pending implementation
@@ -351,37 +311,31 @@ class DocFormController {
         // case FieldType.quantity:
         //   itemView = DocFieldQuantityView(
         //     item: item,
-        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.boolean:
         //   fieldView = DocFieldBooleanView(
         //     field: field,
-        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.checkOpen:
         //   fieldView = DocFieldCheckOpenView(
         //     field: field,
-        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.radioOpen:
         //   fieldView = DocFieldRadioOpenView(
         //     field: field,
-        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.selectOpen:
         //   fieldView = DocFieldSelectOpenView(
         //     field: field,
-        //     dependsOnController: dependsOnController,
         //   );
         //   break;
         // case FieldType.url:
         //   fieldView = DocFieldUrlView(
         //     field: field,
-        //     dependsOnController: dependsOnController,
         //   );
         //   break;
       }

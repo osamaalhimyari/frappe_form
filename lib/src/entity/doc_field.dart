@@ -8,7 +8,6 @@ import 'package:frappe_form/src/entity/enumerator/field_type.dart';
 import 'package:frappe_form/src/logic/utils/iterable_utils.dart';
 import 'package:frappe_form/src/logic/utils/num_utils.dart';
 import 'package:frappe_form/src/logic/utils/text_utils.dart';
-import 'package:frappe_form/src/model/depends_on_eval.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'doc_field.g.dart';
@@ -38,16 +37,20 @@ class DocField extends DocType {
   final int? setOnlyOnce;
   @JsonKey(name: 'reqd')
   final int? required;
+  @JsonKey(name: 'mandatory_depends_on')
+  final String? requiredDependsOn;
   @JsonKey(name: 'bold')
   final int? bold;
   @JsonKey(name: 'collapsible')
   final int? collapsible;
   @JsonKey(name: 'unique')
   final int? unique;
+  @JsonKey(name: 'read_only')
+  final int? readOnly;
+  @JsonKey(name: 'read_only_depends_on')
+  final String? readOnlyDependsOn;
   @JsonKey(name: 'depends_on')
-  final String? dependsOn;
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  final List<DependsOnEval> dependsOnEvalList; // Only for cache
+  final String? visibilityDependsOn;
   @JsonKey(name: 'in_list_view')
   final int? inListView;
   @JsonKey(name: 'length')
@@ -87,7 +90,6 @@ class DocField extends DocType {
     super.module,
     super.sortField,
     super.sortOrder,
-    super.readOnly,
     super.maxAttachments,
     super.isSubmittable,
     super.showTitleFieldInLink,
@@ -107,10 +109,13 @@ class DocField extends DocType {
     this.hidden,
     this.setOnlyOnce,
     this.required,
+    this.requiredDependsOn,
     this.bold,
     this.collapsible,
     this.unique,
-    this.dependsOn,
+    this.readOnly,
+    this.readOnlyDependsOn,
+    this.visibilityDependsOn,
     this.inListView,
     this.length,
     this.translatable,
@@ -130,7 +135,6 @@ class DocField extends DocType {
                 .mapWhere((item) => item, (item) => item.isNotEmpty)
                 .toList() ??
             [],
-        dependsOnEvalList = DependsOnEval.fromExpression(dependsOn),
         initialAsDateTime = DateTime.tryParse('$initial'),
         childForm = DocForm.fromJsonObject(childTable);
 
@@ -138,6 +142,8 @@ class DocField extends DocType {
 
   @override
   String get title => label ?? '';
+
+  bool get isReadOnly => readOnly.asBool;
 
   bool get isGroupType => type.isGroup;
 

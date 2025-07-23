@@ -72,9 +72,10 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
       key: ValueKey('phoneController-${controller.hasError}'),
       // controller: phoneController,
       initialValue: initialPhoneNumber,
+      focusNode: controller.focusNode,
+      enabled: !isReadOnly,
       initialCountryCode: phoneCountry?.code,
       textInputAction: TextInputAction.next,
-      focusNode: controller.focusNode,
       onCountryChanged: (country) => phoneCountry = country,
       validator: (phoneNumber) async {
         isValidPhoneNumber = (phoneNumber?.number.isEmpty ?? true) ||

@@ -62,6 +62,7 @@ class DocFieldCheckViewState<SF extends DocFieldCheckView>
       title: Text(field.title),
       value: isSelected,
       onChanged: onSelectedValueChanged,
+      enabled: !isReadOnly,
     );
   }
 }

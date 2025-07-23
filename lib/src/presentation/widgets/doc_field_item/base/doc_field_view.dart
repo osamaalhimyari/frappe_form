@@ -13,25 +13,30 @@ abstract class DocFieldView extends StatefulWidget {
   final DocField field;
   final List<DocFieldView> children;
   final List<DocFieldBundle> childrenBundles;
-  final DocFieldDependsOnController? dependsOnController;
+  final DocFieldDependsOnController dependsOnController;
+  static final ValidationController defaultRequiredFieldValidation =
+      ValidationUtils.requiredFieldValidation;
   DocFieldView({
     super.key,
     required this.controller,
     required this.field,
     List<DocFieldView>? children,
     List<DocFieldBundle>? childrenBundles,
-    this.dependsOnController,
+    DocFieldDependsOnController? dependsOnController,
   })  : children = children ?? <DocFieldView>[],
-        childrenBundles = childrenBundles ?? <DocFieldBundle>[] {
+        childrenBundles = childrenBundles ?? <DocFieldBundle>[],
+        dependsOnController =
+            dependsOnController ?? DocFieldDependsOnController() {
     initController();
   }
 
   bool get isRequired => field.isRequired;
+  bool get isReadOnly => field.isReadOnly;
   int? get maxLength => field.maxLength;
 
   void initController() {
     controller.validations.addAll([
-      if (isRequired) ValidationUtils.requiredFieldValidation,
+      if (isRequired) defaultRequiredFieldValidation,
       if ((maxLength ?? 0) > 0)
         ValidationUtils.maxLengthValidation(maxLength: maxLength!),
     ]);
@@ -41,7 +46,9 @@ abstract class DocFieldView extends StatefulWidget {
 abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     with AutomaticKeepAliveClientMixin {
   ThemeData theme = ThemeData();
-  bool isEnabled = true;
+  bool isRequiredFromDependencies = false;
+  bool isReadOnlyFromDependencies = false;
+  bool isVisibleFromDependencies = true;
   String? lastControllerError;
   FieldController get controller => widget.controller;
   DocFieldDependsOnController? get dependsOnController =>
@@ -50,7 +57,8 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   List<DocFieldView> get children => widget.children;
   List<DocFieldBundle> get childrenBundles => widget.childrenBundles;
 
-  bool get isReadOnly => field.isReadOnly;
+  bool get isRequired => widget.isRequired || isRequiredFromDependencies;
+  bool get isReadOnly => widget.isReadOnly || isReadOnlyFromDependencies;
   int? get maxLength => widget.maxLength;
   @override
   bool get wantKeepAlive => false;
@@ -65,8 +73,18 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     if (handleControllerErrorManually) {
       controller.addListener(onControllerErrorChanged);
     }
-    isEnabled =
-        dependsOnController?.init(onEnabledChangedListener: onEnabled) ?? true;
+    isRequiredFromDependencies =
+        dependsOnController?.listenOnRequiredDependsOnChangesAndCheck(
+                onRequiredFromDependenciesChanged) ??
+            false;
+    isReadOnlyFromDependencies =
+        dependsOnController?.listenOnReadOnlyDependsOnChangesAndCheck(
+                onReadOnlyFromDependenciesChanged) ??
+            false;
+    isVisibleFromDependencies =
+        dependsOnController?.listenOnVisibilityDependsOnChangesAndCheck(
+                onVisibilityFromDependenciesChanged) ??
+            true;
   }
 
   void onControllerErrorChanged() {
@@ -79,9 +97,27 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     }
   }
 
-  void onEnabled(bool enabled) {
-    if (isEnabled != enabled) {
-      setState(() => isEnabled = enabled);
+  void onRequiredFromDependenciesChanged(bool value) {
+    if (isRequiredFromDependencies != value) {
+      if (value) {
+        controller.validations.add(DocFieldView.defaultRequiredFieldValidation);
+      } else {
+        controller.validations
+            .remove(DocFieldView.defaultRequiredFieldValidation);
+      }
+      setState(() => isRequiredFromDependencies = value);
+    }
+  }
+
+  void onReadOnlyFromDependenciesChanged(bool value) {
+    if (isReadOnlyFromDependencies != value) {
+      setState(() => isReadOnlyFromDependencies = value);
+    }
+  }
+
+  void onVisibilityFromDependenciesChanged(bool value) {
+    if (isVisibleFromDependencies != value) {
+      setState(() => isVisibleFromDependencies = value);
     }
   }
 
@@ -160,33 +196,38 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     final titleView = buildTitleView(context);
     final descriptionView = buildDescriptionView(context);
     final errorManuallyView = buildErrorManuallyView(context);
-    return isHidden
-        ? const SizedBox.shrink()
-        : AnimatedSize(
-            duration: const Duration(milliseconds: 300),
-            child: ClipRect(
-              clipBehavior: Clip.hardEdge,
-              child: SizedBox(
-                height: isEnabled ? null : 0,
-                child: SizeRenderer(
-                  onSizeRendered: onSizeRendered,
-                  child: Padding(
-                    padding: defaultPadding,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (titleView != null) titleView,
-                        buildBody(context),
-                        if (descriptionView != null) descriptionView,
-                        if (errorManuallyView != null) errorManuallyView,
-                      ],
-                    ),
-                  ),
-                ),
+    if (isHidden) return const SizedBox.shrink();
+    final view = AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      child: ClipRect(
+        clipBehavior: Clip.hardEdge,
+        child: SizedBox(
+          height: isVisibleFromDependencies ? null : 0,
+          child: SizeRenderer(
+            onSizeRendered: onSizeRendered,
+            child: Padding(
+              padding: defaultPadding,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (titleView != null) titleView,
+                  buildBody(context),
+                  if (descriptionView != null) descriptionView,
+                  if (errorManuallyView != null) errorManuallyView,
+                ],
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
+    return isReadOnly
+        ? IgnorePointer(
+            ignoring: true,
+            child: view,
+          )
+        : view;
   }
 
   void onSizeRendered(Size size, GlobalKey key) {

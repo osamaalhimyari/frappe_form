@@ -23,7 +23,6 @@ export 'package:frappe_form/src/logic/enumerator/doc_field_depends_on_condition.
 export 'package:frappe_form/src/model/doc_field_depends_on_controller.dart';
 export 'package:frappe_form/src/model/doc_field_depends_on_bundle.dart';
 export 'package:frappe_form/src/model/doc_field_bundle.dart';
-export 'package:frappe_form/src/model/depends_on_eval.dart';
 export 'package:frappe_form/src/model/attachment.dart';
 export 'package:frappe_form/src/model/doc_field_answer.dart';
 export 'package:frappe_form/src/presentation/utils/view_utils.dart';

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
-import 'package:frappe_form/src/logic/utils/num_utils.dart';
 import 'package:frappe_form/src/logic/utils/param_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -30,8 +29,6 @@ class DocType with EquatableMixin {
   final String? sortField;
   @JsonKey(name: 'sort_order')
   final String? sortOrder;
-  @JsonKey(name: 'read_only')
-  final int? readOnly;
   @JsonKey(name: 'max_attachments')
   final int? maxAttachments;
   @JsonKey(name: 'is_submittable')
@@ -61,7 +58,6 @@ class DocType with EquatableMixin {
     this.module,
     this.sortField,
     this.sortOrder,
-    this.readOnly,
     this.maxAttachments,
     this.isSubmittable,
     this.showTitleFieldInLink,
@@ -71,8 +67,6 @@ class DocType with EquatableMixin {
     this.docStatus,
     this.description,
   });
-
-  bool get isReadOnly => readOnly.asBool;
 
   String get title => name ?? '';
 

@@ -23,7 +23,6 @@ abstract class _$DocTypeCWProxy {
     String? module,
     String? sortField,
     String? sortOrder,
-    int? readOnly,
     int? maxAttachments,
     int? isSubmittable,
     int? showTitleFieldInLink,
@@ -59,7 +58,6 @@ class _$DocTypeCWProxyImpl implements _$DocTypeCWProxy {
     Object? module = const $CopyWithPlaceholder(),
     Object? sortField = const $CopyWithPlaceholder(),
     Object? sortOrder = const $CopyWithPlaceholder(),
-    Object? readOnly = const $CopyWithPlaceholder(),
     Object? maxAttachments = const $CopyWithPlaceholder(),
     Object? isSubmittable = const $CopyWithPlaceholder(),
     Object? showTitleFieldInLink = const $CopyWithPlaceholder(),
@@ -106,10 +104,6 @@ class _$DocTypeCWProxyImpl implements _$DocTypeCWProxy {
           ? _value.sortOrder
           // ignore: cast_nullable_to_non_nullable
           : sortOrder as String?,
-      readOnly: readOnly == const $CopyWithPlaceholder()
-          ? _value.readOnly
-          // ignore: cast_nullable_to_non_nullable
-          : readOnly as int?,
       maxAttachments: maxAttachments == const $CopyWithPlaceholder()
           ? _value.maxAttachments
           // ignore: cast_nullable_to_non_nullable
@@ -170,7 +164,6 @@ DocType _$DocTypeFromJson(Map<String, dynamic> json) => DocType(
       module: json['module'] as String?,
       sortField: json['sort_field'] as String?,
       sortOrder: json['sort_order'] as String?,
-      readOnly: (json['read_only'] as num?)?.toInt(),
       maxAttachments: (json['max_attachments'] as num?)?.toInt(),
       isSubmittable: (json['is_submittable'] as num?)?.toInt(),
       showTitleFieldInLink: (json['show_title_field_in_link'] as num?)?.toInt(),
@@ -194,7 +187,6 @@ Map<String, dynamic> _$DocTypeToJson(DocType instance) => <String, dynamic>{
       if (instance.module case final value?) 'module': value,
       if (instance.sortField case final value?) 'sort_field': value,
       if (instance.sortOrder case final value?) 'sort_order': value,
-      if (instance.readOnly case final value?) 'read_only': value,
       if (instance.maxAttachments case final value?) 'max_attachments': value,
       if (instance.isSubmittable case final value?) 'is_submittable': value,
       if (instance.showTitleFieldInLink case final value?)

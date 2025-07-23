@@ -83,7 +83,7 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
                       value == null ? 80 : 40,
                     ),
                     child: ElevatedButton.icon(
-                      onPressed: isLoading ? null : onBtnUpload,
+                      onPressed: isReadOnly || isLoading ? null : onBtnUpload,
                       icon: Icon(
                         value == null ? Icons.upload_rounded : Icons.refresh,
                       ),
@@ -110,7 +110,7 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
                     width:
                         value == null ? 0 : mediaQuery.size.width.percent(40),
                     child: ElevatedButton.icon(
-                      onPressed: isLoading ? null : onBtnRemove,
+                      onPressed: isReadOnly || isLoading ? null : onBtnRemove,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.error,
                         foregroundColor: theme.colorScheme.onError,

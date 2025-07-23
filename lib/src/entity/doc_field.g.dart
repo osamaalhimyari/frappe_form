@@ -23,7 +23,6 @@ abstract class _$DocFieldCWProxy {
     String? module,
     String? sortField,
     String? sortOrder,
-    int? readOnly,
     int? maxAttachments,
     int? isSubmittable,
     int? showTitleFieldInLink,
@@ -43,10 +42,13 @@ abstract class _$DocFieldCWProxy {
     int? hidden,
     int? setOnlyOnce,
     int? required,
+    String? requiredDependsOn,
     int? bold,
     int? collapsible,
     int? unique,
-    String? dependsOn,
+    int? readOnly,
+    String? readOnlyDependsOn,
+    String? visibilityDependsOn,
     int? inListView,
     int? length,
     int? translatable,
@@ -85,7 +87,6 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
     Object? module = const $CopyWithPlaceholder(),
     Object? sortField = const $CopyWithPlaceholder(),
     Object? sortOrder = const $CopyWithPlaceholder(),
-    Object? readOnly = const $CopyWithPlaceholder(),
     Object? maxAttachments = const $CopyWithPlaceholder(),
     Object? isSubmittable = const $CopyWithPlaceholder(),
     Object? showTitleFieldInLink = const $CopyWithPlaceholder(),
@@ -105,10 +106,13 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
     Object? hidden = const $CopyWithPlaceholder(),
     Object? setOnlyOnce = const $CopyWithPlaceholder(),
     Object? required = const $CopyWithPlaceholder(),
+    Object? requiredDependsOn = const $CopyWithPlaceholder(),
     Object? bold = const $CopyWithPlaceholder(),
     Object? collapsible = const $CopyWithPlaceholder(),
     Object? unique = const $CopyWithPlaceholder(),
-    Object? dependsOn = const $CopyWithPlaceholder(),
+    Object? readOnly = const $CopyWithPlaceholder(),
+    Object? readOnlyDependsOn = const $CopyWithPlaceholder(),
+    Object? visibilityDependsOn = const $CopyWithPlaceholder(),
     Object? inListView = const $CopyWithPlaceholder(),
     Object? length = const $CopyWithPlaceholder(),
     Object? translatable = const $CopyWithPlaceholder(),
@@ -158,10 +162,6 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
           ? _value.sortOrder
           // ignore: cast_nullable_to_non_nullable
           : sortOrder as String?,
-      readOnly: readOnly == const $CopyWithPlaceholder()
-          ? _value.readOnly
-          // ignore: cast_nullable_to_non_nullable
-          : readOnly as int?,
       maxAttachments: maxAttachments == const $CopyWithPlaceholder()
           ? _value.maxAttachments
           // ignore: cast_nullable_to_non_nullable
@@ -238,6 +238,10 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
           ? _value.required
           // ignore: cast_nullable_to_non_nullable
           : required as int?,
+      requiredDependsOn: requiredDependsOn == const $CopyWithPlaceholder()
+          ? _value.requiredDependsOn
+          // ignore: cast_nullable_to_non_nullable
+          : requiredDependsOn as String?,
       bold: bold == const $CopyWithPlaceholder()
           ? _value.bold
           // ignore: cast_nullable_to_non_nullable
@@ -250,10 +254,18 @@ class _$DocFieldCWProxyImpl implements _$DocFieldCWProxy {
           ? _value.unique
           // ignore: cast_nullable_to_non_nullable
           : unique as int?,
-      dependsOn: dependsOn == const $CopyWithPlaceholder()
-          ? _value.dependsOn
+      readOnly: readOnly == const $CopyWithPlaceholder()
+          ? _value.readOnly
           // ignore: cast_nullable_to_non_nullable
-          : dependsOn as String?,
+          : readOnly as int?,
+      readOnlyDependsOn: readOnlyDependsOn == const $CopyWithPlaceholder()
+          ? _value.readOnlyDependsOn
+          // ignore: cast_nullable_to_non_nullable
+          : readOnlyDependsOn as String?,
+      visibilityDependsOn: visibilityDependsOn == const $CopyWithPlaceholder()
+          ? _value.visibilityDependsOn
+          // ignore: cast_nullable_to_non_nullable
+          : visibilityDependsOn as String?,
       inListView: inListView == const $CopyWithPlaceholder()
           ? _value.inListView
           // ignore: cast_nullable_to_non_nullable
@@ -326,7 +338,6 @@ DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
       module: json['module'] as String?,
       sortField: json['sort_field'] as String?,
       sortOrder: json['sort_order'] as String?,
-      readOnly: (json['read_only'] as num?)?.toInt(),
       maxAttachments: (json['max_attachments'] as num?)?.toInt(),
       isSubmittable: (json['is_submittable'] as num?)?.toInt(),
       showTitleFieldInLink: (json['show_title_field_in_link'] as num?)?.toInt(),
@@ -346,10 +357,13 @@ DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
       hidden: (json['hidden'] as num?)?.toInt(),
       setOnlyOnce: (json['set_only_once'] as num?)?.toInt(),
       required: (json['reqd'] as num?)?.toInt(),
+      requiredDependsOn: json['mandatory_depends_on'] as String?,
       bold: (json['bold'] as num?)?.toInt(),
       collapsible: (json['collapsible'] as num?)?.toInt(),
       unique: (json['unique'] as num?)?.toInt(),
-      dependsOn: json['depends_on'] as String?,
+      readOnly: (json['read_only'] as num?)?.toInt(),
+      readOnlyDependsOn: json['read_only_depends_on'] as String?,
+      visibilityDependsOn: json['depends_on'] as String?,
       inListView: (json['in_list_view'] as num?)?.toInt(),
       length: (json['length'] as num?)?.toInt(),
       translatable: (json['translatable'] as num?)?.toInt(),
@@ -374,7 +388,6 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
       if (instance.module case final value?) 'module': value,
       if (instance.sortField case final value?) 'sort_field': value,
       if (instance.sortOrder case final value?) 'sort_order': value,
-      if (instance.readOnly case final value?) 'read_only': value,
       if (instance.maxAttachments case final value?) 'max_attachments': value,
       if (instance.isSubmittable case final value?) 'is_submittable': value,
       if (instance.showTitleFieldInLink case final value?)
@@ -397,10 +410,15 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
       if (instance.hidden case final value?) 'hidden': value,
       if (instance.setOnlyOnce case final value?) 'set_only_once': value,
       if (instance.required case final value?) 'reqd': value,
+      if (instance.requiredDependsOn case final value?)
+        'mandatory_depends_on': value,
       if (instance.bold case final value?) 'bold': value,
       if (instance.collapsible case final value?) 'collapsible': value,
       if (instance.unique case final value?) 'unique': value,
-      if (instance.dependsOn case final value?) 'depends_on': value,
+      if (instance.readOnly case final value?) 'read_only': value,
+      if (instance.readOnlyDependsOn case final value?)
+        'read_only_depends_on': value,
+      if (instance.visibilityDependsOn case final value?) 'depends_on': value,
       if (instance.inListView case final value?) 'in_list_view': value,
       if (instance.length case final value?) 'length': value,
       if (instance.translatable case final value?) 'translatable': value,

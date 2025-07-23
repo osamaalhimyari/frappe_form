@@ -46,7 +46,7 @@ class DocFieldRatingViewState<SF extends DocFieldRatingView>
       maxRating: 5,
       itemCount: 5,
       direction: Axis.horizontal,
-      ignoreGestures: field.isReadOnly,
+      ignoreGestures: isReadOnly,
       allowHalfRating: true,
       glowColor: Colors.yellow,
       ratingWidget: RatingWidget(

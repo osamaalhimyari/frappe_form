@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
@@ -208,12 +210,20 @@ class DocFormViewState extends State<DocFormView>
       Tab(text: fieldBundle.field.title);
   void onTabTap(int index) {
     if (index == tabIndex.value) {
+      // This delay here is to ensure the current tab has already loaded all content
+      // and scrollController is attached to any scroll views.
       Future.delayed(const Duration(milliseconds: 100), () {
-        scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+        if (scrollController.hasClients) {
+          if (scrollController.offset == 0) {
+            onScrollListener();
+          } else {
+            scrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        }
       });
     }
   }
@@ -348,7 +358,8 @@ class DocFormViewState extends State<DocFormView>
       child: ListView.builder(
         controller: controller,
         addAutomaticKeepAlives: true,
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics()),
         padding: const EdgeInsets.only(
           top: 16,
           left: 16,

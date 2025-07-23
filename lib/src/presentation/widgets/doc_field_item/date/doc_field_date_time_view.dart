@@ -75,7 +75,7 @@ class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
                             DocFormLocalization.instance.localization.textDate,
                       ),
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: openDatePicker,
+                      onPressed: isReadOnly ? null : openDatePicker,
                     );
                   },
                 ),
@@ -93,7 +93,7 @@ class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
                             DocFormLocalization.instance.localization.textTime,
                       ),
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: openTimePicker,
+                      onPressed: isReadOnly ? null : openTimePicker,
                     );
                   },
                 ),
