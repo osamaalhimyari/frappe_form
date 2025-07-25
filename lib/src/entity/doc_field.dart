@@ -71,6 +71,8 @@ class DocField extends DocType {
   final String? precision;
   @JsonKey(name: 'child_table')
   final Object? childTable;
+  @JsonKey(name: 'render_rules')
+  final String? renderRules;
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<DocField> children;
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -126,6 +128,7 @@ class DocField extends DocType {
     this.initial,
     this.precision,
     this.childTable,
+    this.renderRules,
     List<DocField>? children,
   })  : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
         fieldType = fieldType ?? type?.name,

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frappe_form/frappe_form.dart';
 
-/// Created by luis901101 on 04/21/25.
+/// Created by luis901101 on 06/21/25.
 class DocFieldSelectView extends DocFieldView {
   final bool isOpen;
   DocFieldSelectView({
@@ -83,18 +83,20 @@ class DocFieldSelectViewState<SF extends DocFieldSelectView>
   @override
   bool get handleControllerErrorManually => false;
 
+  Widget get selectView => CustomDropDownButtonFormField.buildDropDown<String>(
+        controller: controller,
+        values: values,
+        disabled: isReadOnly,
+        onChanged: onSelectedValueChanged,
+        nameResolver: valueNameResolver,
+      );
+
   @override
   Widget buildBody(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomDropDownButtonFormField.buildDropDown<String>(
-          controller: controller,
-          values: values,
-          disabled: isReadOnly,
-          onChanged: onSelectedValueChanged,
-          nameResolver: valueNameResolver,
-        ),
+        selectView,
         if (isOpen) ...[
           const SizedBox(height: 8.0),
           Padding(

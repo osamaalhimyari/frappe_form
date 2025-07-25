@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.6.0
+### Added
+- Added support for a field custom property `render_rules` to allow custom rendering of fields based on definitions.
+
 ## 0.5.0
 ### Added
 - Added support for **Mandatory Depends On (JS)** expressions in fields _(`mandatory_depends_on` property)_.

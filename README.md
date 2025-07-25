@@ -19,6 +19,7 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | Text Editor | :white_check_mark: |
 | Markdown Editor | :white_check_mark: |
 | Select | :white_check_mark: |
+| RadioGroup | :white_check_mark: _(This is not a Frappe default supported field, this is a custom field that is based on a `Select` field having a custom property `render_rules` with a JSON definition like: `"{\n \"type\": \"RADIO_GROUP\"\n}"`, this will make the `Select` to be rendered as a `RadioGroup`, check the demo. Use the `render_rules` custom property to override any field rendering)_ |
 | Geolocation | :white_check_mark: |
 | Autocomplete | :white_check_mark: |
 | Phone | :white_check_mark: |

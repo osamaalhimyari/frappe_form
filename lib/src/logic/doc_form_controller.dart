@@ -191,9 +191,14 @@ class DocFormController {
           );
           break;
         case FieldType.select:
-          fieldView = DocFieldSelectView(
-            field: field,
-          );
+          final renderRules = RenderRules.tryFromJsonString(field.renderRules);
+          fieldView = renderRules?.type == 'RADIO_GROUP'
+              ? DocFieldRadioGroupView(
+                  field: field,
+                )
+              : DocFieldSelectView(
+                  field: field,
+                );
           break;
         case FieldType.autocomplete:
           fieldView = DocFieldAutocompleteView(

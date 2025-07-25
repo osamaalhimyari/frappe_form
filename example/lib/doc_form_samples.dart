@@ -212,10 +212,13 @@ class DocFormSamples {
       },
       {
         "depends_on": "eval:doc.check_liked_option_3==1 && doc.select=='Option 3'",
+        "description": "This is a Select with a configuration of Render Rules to be rendered as a Radio Group",
         "fieldname": "select_how_much",
         "fieldtype": "Select",
         "label": "How much",
-        "options": "Little bit\nNormal\nToo much"
+        "mandatory_depends_on": "eval:doc.check_liked_option_3==1 && doc.select=='Option 3'",
+        "options": "Little bit\nNormal\nToo much",
+        "render_rules": "{\n   \"type\": \"RADIO_GROUP\"\n}"
       },
       {
         "fieldname": "tab_4_tab",
@@ -301,7 +304,7 @@ class DocFormSamples {
         "fieldname": "gallery_section",
         "fieldtype": "Section Break",
         "label": "Photos and Video Gallery",
-        "options": "{\n    \"type\": \"GALLERY\"\n}"
+        "render_rules": "{\n    \"type\": \"GALLERY\"\n}"
       },
       {
         "fieldname": "photo_1",
@@ -322,25 +325,25 @@ class DocFormSamples {
         "fieldname": "video_1",
         "fieldtype": "Attach",
         "label": "Video 1",
-        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
+        "render_rules": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
       },
       {
         "fieldname": "video_2",
         "fieldtype": "Attach",
         "label": "Video 2",
-        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
+        "render_rules": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
       },
       {
         "fieldname": "video_3",
         "fieldtype": "Attach",
         "label": "Video 3",
-        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
+        "render_rules": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
       },
       {
         "fieldname": "place",
         "fieldtype": "Section Break",
         "label": "Place",
-        "options": "{\n    \"type\": \"PLACE\"\n}"
+        "render_rules": "{\n    \"type\": \"PLACE\"\n}"
       },
       {
         "fieldname": "location",
@@ -360,7 +363,7 @@ class DocFormSamples {
         "fieldname": "video",
         "fieldtype": "Attach",
         "label": "Video",
-        "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 30000\n}"
+        "render_rules": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 30000\n}"
       },
       {
         "fieldname": "tab_table",
@@ -454,18 +457,20 @@ class DocFormSamples {
               "fieldname": "video",
               "fieldtype": "Attach",
               "label": "Video",
-              "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
+              "options": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}",
+              "render_rules": "{\n    \"type\": \"VIDEO\", \n    \"maxDuration\": 60000\n}"
             },
             {
               "fieldname": "section_break_mtto",
               "fieldtype": "Section Break",
-              "options": "{\n\"type\": \"GALLERY\", \n     \"maxCount\": 1\n}"
+              "options": "{\n\"type\": \"GALLERY\", \n     \"maxCount\": 1\n}",
+              "render_rules": "{\n\"type\": \"GALLERY\", \n \"maxCount\": 1\n}"
             }
           ],
           "index_web_pages_for_search": 1,
           "istable": 1,
           "links": [],
-          "modified": "2025-07-14 13:13:11.443549",
+          "modified": "2025-07-24 06:28:47.632072",
           "modified_by": "Administrator",
           "module": "Culinary Forms",
           "name": "Recipe Evaluation Media Uploads",
@@ -479,7 +484,7 @@ class DocFormSamples {
     ],
     "index_web_pages_for_search": 1,
     "links": [],
-    "modified": "2025-07-23 10:49:15.127673",
+    "modified": "2025-07-25 09:12:03.273370",
     "modified_by": "luis@flckn.com",
     "module": "Culinary Forms",
     "name": "FieldTest",
