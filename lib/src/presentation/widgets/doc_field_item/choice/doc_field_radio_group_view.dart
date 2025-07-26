@@ -26,6 +26,8 @@ class DocFieldRadioGroupViewState<SF extends DocFieldRadioGroupView>
         children: values
             .map(
               (value) => RadioListTile<String>(
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
                 title: Text(valueNameResolver(value)),
                 value: value,
                 groupValue: selectedValue,

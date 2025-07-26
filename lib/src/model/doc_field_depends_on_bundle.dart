@@ -91,16 +91,25 @@ class DocFieldDependsOnBundle {
   DocFieldDependsOnBundle withCondition(
       {required DocFieldDependsOnCondition condition,
       required DocFieldDependsOnBundle? value}) {
-    DocFieldDependsOnBundle? and;
-    DocFieldDependsOnBundle? or;
+    DocFieldDependsOnBundle? and = this.and;
+    DocFieldDependsOnBundle? or = this.or;
     switch (condition) {
       case DocFieldDependsOnCondition.and:
-        and = value;
+        and = and?.withCondition(
+              condition: condition,
+              value: value,
+            ) ??
+            value;
         break;
       case DocFieldDependsOnCondition.or:
-        or = value;
+        or = or?.withCondition(
+              condition: condition,
+              value: value,
+            ) ??
+            value;
         break;
     }
+
     return DocFieldDependsOnBundle(
       fieldName: fieldName,
       controller: controller,
@@ -131,6 +140,7 @@ class DocFieldDependsOnBundle {
     String expression,
     List<DocFieldBundle> itemBundles,
   ) {
+    DocFieldDependsOnBundle? field;
     for (final condition in DocFieldDependsOnCondition.values) {
       final conditionExpression = expression.split(condition.name);
       if (conditionExpression.length > 1) {
@@ -152,12 +162,19 @@ class DocFieldDependsOnBundle {
                   field2;
             }
           }
+          if (field == null) {
+            field = field1;
+          } else {
+            field = field.withCondition(
+              condition: condition,
+              value: field1,
+            );
+          }
         }
-        return field1;
       }
     }
-    // If no conditions found, then we assume it's a simple expression
-    return _fromSimpleExpression(expression, itemBundles);
+
+    return field ??= _fromSimpleExpression(expression, itemBundles);
   }
 
   static DocFieldDependsOnBundle? _fromSimpleExpression(

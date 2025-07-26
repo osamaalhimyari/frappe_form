@@ -9,6 +9,11 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.6.1
+### Fixed
+- Fixed minor UI issue with `RadioGroup`
+- Fixed issue with JS expressions parser.
+
 ## 0.6.0
 ### Added
 - Added support for a field custom property `render_rules` to allow custom rendering of fields based on definitions.

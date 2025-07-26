@@ -43,12 +43,13 @@ class DocFormSamples {
       "miscellaneous",
       "section_break_omsq",
       "rating",
+      "geolocation",
+      "section_with_depends",
       "check_1",
       "check_2",
       "check_3",
       "none_of_the_above_check",
       "none_of_the_above_text",
-      "geolocation",
       "custom_fields_tab",
       "gallery_section",
       "photo_1",
@@ -256,6 +257,17 @@ class DocFormSamples {
         "label": "Rating"
       },
       {
+        "fieldname": "geolocation",
+        "fieldtype": "Geolocation",
+        "label": "Geolocation"
+      },
+      {
+        "fieldname": "section_with_depends",
+        "fieldtype": "Section Break",
+        "label": "Section with Depends",
+        "mandatory_depends_on": "eval:doc.none_of_the_above_check == 0 && doc.check_1 == 0 && doc.check_2 == 0 && doc.check_3 == 0"
+      },
+      {
         "default": "0",
         "fieldname": "check_1",
         "fieldtype": "Check",
@@ -289,11 +301,6 @@ class DocFormSamples {
         "fieldtype": "Small Text",
         "label": "Your own answer",
         "mandatory_depends_on": "eval:doc.none_of_the_above_check == 1"
-      },
-      {
-        "fieldname": "geolocation",
-        "fieldtype": "Geolocation",
-        "label": "Geolocation"
       },
       {
         "fieldname": "custom_fields_tab",
@@ -484,11 +491,11 @@ class DocFormSamples {
     ],
     "index_web_pages_for_search": 1,
     "links": [],
-    "modified": "2025-07-25 09:12:03.273370",
-    "modified_by": "luis@flckn.com",
+    "modified": "2025-07-25 17:40:03.222007",
+    "modified_by": "user@mail.com",
     "module": "Culinary Forms",
     "name": "FieldTest",
-    "owner": "luis@flckn.com",
+    "owner": "user@mail.com",
     "permissions": [
       {
         "create": 1,

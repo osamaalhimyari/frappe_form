@@ -254,7 +254,7 @@ enum FieldType {
         _ => false,
       };
 
-  bool get isParentGroupType => this == FieldType.tabBreak;
+  bool get isParentGroup => this == FieldType.tabBreak;
 
   static FieldType? valueOf(String? name) =>
       FieldType.values.firstWhereOrNull((value) => value.name == name);

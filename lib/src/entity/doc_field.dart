@@ -150,7 +150,7 @@ class DocField extends DocType {
 
   bool get isGroupType => type.isGroup;
 
-  bool get isParentGroupType => type.isParentGroupType;
+  bool get isParentGroupType => type.isParentGroup;
 
   bool get isHidden => hidden.asBool;
   bool get isRequired => required.asBool;
