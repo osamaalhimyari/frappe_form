@@ -29,6 +29,7 @@ export 'package:frappe_form/src/model/doc_field_answer.dart';
 export 'package:frappe_form/src/presentation/utils/view_utils.dart';
 export 'package:frappe_form/src/presentation/utils/input_method_utils.dart';
 export 'package:frappe_form/src/presentation/utils/formatter_utils.dart';
+export 'package:frappe_form/src/presentation/utils/phone_utils.dart';
 export 'package:frappe_form/src/presentation/utils/validation_utils.dart';
 export 'package:frappe_form/src/presentation/utils/flutter_view_utils.dart';
 export 'package:frappe_form/src/presentation/widgets/size_renderer.dart';

@@ -15,6 +15,7 @@ Types of changes
 
 ### Changed
 - Improved `DocFieldSectionView` to properly render long Labels with round borders.
+- Improved `DocFieldPhoneView` to properly load phone from default value.
 
 ## 0.6.1
 ### Fixed

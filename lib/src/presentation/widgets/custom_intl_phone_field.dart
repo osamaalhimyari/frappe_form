@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frappe_form/frappe_form.dart';
-import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
@@ -50,7 +49,8 @@ class CustomIntlPhoneField extends IntlPhoneField {
     PickerDialogStyle? pickerDialogStyle,
     super.flagsButtonMargin = EdgeInsets.zero,
   }) : super(
-         initialCountryCode: initialCountryCode ?? defaultInitialCountryCode,
+         initialCountryCode:
+             initialCountryCode ?? PhoneUtils.defaultInitialCountryCode,
          invalidNumberMessage:
              invalidNumberMessage ??
              DocFormLocalization
@@ -68,46 +68,4 @@ class CustomIntlPhoneField extends IntlPhoneField {
                ),
              ),
        );
-
-  static String get defaultInitialCountryCode =>
-      DocFormLocalization.instance.localization.locale.countryCode ?? 'US';
-  static Country get defaultInitialCountry {
-    return countries.firstWhere(
-      (country) => country.code == defaultInitialCountryCode,
-      orElse: () => countries.first,
-    );
-  }
-
-  static PhoneInfo parse(String? number) {
-    if (number == null) return PhoneInfo(country: defaultInitialCountry);
-    final tempNumber = (number.startsWith('+') ? number.substring(1) : number)
-        .replaceAll('(', '')
-        .replaceAll(')', '')
-        .replaceAll('-', '')
-        .replaceAll(' ', '');
-    final country = countries.firstWhere((country) {
-      if (tempNumber.startsWith(country.dialCode)) {
-        final numberLength = tempNumber.length - country.dialCode.length;
-        return numberLength >= country.minLength &&
-            numberLength <= country.maxLength;
-      }
-      return false;
-    }, orElse: () => defaultInitialCountry);
-    return PhoneInfo(
-      number: tempNumber.length >= country.dialCode.length
-          ? tempNumber.substring(country.dialCode.length)
-          : tempNumber,
-      country: country,
-    );
-  }
-}
-
-class PhoneInfo {
-  String? number;
-  Country? country;
-
-  PhoneInfo({this.number, this.country});
-
-  String get completeNumber =>
-      '${country?.dialCode != null ? '+${country?.dialCode}' : ''}$number';
 }

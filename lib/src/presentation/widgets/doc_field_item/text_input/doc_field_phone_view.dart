@@ -25,7 +25,7 @@ class DocFieldPhoneView extends DocFieldView {
     if (controller.text.isEmpty) {
       final initial = field.initial?.toString();
       if (initial.isNotEmpty) {
-        controller.text = initial!;
+        controller.text = PhoneUtils.parse(initial).toFrappePhone;
       }
     }
   }
@@ -37,7 +37,6 @@ class DocFieldPhoneView extends DocFieldView {
 class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
     extends DocFieldViewState<SF> {
   String? initialPhoneNumber;
-  String? phoneNumber;
   Country? phoneCountry;
   bool isValidPhoneNumber = true;
 
@@ -49,9 +48,7 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
     super.initState();
     try {
       isValidPhoneNumber = true;
-      final phoneInfo = CustomIntlPhoneField.parse(
-        phoneNumber = controller.text,
-      );
+      final phoneInfo = PhoneUtils.parse(controller.text);
       initialPhoneNumber = phoneInfo.number;
       phoneCountry = phoneInfo.country;
     } catch (e) {
@@ -99,11 +96,7 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
           controller.clear();
           setState(() {});
         }
-        if (phone.number.isNotEmpty) {
-          controller.text = '${phone.countryCode}-${phone.number}';
-        } else {
-          controller.text = '';
-        }
+        controller.text = phone.toFrappePhone;
       },
       decoration: InputDecoration(
         hintText: DocFormLocalization.instance.localization.textPhone,

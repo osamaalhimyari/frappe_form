@@ -2,6 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:frappe_form/frappe_form.dart';
 
 class DocFormController {
+  /// Allows to override a [DocField] before building its view and controller.
+  /// This can be useful to modify field properties dynamically.
+  Future<DocField> Function(DocField field)? onOverrideField;
+
+  /// Allows customizing the logic that maps [DocField] objects into
+  /// [DocFieldView] widgets.
+  Future<DocFieldView?> Function(
+    DocField field,
+    Future<Attachment?> Function()? onAttachmentLoaded,
+  )?
+  onBuildFieldView;
+
   /// Allows to override the function to generate individual field answer,
   /// either to generate a new [DocFieldAnswer] or modify the generated one
   Future<DocFieldAnswer?> Function(
@@ -10,23 +22,12 @@ class DocFormController {
   )?
   onGenerateFieldAnswer;
 
-  /// Allows customizing the logic that maps [DocField] objects into
-  /// [DocFieldView] widgets.
-  ///
-  /// [dependsOnController] needs to be passed to the returned [DocFieldView]
-  /// otherwise the dependsOn functionality for that DocField will not work.
-  /// assuming that form item has dependsOn values
-  Future<DocFieldView?> Function(
-    DocField field,
-    Future<Attachment?> Function()? onAttachmentLoaded,
-  )?
-  onBuildFieldView;
-
   final DocFieldGroupController docFieldGroupController;
   DocFormController({
     this.docFieldGroupController = const DocFieldGroupController(),
-    this.onGenerateFieldAnswer,
+    this.onOverrideField,
     this.onBuildFieldView,
+    this.onGenerateFieldAnswer,
   });
 
   Future<List<DocFieldBundle>> buildFormFields(
@@ -143,6 +144,7 @@ class DocFormController {
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
     );
 
+    field = await onOverrideField?.call(field) ?? field;
     fieldView = await onBuildFieldView?.call(field, onAttachmentLoaded);
 
     if (fieldView == null) {
