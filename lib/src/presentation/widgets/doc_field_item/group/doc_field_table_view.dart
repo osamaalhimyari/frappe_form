@@ -51,23 +51,19 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
             ),
           ),
         ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: removeButton(index),
-        ),
+        Positioned(right: 0, top: 0, child: removeButton(index)),
       ],
     );
   }
 
   Widget get pageView => PageView.builder(
-        key: ValueKey('pageView-${childrenBundles.length}'),
-        controller: pageController,
-        onPageChanged: onMediaPageChanged,
-        padEnds: true,
-        itemCount: childrenBundles.length,
-        itemBuilder: pageItemView,
-      );
+    key: ValueKey('pageView-${childrenBundles.length}'),
+    controller: pageController,
+    onPageChanged: onMediaPageChanged,
+    padEnds: true,
+    itemCount: childrenBundles.length,
+    itemBuilder: pageItemView,
+  );
 
   Widget get pageViewContainer {
     return Column(
@@ -81,10 +77,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
             ),
           ),
         if (pageViewSize > 0) ...[
-          SizedBox(
-            height: pageViewSize,
-            child: pageView,
-          ),
+          SizedBox(height: pageViewSize, child: pageView),
           pageIndicatorView,
         ],
       ],
@@ -92,29 +85,29 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   }
 
   Widget get pageIndicatorView => Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: ValueListenableBuilder(
-          valueListenable: pageIndexNotifier,
-          builder: (context, value, child) => Text(
-              '${pageIndexNotifier.value + 1} / ${childrenBundles.length}'),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: ValueListenableBuilder(
+      valueListenable: pageIndexNotifier,
+      builder: (context, value, child) =>
+          Text('${pageIndexNotifier.value + 1} / ${childrenBundles.length}'),
+    ),
+  );
 
   Widget removeButton(int index) => MaterialButton(
-        onPressed: () => onRemove(index),
-        shape: const CircleBorder(),
-        color: theme.colorScheme.error,
-        minWidth: 0,
-        child: Icon(Icons.delete, color: theme.colorScheme.onError),
-      );
+    onPressed: () => onRemove(index),
+    shape: const CircleBorder(),
+    color: theme.colorScheme.error,
+    minWidth: 0,
+    child: Icon(Icons.delete, color: theme.colorScheme.onError),
+  );
 
   Widget get addButton => Center(
-        child: FloatingActionButton(
-          heroTag: null,
-          onPressed: onAdd,
-          child: const Icon(Icons.add),
-        ),
-      );
+    child: FloatingActionButton(
+      heroTag: null,
+      onPressed: onAdd,
+      child: const Icon(Icons.add),
+    ),
+  );
 
   @override
   Widget buildBody(BuildContext context) {
@@ -149,8 +142,8 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
   Future<void> onAdd() async {
     // Get all the children from the child table as DocFieldBundle
-    List<DocFieldBundle> childrenFieldBundles =
-        await docFormController.buildFormFields(field.childForm ?? DocForm());
+    List<DocFieldBundle> childrenFieldBundles = await docFormController
+        .buildFormFields(field.childForm ?? DocForm());
 
     // Get the first child bundle if exists, a Child Table must only have one Parent Group which must be a Tab Break
     final DocFieldBundle? parentChildBundle = childrenFieldBundles.firstOrNull;

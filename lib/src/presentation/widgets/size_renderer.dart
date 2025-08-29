@@ -45,9 +45,6 @@ class _SizeRendererState extends State<SizeRenderer> {
     if (widget.listenContinuously) {
       SchedulerBinding.instance.addPostFrameCallback(onCreated);
     }
-    return SizedBox(
-      key: key,
-      child: widget.child,
-    );
+    return SizedBox(key: key, child: widget.child);
   }
 }

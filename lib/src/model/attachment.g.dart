@@ -6,66 +6,21 @@ part of 'attachment.dart';
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$AttachmentCWProxy {
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
-  ///
-  /// Usage
-  /// ```dart
-  /// Attachment(...).copyWith(id: 12, name: "My name")
-  /// ````
-  Attachment call({
+/// This Extension on [Attachment] is to generate the code for a copyWith(...) function.
+extension $AttachmentCopyWithExtension on Attachment {
+  Attachment copyWith({
     String? mediaType,
     String? path,
     String? url,
     String? base64,
-  });
-}
-
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAttachment.copyWith(...)`.
-class _$AttachmentCWProxyImpl implements _$AttachmentCWProxy {
-  const _$AttachmentCWProxyImpl(this._value);
-
-  final Attachment _value;
-
-  @override
-
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
-  ///
-  /// Usage
-  /// ```dart
-  /// Attachment(...).copyWith(id: 12, name: "My name")
-  /// ````
-  Attachment call({
-    Object? mediaType = const $CopyWithPlaceholder(),
-    Object? path = const $CopyWithPlaceholder(),
-    Object? url = const $CopyWithPlaceholder(),
-    Object? base64 = const $CopyWithPlaceholder(),
   }) {
     return Attachment(
-      mediaType: mediaType == const $CopyWithPlaceholder()
-          ? _value.mediaType
-          // ignore: cast_nullable_to_non_nullable
-          : mediaType as String?,
-      path: path == const $CopyWithPlaceholder()
-          ? _value.path
-          // ignore: cast_nullable_to_non_nullable
-          : path as String?,
-      url: url == const $CopyWithPlaceholder()
-          ? _value.url
-          // ignore: cast_nullable_to_non_nullable
-          : url as String?,
-      base64: base64 == const $CopyWithPlaceholder()
-          ? _value.base64
-          // ignore: cast_nullable_to_non_nullable
-          : base64 as String?,
+      mediaType: mediaType ?? this.mediaType,
+      path: path ?? this.path,
+      url: url ?? this.url,
+      base64: base64 ?? this.base64,
     );
   }
-}
-
-extension $AttachmentCopyWith on Attachment {
-  /// Returns a callable class that can be used as follows: `instanceOfAttachment.copyWith(...)`.
-  // ignore: library_private_types_in_public_api
-  _$AttachmentCWProxy get copyWith => _$AttachmentCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -73,16 +28,16 @@ extension $AttachmentCopyWith on Attachment {
 // **************************************************************************
 
 Attachment _$AttachmentFromJson(Map<String, dynamic> json) => Attachment(
-      mediaType: json['mediaType'] as String?,
-      path: json['path'] as String?,
-      url: json['url'] as String?,
-      base64: json['base64'] as String?,
-    );
+  mediaType: json['mediaType'] as String?,
+  path: json['path'] as String?,
+  url: json['url'] as String?,
+  base64: json['base64'] as String?,
+);
 
 Map<String, dynamic> _$AttachmentToJson(Attachment instance) =>
     <String, dynamic>{
-      if (instance.mediaType case final value?) 'mediaType': value,
-      if (instance.path case final value?) 'path': value,
-      if (instance.url case final value?) 'url': value,
-      if (instance.base64 case final value?) 'base64': value,
+      'mediaType': ?instance.mediaType,
+      'path': ?instance.path,
+      'url': ?instance.url,
+      'base64': ?instance.base64,
     };

@@ -8,8 +8,9 @@ class DocFieldGroupController {
     form.sortFields();
     // Create a copy of the fields to avoid modifying the original form
     // and clear the children of each field to start fresh
-    List<DocField> fields =
-        form.fields.map((field) => field.copyWith()..children.clear()).toList();
+    List<DocField> fields = form.fields
+        .map((field) => field.copyWith()..children.clear())
+        .toList();
 
     List<DocField> parentGroups = [];
     try {

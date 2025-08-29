@@ -21,23 +21,25 @@ class DocFieldRadioGroupViewState<SF extends DocFieldRadioGroupView>
   bool get handleControllerErrorManually => true;
 
   @override
-  Widget get selectView => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: values
-            .map(
-              (value) => RadioListTile<String>(
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
-                title: Text(valueNameResolver(value)),
-                value: value,
-                groupValue: selectedValue,
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    onSelectedValueChanged(newValue);
-                  }
-                },
-              ),
-            )
-            .toList(),
-      );
+  Widget get selectView => RadioGroup(
+    groupValue: selectedValue,
+    onChanged: (String? newValue) {
+      if (newValue != null) {
+        onSelectedValueChanged(newValue);
+      }
+    },
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: values
+          .map(
+            (value) => RadioListTile<String>(
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: EdgeInsets.zero,
+              title: Text(valueNameResolver(value)),
+              value: value,
+            ),
+          )
+          .toList(),
+    ),
+  );
 }

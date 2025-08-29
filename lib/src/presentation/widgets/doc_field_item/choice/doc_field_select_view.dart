@@ -12,9 +12,10 @@ class DocFieldSelectView extends DocFieldView {
     super.dependsOnController,
     this.isOpen = false,
   }) : super(
-          controller: controller ??
-              CustomValueController<String>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<String>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<String> get controller =>
@@ -84,12 +85,12 @@ class DocFieldSelectViewState<SF extends DocFieldSelectView>
   bool get handleControllerErrorManually => false;
 
   Widget get selectView => CustomDropDownButtonFormField.buildDropDown<String>(
-        controller: controller,
-        values: values,
-        disabled: isReadOnly,
-        onChanged: onSelectedValueChanged,
-        nameResolver: valueNameResolver,
-      );
+    controller: controller,
+    values: values,
+    disabled: isReadOnly,
+    onChanged: onSelectedValueChanged,
+    nameResolver: valueNameResolver,
+  );
 
   @override
   Widget buildBody(BuildContext context) {

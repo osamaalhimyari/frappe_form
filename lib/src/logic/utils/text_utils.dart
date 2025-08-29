@@ -56,11 +56,11 @@ class ValidationController {
 
 class EmptyValidationController extends ValidationController {
   EmptyValidationController({String message = 'This field is required'})
-      : super(
-          message: message,
-          isValid: ({controller}) =>
-              TextUtils.isNotEmpty(controller?.rawValue?.toString()),
-        );
+    : super(
+        message: message,
+        isValid: ({controller}) =>
+            TextUtils.isNotEmpty(controller?.rawValue?.toString()),
+      );
 }
 
 class LengthValidationController extends ValidationController {
@@ -70,13 +70,13 @@ class LengthValidationController extends ValidationController {
     String message = 'Invalid length',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isLength(textValue!, minLength, maxLength);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isLength(textValue!, minLength, maxLength);
+         },
+       );
 }
 
 class RepeatPasswordValidationController extends ValidationController {
@@ -84,11 +84,11 @@ class RepeatPasswordValidationController extends ValidationController {
     FieldController? passwordController,
     String message = "Passwords doesn't match",
   }) : super(
-          message: message,
-          isValid: ({controller}) =>
-              controller?.rawValue?.toString() ==
-              passwordController?.rawValue?.toString(),
-        );
+         message: message,
+         isValid: ({controller}) =>
+             controller?.rawValue?.toString() ==
+             passwordController?.rawValue?.toString(),
+       );
 }
 
 class EmailValidationController extends ValidationController {
@@ -96,13 +96,13 @@ class EmailValidationController extends ValidationController {
     String message = 'Invalid email address',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isEmail(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isEmail(textValue!);
+         },
+       );
 }
 
 class UrlValidationController extends ValidationController {
@@ -110,13 +110,13 @@ class UrlValidationController extends ValidationController {
     String message = 'Invalid url',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isURL(textValue);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isURL(textValue);
+         },
+       );
 }
 
 class IPValidationController extends ValidationController {
@@ -124,13 +124,13 @@ class IPValidationController extends ValidationController {
     String message = 'Invalid ip address',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isIP(textValue);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isIP(textValue);
+         },
+       );
 }
 
 class AlphanumericValidationController extends ValidationController {
@@ -138,13 +138,13 @@ class AlphanumericValidationController extends ValidationController {
     String message = 'Invalid alphanumeric',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isAlphanumeric(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isAlphanumeric(textValue!);
+         },
+       );
 }
 
 class CreditCardValidationController extends ValidationController {
@@ -152,13 +152,13 @@ class CreditCardValidationController extends ValidationController {
     String message = 'Invalid credit card',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isCreditCard(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isCreditCard(textValue!);
+         },
+       );
 }
 
 class DateValidationController extends ValidationController {
@@ -166,13 +166,13 @@ class DateValidationController extends ValidationController {
     String message = 'Invalid date',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isDate(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isDate(textValue!);
+         },
+       );
 }
 
 class AsciiValidationController extends ValidationController {
@@ -180,13 +180,13 @@ class AsciiValidationController extends ValidationController {
     String message = 'Invalid Ascii',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isAscii(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isAscii(textValue!);
+         },
+       );
 }
 
 class Base64ValidationController extends ValidationController {
@@ -194,13 +194,13 @@ class Base64ValidationController extends ValidationController {
     String message = 'Invalid Base64',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isBase64(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isBase64(textValue!);
+         },
+       );
 }
 
 class OnlyTextValidationController extends ValidationController {
@@ -208,13 +208,13 @@ class OnlyTextValidationController extends ValidationController {
     String message = 'Text should contain only text',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isAlpha(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isAlpha(textValue!);
+         },
+       );
 }
 
 class DNSValidationController extends ValidationController {
@@ -224,13 +224,13 @@ class DNSValidationController extends ValidationController {
     String message = 'Invalid DNS',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isFQDN(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isFQDN(textValue!);
+         },
+       );
 }
 
 class HexadecimalValidationController extends ValidationController {
@@ -238,13 +238,13 @@ class HexadecimalValidationController extends ValidationController {
     String message = 'Invalid hexadecimal',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isHexadecimal(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isHexadecimal(textValue!);
+         },
+       );
 }
 
 class HexColorValidationController extends ValidationController {
@@ -252,13 +252,13 @@ class HexColorValidationController extends ValidationController {
     String message = 'Invalid Hexcolor',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isHexColor(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isHexColor(textValue!);
+         },
+       );
 }
 
 class ISBNValidationController extends ValidationController {
@@ -267,13 +267,13 @@ class ISBNValidationController extends ValidationController {
     String message = 'Invalid ISBN',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isISBN(textValue, version);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isISBN(textValue, version);
+         },
+       );
 }
 
 class JsonValidationController extends ValidationController {
@@ -281,13 +281,13 @@ class JsonValidationController extends ValidationController {
     String message = 'Invalid Json',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isJSON(textValue);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isJSON(textValue);
+         },
+       );
 }
 
 class LowercaseValidationController extends ValidationController {
@@ -295,13 +295,13 @@ class LowercaseValidationController extends ValidationController {
     String message = 'Invalid lowercase',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isLowercase(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isLowercase(textValue!);
+         },
+       );
 }
 
 class UppercaseValidationController extends ValidationController {
@@ -309,13 +309,13 @@ class UppercaseValidationController extends ValidationController {
     String message = 'Invalid Uppercase',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isUppercase(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isUppercase(textValue!);
+         },
+       );
 }
 
 class MongoIdValidationController extends ValidationController {
@@ -323,13 +323,13 @@ class MongoIdValidationController extends ValidationController {
     String message = 'Invalid MongoId',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isMongoId(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isMongoId(textValue!);
+         },
+       );
 }
 
 class SurrogatePairValidationController extends ValidationController {
@@ -337,13 +337,13 @@ class SurrogatePairValidationController extends ValidationController {
     String message = 'Invalid SurrogatePair',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isSurrogatePair(textValue!);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isSurrogatePair(textValue!);
+         },
+       );
 }
 
 class UUIDValidationController extends ValidationController {
@@ -352,13 +352,13 @@ class UUIDValidationController extends ValidationController {
     String message = 'Invalid UUID',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return validators.isUUID(textValue, version);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return validators.isUUID(textValue, version);
+         },
+       );
 }
 
 class NumericValidationController extends ValidationController {
@@ -366,13 +366,13 @@ class NumericValidationController extends ValidationController {
     String message = 'Text must be a number',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return num.tryParse(textValue!) != null;
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return num.tryParse(textValue!) != null;
+         },
+       );
 }
 
 class IntegerValidationController extends ValidationController {
@@ -380,13 +380,13 @@ class IntegerValidationController extends ValidationController {
     String message = 'Text must be an integer number',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return int.tryParse(textValue!) != null;
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return int.tryParse(textValue!) != null;
+         },
+       );
 }
 
 class DecimalValidationController extends ValidationController {
@@ -394,13 +394,13 @@ class DecimalValidationController extends ValidationController {
     String message = 'Text must be an decimal number',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            return double.tryParse(textValue!) != null;
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           return double.tryParse(textValue!) != null;
+         },
+       );
 }
 
 class PositiveIntegerValidationController extends ValidationController {
@@ -408,14 +408,14 @@ class PositiveIntegerValidationController extends ValidationController {
     String message = 'Text must be an integer positive number',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            int? value = int.tryParse(textValue!);
-            return (value ?? -1) >= 0;
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           int? value = int.tryParse(textValue!);
+           return (value ?? -1) >= 0;
+         },
+       );
 }
 
 class PositiveDecimalValidationController extends ValidationController {
@@ -423,14 +423,14 @@ class PositiveDecimalValidationController extends ValidationController {
     String message = 'Text must be a decimal positive number',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            num? value = num.tryParse(textValue!);
-            return (value ?? -1) >= 0;
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           num? value = num.tryParse(textValue!);
+           return (value ?? -1) >= 0;
+         },
+       );
 }
 
 class IntegerRangeValidationController extends ValidationController {
@@ -440,15 +440,15 @@ class IntegerRangeValidationController extends ValidationController {
     String message = 'Number must fall in the specified range',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            int? value = int.tryParse(textValue!);
-            return (value ?? 0) >= (minValue ?? 0) &&
-                (value ?? 0) <= (maxValue ?? 0);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           int? value = int.tryParse(textValue!);
+           return (value ?? 0) >= (minValue ?? 0) &&
+               (value ?? 0) <= (maxValue ?? 0);
+         },
+       );
 }
 
 class DecimalRangeValidationController extends ValidationController {
@@ -458,15 +458,15 @@ class DecimalRangeValidationController extends ValidationController {
     String message = 'Number must fall in the specified range',
     bool required = false,
   }) : super(
-          message: message,
-          isValid: ({controller}) {
-            String? textValue = controller?.rawValue?.toString();
-            if (!required && TextUtils.isEmpty(textValue)) return true;
-            num? value = num.tryParse(textValue!);
-            return (value ?? 0) >= (minValue ?? 0) &&
-                (value ?? 0) <= (maxValue ?? 0);
-          },
-        );
+         message: message,
+         isValid: ({controller}) {
+           String? textValue = controller?.rawValue?.toString();
+           if (!required && TextUtils.isEmpty(textValue)) return true;
+           num? value = num.tryParse(textValue!);
+           return (value ?? 0) >= (minValue ?? 0) &&
+               (value ?? 0) <= (maxValue ?? 0);
+         },
+       );
 }
 
 mixin FieldController<T> {

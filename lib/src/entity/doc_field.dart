@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:adeptannotations/adeptannotations.dart';
 import 'package:frappe_form/src/entity/doc_form.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
@@ -30,6 +30,7 @@ class DocField extends DocType {
   @JsonKey(name: 'fieldtype')
   final String? fieldType;
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @CopyWithKey(ignore: true)
   final FieldType type;
   @JsonKey(name: 'hidden')
   final int? hidden;
@@ -76,10 +77,13 @@ class DocField extends DocType {
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<DocField> children;
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @CopyWithKey(ignore: true)
   final List<String> optionsAsList;
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @CopyWithKey(ignore: true)
   final DateTime? initialAsDateTime;
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @CopyWithKey(ignore: true)
   final DocForm? childForm;
 
   DocField({
@@ -130,16 +134,17 @@ class DocField extends DocType {
     this.childTable,
     this.renderRules,
     List<DocField>? children,
-  })  : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
-        fieldType = fieldType ?? type?.name,
-        children = children ?? [],
-        optionsAsList = options
-                ?.split('\n')
-                .mapWhere((item) => item, (item) => item.isNotEmpty)
-                .toList() ??
-            [],
-        initialAsDateTime = DateTime.tryParse('$initial'),
-        childForm = DocForm.fromJsonObject(childTable);
+  }) : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
+       fieldType = fieldType ?? type?.name,
+       children = children ?? [],
+       optionsAsList =
+           options
+               ?.split('\n')
+               .mapWhere((item) => item, (item) => item.isNotEmpty)
+               .toList() ??
+           [],
+       initialAsDateTime = DateTime.tryParse('$initial'),
+       childForm = DocForm.fromJsonObject(childTable);
 
   factory DocField.dummy() => DocField();
 

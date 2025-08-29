@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 ///  • Optionally allows a leading '+' or '-' if [allowSigned] is true.
 class DecimalTextInputFormatter extends TextInputFormatter {
   DecimalTextInputFormatter({this.decimals = 2, this.allowSigned = false})
-      : assert(decimals >= 0, 'Decimal range must be non-negative');
+    : assert(decimals >= 0, 'Decimal range must be non-negative');
 
   /// how many decimals to allow
   final int decimals;

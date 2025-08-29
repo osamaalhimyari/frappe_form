@@ -5,9 +5,13 @@ class DocFormSamples {
     "allow_rename": 1,
     "creation": "2025-07-04 10:00:57.319696",
     "custom": 1,
+    "description": "FieldTest description sample",
     "doctype": "DocType",
     "engine": "InnoDB",
     "field_order": [
+      "intro_tab",
+      "section_break_ydxz",
+      "html_intro",
       "tab_texts",
       "section_multiline_texts",
       "column_break_ofje",
@@ -71,14 +75,29 @@ class DocFormSamples {
     ],
     "fields": [
       {
+        "fieldname": "intro_tab",
+        "fieldtype": "Tab Break",
+        "label": "Intro"
+      },
+      {
+        "fieldname": "section_break_ydxz",
+        "fieldtype": "Section Break"
+      },
+      {
+        "fieldname": "html_intro",
+        "fieldtype": "HTML",
+        "options": "<section>\n  <h2 style=\"color:#d35400;\">Freshly Hand-Tossed Pizza</h2>\n\n  <p>\n    <strong>Freshly hand-tossed dough</strong>, <em>slow-risen</em> for the perfect \n    <span style=\"color:#8e44ad;\">crunch</span> and <span style=\"color:#16a085;\">chew</span>, \n    topped with <span style=\"color:#c0392b;\"><strong>rich tomato sauce</strong></span> \n    and the <em>finest mozzarella</em>.\n  </p>\n\n  <p>\n    Each pizza is baked to <strong>golden perfection</strong> in our \n    <span style=\"color:#7f8c8d;\"><em>stone oven</em></span>, bringing out \n    <span style=\"color:#2c3e50;\">bold flavors</span> in every bite.\n  </p>\n\n  <h3 style=\"color:#2980b9;\">Choose Your Experience</h3>\n  <ul>\n    <li><em>Timeless classics</em></li>\n    <li><strong><span style=\"color:#27ae60;\">Chef\u2019s specialty creations</span></strong></li>\n  </ul>\n\n  <ol>\n    <li>Always made to share</li>\n    <li><strong><span style=\"color:#e74c3c;\">Always made with love</span></strong></li>\n  </ol>\n</section>\n"
+      },
+      {
         "fieldname": "tab_texts",
         "fieldtype": "Tab Break",
         "label": "Texts"
       },
       {
-        "description": "A section with multiple type of \ntexts",
+        "description": "A section with multiple type of \ntexts.",
         "fieldname": "section_multiline_texts",
-        "fieldtype": "Section Break"
+        "fieldtype": "Section Break",
+        "label": "This is a sample of a Section Label too long, to see how it fit in a mobile screen. And repeat: This is a sample of a Section Label too long, to see how it fit in a mobile screen"
       },
       {
         "fieldname": "column_break_ofje",
@@ -491,7 +510,7 @@ class DocFormSamples {
     ],
     "index_web_pages_for_search": 1,
     "links": [],
-    "modified": "2025-07-25 17:40:03.222007",
+    "modified": "2025-08-29 09:49:53.773425",
     "modified_by": "user@mail.com",
     "module": "Culinary Forms",
     "name": "FieldTest",

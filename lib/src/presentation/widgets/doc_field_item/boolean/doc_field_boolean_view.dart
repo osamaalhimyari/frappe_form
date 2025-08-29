@@ -9,9 +9,9 @@ class DocFieldBooleanView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller:
-              controller ?? CustomValueController<bool>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomValueController<bool>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<bool> get controller =>
@@ -39,8 +39,9 @@ class DocFieldBooleanViewState<SF extends DocFieldBooleanView>
   Widget buildBody(BuildContext context) {
     return SwitchListTile(
       value: value ?? false,
-      onChanged:
-          isReadOnly ? null : (value) => setState(() => this.value = value),
+      onChanged: isReadOnly
+          ? null
+          : (value) => setState(() => this.value = value),
       title: field.title.isEmpty ? null : Text(field.title),
       contentPadding: const EdgeInsets.only(left: 8),
     );

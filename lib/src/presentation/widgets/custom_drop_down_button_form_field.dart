@@ -148,7 +148,7 @@ class _CustomDropDownButtonFormFieldState<T>
     return DropdownButtonFormField<T?>(
       items: widget.items,
       selectedItemBuilder: widget.selectedItemBuilder,
-      value: /*widget.disabled ? null :*/ value,
+      initialValue: /*widget.disabled ? null :*/ value,
       hint: widget.hint,
       disabledHint: widget.disabledHint,
       onChanged: /*widget.disabled ? null :*/ onChanged,
@@ -157,7 +157,8 @@ class _CustomDropDownButtonFormFieldState<T>
           : (widget.onTap ?? () => widget.focusNode?.requestFocus()),
       elevation: widget.elevation ?? 8,
       style: widget.style,
-      icon: widget.icon ??
+      icon:
+          widget.icon ??
           (showSuffixButtons
               ? Row(
                   mainAxisSize: MainAxisSize.min,
@@ -191,26 +192,26 @@ class _CustomDropDownButtonFormFieldState<T>
   }
 
   Widget get addButton => IconButton(
-        icon: const Icon(Icons.add),
-        padding: EdgeInsets.zero,
-        color: theme.colorScheme.primary,
-        onPressed: widget.onAdd,
-      );
+    icon: const Icon(Icons.add),
+    padding: EdgeInsets.zero,
+    color: theme.colorScheme.primary,
+    onPressed: widget.onAdd,
+  );
 
   Widget get retryButton => IconButton(
-        icon: const Icon(Icons.refresh),
-        padding: EdgeInsets.zero,
-        color: theme.colorScheme.primary,
-        onPressed: widget.onRetry,
-      );
+    icon: const Icon(Icons.refresh),
+    padding: EdgeInsets.zero,
+    color: theme.colorScheme.primary,
+    onPressed: widget.onRetry,
+  );
 
   Widget get clearButton => IconButton(
-        icon: const Icon(Icons.clear),
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          onChanged(null);
-        },
-      );
+    icon: const Icon(Icons.clear),
+    padding: EdgeInsets.zero,
+    onPressed: () {
+      onChanged(null);
+    },
+  );
 
   bool get showSuffixButtons =>
       showAddButton || showRetryButton || showClearButton;

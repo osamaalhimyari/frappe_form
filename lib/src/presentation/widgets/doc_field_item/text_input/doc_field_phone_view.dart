@@ -11,9 +11,9 @@ class DocFieldPhoneView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller:
-              controller ?? CustomTextEditingController(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomTextEditingController(focusNode: FocusNode()),
+       );
 
   @override
   CustomTextEditingController get controller =>
@@ -78,7 +78,8 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
       textInputAction: TextInputAction.next,
       onCountryChanged: (country) => phoneCountry = country,
       validator: (phoneNumber) async {
-        isValidPhoneNumber = (phoneNumber?.number.isEmpty ?? true) ||
+        isValidPhoneNumber =
+            (phoneNumber?.number.isEmpty ?? true) ||
             ValidationUtils.isPhoneNumberValid(
               number: phoneNumber?.number,
               country: phoneCountry,
@@ -86,7 +87,9 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
         return isValidPhoneNumber
             ? null
             : DocFormLocalization
-                .instance.localization.exceptionInvalidPhoneNumber;
+                  .instance
+                  .localization
+                  .exceptionInvalidPhoneNumber;
       },
       onSubmitted: (term) {
         controller.focusNode?.unfocus();

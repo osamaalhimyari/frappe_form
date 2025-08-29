@@ -9,9 +9,9 @@ class DocFieldCheckView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller:
-              controller ?? CustomValueController<int>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomValueController<int>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<int> get controller =>

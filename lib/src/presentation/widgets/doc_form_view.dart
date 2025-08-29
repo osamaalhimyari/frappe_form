@@ -168,8 +168,10 @@ class DocFormViewState extends State<DocFormView>
     );
     tabController.addListener(onTabScrollListener);
     clearScrollControllers();
-    scrollControllers = List.generate(tabController.length,
-        (index) => ScrollController()..addListener(onScrollListener));
+    scrollControllers = List.generate(
+      tabController.length,
+      (index) => ScrollController()..addListener(onScrollListener),
+    );
     setLoading(false, offstage: tabsCount > 1);
     renderAllTabs();
     checkScrollOnInit();
@@ -235,13 +237,15 @@ class DocFormViewState extends State<DocFormView>
       canPop: false,
       onPopInvokedWithResult: (bool didPop, result) {
         if (didPop) return;
-        onBackPressed(result: result).then((canPop) {
-          if (canPop && context.mounted) {
-            Navigator.of(context).pop(result);
-          }
-        }).onError((error, stackTrace) {
-          debugPrint('Error: $error');
-        });
+        onBackPressed(result: result)
+            .then((canPop) {
+              if (canPop && context.mounted) {
+                Navigator.of(context).pop(result);
+              }
+            })
+            .onError((error, stackTrace) {
+              debugPrint('Error: $error');
+            });
       },
       child: Scaffold(
         appBar: AppBar(
@@ -306,48 +310,48 @@ class DocFormViewState extends State<DocFormView>
   bool get canGoBack => tabController.index > 0;
 
   Widget get submitButton => AnimatedSize(
-        duration: const Duration(milliseconds: 300),
-        child: SizedBox(
-          key: ValueKey('submit-btn-$showSubmitButton'),
-          width: showSubmitButton ? 200 : 0,
-          height: showSubmitButton ? null : 0,
-          child: FloatingActionButton.extended(
-            shape: const StadiumBorder(),
-            backgroundColor: canSubmit ? null : theme.disabledColor,
-            foregroundColor: canSubmit ? null : theme.disabledColor,
-            onPressed: canSubmit ? onSubmit : null,
-            label: Text(
-              showSubmitButton
-                  ? DocFormLocalization.instance.localization.btnSubmit
-                  : '',
-            ),
-          ),
+    duration: const Duration(milliseconds: 300),
+    child: SizedBox(
+      key: ValueKey('submit-btn-$showSubmitButton'),
+      width: showSubmitButton ? 200 : 0,
+      height: showSubmitButton ? null : 0,
+      child: FloatingActionButton.extended(
+        shape: const StadiumBorder(),
+        backgroundColor: canSubmit ? null : theme.disabledColor,
+        foregroundColor: canSubmit ? null : theme.disabledColor,
+        onPressed: canSubmit ? onSubmit : null,
+        label: Text(
+          showSubmitButton
+              ? DocFormLocalization.instance.localization.btnSubmit
+              : '',
         ),
-      );
+      ),
+    ),
+  );
 
   Widget get nextButton => AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: FloatingActionButton(
-          key: ValueKey('next-btn-$canGoNext'),
-          shape: const StadiumBorder(),
-          backgroundColor: canGoNext ? null : theme.disabledColor,
-          foregroundColor: canGoNext ? null : theme.disabledColor,
-          onPressed: canGoNext ? onNextTab : null,
-          child: const Icon(Icons.arrow_forward_ios_rounded),
-        ),
-      );
+    duration: const Duration(milliseconds: 300),
+    child: FloatingActionButton(
+      key: ValueKey('next-btn-$canGoNext'),
+      shape: const StadiumBorder(),
+      backgroundColor: canGoNext ? null : theme.disabledColor,
+      foregroundColor: canGoNext ? null : theme.disabledColor,
+      onPressed: canGoNext ? onNextTab : null,
+      child: const Icon(Icons.arrow_forward_ios_rounded),
+    ),
+  );
 
   Widget get backButton => AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: FloatingActionButton(
-          key: ValueKey('back-btn-$canGoBack'),
-          shape: const StadiumBorder(),
-          backgroundColor: canGoBack ? null : theme.disabledColor,
-          foregroundColor: canGoBack ? null : theme.disabledColor,
-          onPressed: canGoBack ? onPreviousTab : null,
-          child: const Icon(Icons.arrow_back_ios_new_rounded),
-        ),
-      );
+    duration: const Duration(milliseconds: 300),
+    child: FloatingActionButton(
+      key: ValueKey('back-btn-$canGoBack'),
+      shape: const StadiumBorder(),
+      backgroundColor: canGoBack ? null : theme.disabledColor,
+      foregroundColor: canGoBack ? null : theme.disabledColor,
+      onPressed: canGoBack ? onPreviousTab : null,
+      child: const Icon(Icons.arrow_back_ios_new_rounded),
+    ),
+  );
 
   List<Widget> get tabContentViews =>
       fieldBundles.mapIndexed(tabContentView).toList();
@@ -359,7 +363,8 @@ class DocFormViewState extends State<DocFormView>
         controller: controller,
         addAutomaticKeepAlives: true,
         physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics()),
+          parent: BouncingScrollPhysics(),
+        ),
         padding: const EdgeInsets.only(
           top: 16,
           left: 16,
@@ -414,7 +419,7 @@ class DocFormViewState extends State<DocFormView>
   }
 
   ({bool isValid, double offset, FieldController? controller, int tabIndex})
-      validateRecursive({required List<DocFieldBundle> fieldBundles}) {
+  validateRecursive({required List<DocFieldBundle> fieldBundles}) {
     bool isValid = true;
     FieldController? controller;
     double tempOffset = 0;

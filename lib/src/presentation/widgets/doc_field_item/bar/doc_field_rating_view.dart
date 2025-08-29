@@ -10,9 +10,10 @@ class DocFieldRatingView extends DocFieldView {
     CustomValueController<double>? controller,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomValueController<double>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<double>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<double> get controller =>

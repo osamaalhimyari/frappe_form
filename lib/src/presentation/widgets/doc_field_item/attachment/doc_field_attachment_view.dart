@@ -14,9 +14,10 @@ class DocFieldAttachmentView extends DocFieldView {
     required this.onAttachmentLoaded,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomValueController<Attachment>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<Attachment>(focusNode: FocusNode()),
+       );
 
   @override
   State createState() => DocFieldAttachmentViewState();
@@ -47,8 +48,8 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Center(
-                  child: ((value?.isImage ?? false) &&
-                          (value?.hasSource ?? false))
+                  child:
+                      ((value?.isImage ?? false) && (value?.hasSource ?? false))
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           clipBehavior: Clip.hardEdge,
@@ -90,9 +91,13 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
                       label: Text(
                         value == null
                             ? DocFormLocalization
-                                .instance.localization.btnUpload
+                                  .instance
+                                  .localization
+                                  .btnUpload
                             : DocFormLocalization
-                                .instance.localization.btnChange,
+                                  .instance
+                                  .localization
+                                  .btnChange,
                       ),
                     ),
                   ),
@@ -107,8 +112,9 @@ class DocFieldAttachmentViewState<SF extends DocFieldAttachmentView>
                 child: AnimatedSize(
                   duration: const Duration(milliseconds: 300),
                   child: SizedBox(
-                    width:
-                        value == null ? 0 : mediaQuery.size.width.percent(40),
+                    width: value == null
+                        ? 0
+                        : mediaQuery.size.width.percent(40),
                     child: ElevatedButton.icon(
                       onPressed: isReadOnly || isLoading ? null : onBtnRemove,
                       style: ElevatedButton.styleFrom(

@@ -7,7 +7,8 @@ class DocFormController {
   Future<DocFieldAnswer?> Function(
     DocFieldBundle fieldBundle,
     dynamic fieldValue,
-  )? onGenerateFieldAnswer;
+  )?
+  onGenerateFieldAnswer;
 
   /// Allows customizing the logic that maps [DocField] objects into
   /// [DocFieldView] widgets.
@@ -18,7 +19,8 @@ class DocFormController {
   Future<DocFieldView?> Function(
     DocField field,
     Future<Attachment?> Function()? onAttachmentLoaded,
-  )? onBuildFieldView;
+  )?
+  onBuildFieldView;
 
   final DocFieldGroupController docFieldGroupController;
   DocFormController({
@@ -50,29 +52,42 @@ class DocFormController {
   void handleDependsOnLogic({required List<DocFieldBundle> fieldBundles}) {
     for (final fieldBundle in fieldBundles) {
       handleDependsOnLogicRecursively(
-          fieldBundle: fieldBundle, fieldBundles: fieldBundles);
+        fieldBundle: fieldBundle,
+        fieldBundles: fieldBundles,
+      );
     }
   }
 
-  void handleDependsOnLogicRecursively(
-      {required DocFieldBundle fieldBundle,
-      required List<DocFieldBundle> fieldBundles}) {
+  void handleDependsOnLogicRecursively({
+    required DocFieldBundle fieldBundle,
+    required List<DocFieldBundle> fieldBundles,
+  }) {
     fieldBundle.view.dependsOnController.requiredDependsOn =
         DocFieldDependsOnBundle.fromExpression(
-            fieldBundle.field.requiredDependsOn, fieldBundles);
+          fieldBundle.field.requiredDependsOn,
+          fieldBundles,
+        );
     fieldBundle.view.dependsOnController.readOnlyDependsOn =
         DocFieldDependsOnBundle.fromExpression(
-            fieldBundle.field.readOnlyDependsOn, fieldBundles);
+          fieldBundle.field.readOnlyDependsOn,
+          fieldBundles,
+        );
     fieldBundle.view.dependsOnController.visibilityDependsOn =
         DocFieldDependsOnBundle.fromExpression(
-            fieldBundle.field.visibilityDependsOn, fieldBundles);
+          fieldBundle.field.visibilityDependsOn,
+          fieldBundles,
+        );
     for (final fieldChild in fieldBundle.children) {
       handleDependsOnLogicRecursively(
-          fieldBundle: fieldChild, fieldBundles: fieldBundles);
+        fieldBundle: fieldChild,
+        fieldBundles: fieldBundles,
+      );
     }
     for (final fieldChild in fieldBundle.view.childrenBundles) {
       handleDependsOnLogicRecursively(
-          fieldBundle: fieldChild, fieldBundles: fieldBundles);
+        fieldBundle: fieldChild,
+        fieldBundles: fieldBundles,
+      );
     }
   }
 
@@ -128,97 +143,60 @@ class DocFormController {
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
     );
 
-    fieldView = await onBuildFieldView?.call(
-      field,
-      onAttachmentLoaded,
-    );
+    fieldView = await onBuildFieldView?.call(field, onAttachmentLoaded);
 
     if (fieldView == null) {
       switch (fieldType) {
         case FieldType.data:
-          fieldView = DocFieldDataView(
-            field: field,
-          );
+          fieldView = DocFieldDataView(field: field);
           break;
         case FieldType.text:
-          fieldView = DocFieldTextView(
-            field: field,
-          );
+          fieldView = DocFieldTextView(field: field);
           break;
         case FieldType.smallText:
-          fieldView = DocFieldSmallTextView(
-            field: field,
-          );
+          fieldView = DocFieldSmallTextView(field: field);
           break;
         case FieldType.longText:
-          fieldView = DocFieldLongTextView(
-            field: field,
-          );
+          fieldView = DocFieldLongTextView(field: field);
           break;
         case FieldType.textEditor:
-          fieldView = DocFieldTextEditorView(
-            field: field,
-          );
+          fieldView = DocFieldTextEditorView(field: field);
           break;
         case FieldType.markdownEditor:
-          fieldView = DocFieldMarkdownEditorView(
-            field: field,
-          );
+          fieldView = DocFieldMarkdownEditorView(field: field);
           break;
         case FieldType.int:
-          fieldView = DocFieldIntView(
-            field: field,
-          );
+          fieldView = DocFieldIntView(field: field);
           break;
         case FieldType.float:
-          fieldView = DocFieldFloatView(
-            field: field,
-          );
+          fieldView = DocFieldFloatView(field: field);
           break;
         case FieldType.percent:
-          fieldView = DocFieldPercentView(
-            field: field,
-          );
+          fieldView = DocFieldPercentView(field: field);
           break;
         case FieldType.currency:
-          fieldView = DocFieldCurrencyView(
-            field: field,
-          );
+          fieldView = DocFieldCurrencyView(field: field);
           break;
         case FieldType.check:
-          fieldView = DocFieldCheckView(
-            field: field,
-          );
+          fieldView = DocFieldCheckView(field: field);
           break;
         case FieldType.select:
           final renderRules = RenderRules.tryFromJsonString(field.renderRules);
           fieldView = renderRules?.type == 'RADIO_GROUP'
-              ? DocFieldRadioGroupView(
-                  field: field,
-                )
-              : DocFieldSelectView(
-                  field: field,
-                );
+              ? DocFieldRadioGroupView(field: field)
+              : DocFieldSelectView(field: field);
           break;
         case FieldType.autocomplete:
-          fieldView = DocFieldAutocompleteView(
-            field: field,
-          );
+          fieldView = DocFieldAutocompleteView(field: field);
           break;
         case FieldType.phone:
-          fieldView = DocFieldPhoneView(
-            field: field,
-          );
+          fieldView = DocFieldPhoneView(field: field);
           break;
         case FieldType.password:
-          fieldView = DocFieldPasswordView(
-            field: field,
-          );
+          fieldView = DocFieldPasswordView(field: field);
           break;
         case FieldType.geolocation:
-          fieldView = DocFieldGeolocationView(
-            field: field,
-          );
+          fieldView = DocFieldGeolocationView(field: field);
           break;
         case FieldType.date:
         case FieldType.time:
@@ -236,9 +214,7 @@ class DocFormController {
           );
           break;
         case FieldType.heading:
-          fieldView = DocFieldHeadingView(
-            field: field,
-          );
+          fieldView = DocFieldHeadingView(field: field);
           break;
         case FieldType.tabBreak:
           fieldView = DocFieldTabView(
@@ -254,8 +230,9 @@ class DocFormController {
           break;
         case FieldType.sectionBreak:
           List<DocFieldView> finalChildrenViews = [];
-          List<DocFieldView> childrenViews =
-              children.map((itemBundle) => itemBundle.view).toList();
+          List<DocFieldView> childrenViews = children
+              .map((itemBundle) => itemBundle.view)
+              .toList();
           // This logic is to group consecutive check views so they can be displayed as a list with some padding.
           for (int i = 0; i < childrenViews.length; i++) {
             DocFieldView fieldView = childrenViews[i];
@@ -286,14 +263,13 @@ class DocFormController {
           );
           break;
         case FieldType.rating:
-          fieldView = DocFieldRatingView(
-            field: field,
-          );
+          fieldView = DocFieldRatingView(field: field);
           break;
         case FieldType.table:
-          fieldView = DocFieldTableView(
-            field: field,
-          );
+          fieldView = DocFieldTableView(field: field);
+          break;
+        case FieldType.html:
+          fieldView = DocFieldHtmlView(field: field);
           break;
         //TODO: pending implementation
         case FieldType.link:
@@ -302,7 +278,6 @@ class DocFormController {
         case FieldType.button:
         case FieldType.code:
         case FieldType.color:
-        case FieldType.html:
         case FieldType.image:
         case FieldType.readOnly:
         case FieldType.signature:
@@ -432,8 +407,7 @@ class DocFormController {
       // Excluding these types as they are not part of the response
       FieldType.tabBreak ||
       FieldType.columnBreak ||
-      FieldType.sectionBreak =>
-        null,
+      FieldType.sectionBreak => null,
       FieldType.data ||
       FieldType.text ||
       FieldType.smallText ||
@@ -446,8 +420,7 @@ class DocFormController {
       FieldType.phone ||
       FieldType.attach ||
       FieldType.attachImage ||
-      FieldType.password =>
-        fieldBundle.controller.rawValue?.toString(),
+      FieldType.password => fieldBundle.controller.rawValue?.toString(),
       FieldType.check => fieldBundle.controller.rawValue?.toString().asInt,
       FieldType.date =>
         (fieldBundle.controller.rawValue as DateTime?)?.toJsonDate(),
@@ -459,9 +432,9 @@ class DocFormController {
       FieldType.float ||
       FieldType.percent ||
       FieldType.currency ||
-      FieldType.rating =>
-        fieldBundle.controller.rawValue?.toString().asDouble,
+      FieldType.rating => fieldBundle.controller.rawValue?.toString().asDouble,
       FieldType.heading => null,
+      FieldType.html => null,
       //TODO: pending implementation
       FieldType.link => null,
       FieldType.dynamicLink => null,
@@ -470,7 +443,6 @@ class DocFormController {
       FieldType.button => null,
       FieldType.code => null,
       FieldType.color => null,
-      FieldType.html => null,
       FieldType.image => null,
       FieldType.readOnly => null,
       FieldType.signature => null,
@@ -484,11 +456,11 @@ class DocFormController {
 
     DocFieldAnswer fieldAnswer =
         await onGenerateFieldAnswer?.call(fieldBundle, fieldValue) ??
-            DocFieldAnswer(
-              type: fieldType,
-              name: fieldBundle.field.fieldName,
-              value: fieldValue,
-            );
+        DocFieldAnswer(
+          type: fieldType,
+          name: fieldBundle.field.fieldName,
+          value: fieldValue,
+        );
 
     return fieldAnswer;
   }

@@ -77,11 +77,7 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
                 runSpacing: itemSpacing,
                 children: List.generate(children.length, (index) {
                   return SizedBox(
-                    width: getItemWidth(
-                      screenWidth,
-                      index,
-                      children.length,
-                    ),
+                    width: getItemWidth(screenWidth, index, children.length),
                     child: children[index],
                   );
                 }),
@@ -99,41 +95,44 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
               padding: EdgeInsets.only(
                 left: 16,
                 right: 16,
-                top: groupTitleHeight != null ? groupTitleHeight! : 24,
+                top: (groupTitleHeight ?? 0) / 2 + 16,
               ),
-              margin: const EdgeInsets.only(top: 14),
+              margin: EdgeInsets.only(top: (groupTitleHeight ?? 0) / 2),
               child: descriptionView == null && childrenView == null
                   ? null
                   : descriptionView != null
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            descriptionView,
-                            if (childrenView != null)
-                              Padding(
-                                padding: EdgeInsets.only(top: itemSpacing),
-                                child: childrenView,
-                              ),
-                          ],
-                        )
-                      : childrenView,
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        descriptionView,
+                        if (childrenView != null)
+                          Padding(
+                            padding: EdgeInsets.only(top: itemSpacing),
+                            child: childrenView,
+                          ),
+                      ],
+                    )
+                  : childrenView,
             ),
             if (field.title.isNotEmpty)
               Positioned(
                 left: 16,
                 right: 16,
                 top: 0,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0.5, color: borderColor),
-                      borderRadius: BorderRadius.circular(borderRadius),
-                      color: color,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: SizeRenderer(
-                      onSizeRendered: onGroupTitleSizeRendered,
+                child: SizeRenderer(
+                  onSizeRendered: onGroupTitleSizeRendered,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.5, color: borderColor),
+                        borderRadius: BorderRadius.circular(borderRadius),
+                        color: color,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8 + (borderRadius / 4),
+                        vertical: 8 + (borderRadius / 16),
+                      ),
                       child: Text(
                         field.title,
                         style: theme.textTheme.titleMedium,

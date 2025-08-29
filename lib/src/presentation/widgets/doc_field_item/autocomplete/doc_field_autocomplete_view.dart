@@ -12,9 +12,10 @@ class DocFieldAutocompleteView extends DocFieldView {
     super.dependsOnController,
     this.isOpen = false,
   }) : super(
-          controller: controller ??
-              CustomValueController<String>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<String>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<String> get controller =>
@@ -91,11 +92,11 @@ class DocFieldAutocompleteViewState<SF extends DocFieldAutocompleteView>
           initialValue: TextEditingValue(text: controller.value ?? ''),
           optionsBuilder: (TextEditingValue textEditingValue) =>
               textEditingValue.text.isEmpty
-                  ? (autoOpen ? values : [])
-                  : values.where(
-                      (String value) =>
-                          value.containsIgnoringCase(textEditingValue.text),
-                    ),
+              ? (autoOpen ? values : [])
+              : values.where(
+                  (String value) =>
+                      value.containsIgnoringCase(textEditingValue.text),
+                ),
           onSelected: (String value) => controller.value = value,
         ),
         if (isOpen) ...[

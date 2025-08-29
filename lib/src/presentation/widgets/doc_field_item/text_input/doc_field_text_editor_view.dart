@@ -27,12 +27,13 @@ class DocFieldTextEditorViewState<SF extends DocFieldTextEditorView>
 
   @override
   Widget buildBody(BuildContext context) {
-    final borderColor = theme.inputDecorationTheme.outlineBorder?.color ??
+    final borderColor =
+        theme.inputDecorationTheme.outlineBorder?.color ??
         theme.colorScheme.outline;
     final themeBorder =
         (theme.inputDecorationTheme.border is OutlineInputBorder)
-            ? (theme.inputDecorationTheme.border as OutlineInputBorder)
-            : null;
+        ? (theme.inputDecorationTheme.border as OutlineInputBorder)
+        : null;
     final borderRadius = themeBorder?.borderRadius;
     final border = themeBorder != null
         ? Border.all(color: borderColor)

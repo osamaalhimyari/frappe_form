@@ -23,10 +23,10 @@ abstract class DocFieldView extends StatefulWidget {
     List<DocFieldView>? children,
     List<DocFieldBundle>? childrenBundles,
     DocFieldDependsOnController? dependsOnController,
-  })  : children = children ?? <DocFieldView>[],
-        childrenBundles = childrenBundles ?? <DocFieldBundle>[],
-        dependsOnController =
-            dependsOnController ?? DocFieldDependsOnController() {
+  }) : children = children ?? <DocFieldView>[],
+       childrenBundles = childrenBundles ?? <DocFieldBundle>[],
+       dependsOnController =
+           dependsOnController ?? DocFieldDependsOnController() {
     initController();
   }
 
@@ -75,16 +75,19 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
     }
     isRequiredFromDependencies =
         dependsOnController?.listenOnRequiredDependsOnChangesAndCheck(
-                onRequiredFromDependenciesChanged) ??
-            false;
+          onRequiredFromDependenciesChanged,
+        ) ??
+        false;
     isReadOnlyFromDependencies =
         dependsOnController?.listenOnReadOnlyDependsOnChangesAndCheck(
-                onReadOnlyFromDependenciesChanged) ??
-            false;
+          onReadOnlyFromDependenciesChanged,
+        ) ??
+        false;
     isVisibleFromDependencies =
         dependsOnController?.listenOnVisibilityDependsOnChangesAndCheck(
-                onVisibilityFromDependenciesChanged) ??
-            true;
+          onVisibilityFromDependenciesChanged,
+        ) ??
+        true;
   }
 
   void onControllerErrorChanged() {
@@ -102,8 +105,9 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
       if (value) {
         controller.validations.add(DocFieldView.defaultRequiredFieldValidation);
       } else {
-        controller.validations
-            .remove(DocFieldView.defaultRequiredFieldValidation);
+        controller.validations.remove(
+          DocFieldView.defaultRequiredFieldValidation,
+        );
       }
       setState(() => isRequiredFromDependencies = value);
     }
@@ -131,8 +135,8 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
 
   Widget? buildTitleView(BuildContext context) {
     if (field.title.isEmpty) return null;
-    final fieldRadius = (theme.inputDecorationTheme.border
-            is OutlineInputBorder)
+    final fieldRadius =
+        (theme.inputDecorationTheme.border is OutlineInputBorder)
         ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
         : const BorderRadius.all(Radius.circular(8));
     return Padding(
@@ -147,8 +151,8 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
 
   Widget? buildDescriptionView(BuildContext context) {
     if (field.description.isEmpty) return null;
-    final inputBorderRadius = (theme.inputDecorationTheme.border
-            is OutlineInputBorder)
+    final inputBorderRadius =
+        (theme.inputDecorationTheme.border is OutlineInputBorder)
         ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
         : const BorderRadius.all(Radius.circular(4));
     return Padding(
@@ -168,8 +172,8 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
 
   Widget? buildErrorManuallyView(BuildContext context) {
     if (!handleControllerErrorManually || !controller.hasError) return null;
-    final inputBorderRadius = (theme.inputDecorationTheme.border
-            is OutlineInputBorder)
+    final inputBorderRadius =
+        (theme.inputDecorationTheme.border is OutlineInputBorder)
         ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
         : const BorderRadius.all(Radius.circular(4));
     return Padding(
@@ -222,12 +226,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
         ),
       ),
     );
-    return isReadOnly
-        ? IgnorePointer(
-            ignoring: true,
-            child: view,
-          )
-        : view;
+    return isReadOnly ? IgnorePointer(ignoring: true, child: view) : view;
   }
 
   void onSizeRendered(Size size, GlobalKey key) {

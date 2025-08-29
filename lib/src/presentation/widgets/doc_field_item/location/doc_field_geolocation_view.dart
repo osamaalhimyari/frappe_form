@@ -10,9 +10,10 @@ class DocFieldGeolocationView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomValueController<DocGeolocation>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<DocGeolocation>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<DocGeolocation> get controller =>

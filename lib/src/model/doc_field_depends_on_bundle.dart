@@ -35,8 +35,9 @@ class DocFieldDependsOnBundle {
       return false;
     }
 
-    num? controllerAnswerAsNum =
-        NumUtils.tryParse(controllerAnswer?.toString());
+    num? controllerAnswerAsNum = NumUtils.tryParse(
+      controllerAnswer?.toString(),
+    );
     num? expectedValueAsNum = NumUtils.tryParse(expectedAnswer?.toString());
 
     result = switch (operator) {
@@ -83,30 +84,23 @@ class DocFieldDependsOnBundle {
   }
 
   List<FieldController> _gatherDependencyControllers() => [
-        controller,
-        if (and != null) ...and!._gatherDependencyControllers(),
-        if (or != null) ...or!._gatherDependencyControllers(),
-      ];
+    controller,
+    if (and != null) ...and!._gatherDependencyControllers(),
+    if (or != null) ...or!._gatherDependencyControllers(),
+  ];
 
-  DocFieldDependsOnBundle withCondition(
-      {required DocFieldDependsOnCondition condition,
-      required DocFieldDependsOnBundle? value}) {
+  DocFieldDependsOnBundle withCondition({
+    required DocFieldDependsOnCondition condition,
+    required DocFieldDependsOnBundle? value,
+  }) {
     DocFieldDependsOnBundle? and = this.and;
     DocFieldDependsOnBundle? or = this.or;
     switch (condition) {
       case DocFieldDependsOnCondition.and:
-        and = and?.withCondition(
-              condition: condition,
-              value: value,
-            ) ??
-            value;
+        and = and?.withCondition(condition: condition, value: value) ?? value;
         break;
       case DocFieldDependsOnCondition.or:
-        or = or?.withCondition(
-              condition: condition,
-              value: value,
-            ) ??
-            value;
+        or = or?.withCondition(condition: condition, value: value) ?? value;
         break;
     }
 
@@ -121,7 +115,9 @@ class DocFieldDependsOnBundle {
   }
 
   static DocFieldDependsOnBundle? fromExpression(
-      String? expression, List<DocFieldBundle> itemBundles) {
+    String? expression,
+    List<DocFieldBundle> itemBundles,
+  ) {
     if (expression == null || expression.isEmpty) return null;
     try {
       final dependsOnParts = expression.split('eval:');
@@ -148,27 +144,26 @@ class DocFieldDependsOnBundle {
         for (int i = 0; i < conditionExpression.length; ++i) {
           String conditionExpressionPart1 = conditionExpression[i].trim();
           field1 = _analyzeConditionExpression(
-              conditionExpressionPart1, itemBundles);
+            conditionExpressionPart1,
+            itemBundles,
+          );
           if (i + 1 < conditionExpression.length) {
             ++i;
             String conditionExpressionPart2 = conditionExpression[i].trim();
             DocFieldDependsOnBundle? field2 = _analyzeConditionExpression(
-                conditionExpressionPart2, itemBundles);
+              conditionExpressionPart2,
+              itemBundles,
+            );
             if (field2 != null) {
-              field1 = field1?.withCondition(
-                    condition: condition,
-                    value: field2,
-                  ) ??
+              field1 =
+                  field1?.withCondition(condition: condition, value: field2) ??
                   field2;
             }
           }
           if (field == null) {
             field = field1;
           } else {
-            field = field.withCondition(
-              condition: condition,
-              value: field1,
-            );
+            field = field.withCondition(condition: condition, value: field1);
           }
         }
       }
@@ -187,8 +182,10 @@ class DocFieldDependsOnBundle {
       if (operatorParts.length == 2) {
         final fieldName = operatorParts[0].trim().replaceAll('doc.', '');
         if (fieldName.isEmpty) return null;
-        String expectedAnswer =
-            operatorParts[1].trim().replaceAll('\'', '').replaceAll('"', '');
+        String expectedAnswer = operatorParts[1]
+            .trim()
+            .replaceAll('\'', '')
+            .replaceAll('"', '');
         if (expectedAnswer.isEmpty) return null;
         final itemBundle = _findBundle(fieldName, itemBundles);
         return itemBundle == null
@@ -205,13 +202,17 @@ class DocFieldDependsOnBundle {
   }
 
   static DocFieldBundle? _findBundle(
-      String fieldName, List<DocFieldBundle> itemBundles) {
+    String fieldName,
+    List<DocFieldBundle> itemBundles,
+  ) {
     for (final item in itemBundles) {
       if (item.field.fieldName == fieldName) {
         return item;
       }
-      DocFieldBundle? result = _findBundle(
-          fieldName, [...item.children, ...item.view.childrenBundles]);
+      DocFieldBundle? result = _findBundle(fieldName, [
+        ...item.children,
+        ...item.view.childrenBundles,
+      ]);
       if (result != null) return result;
     }
     return null;

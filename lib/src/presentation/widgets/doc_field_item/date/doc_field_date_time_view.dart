@@ -27,9 +27,10 @@ class DocFieldDateTimeView extends DocFieldView {
     required this.type,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomValueController<DateTime>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<DateTime>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<DateTime> get controller =>
@@ -112,7 +113,8 @@ class DocFieldDateTimeViewState<SF extends DocFieldDateTimeView>
       lastDate: DateTime(2100),
     );
     if (newDate != null) {
-      dateTime = dateTime?.copyWith(
+      dateTime =
+          dateTime?.copyWith(
             year: newDate.year,
             month: newDate.month,
             day: newDate.day,

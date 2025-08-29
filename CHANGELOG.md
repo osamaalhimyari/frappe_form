@@ -9,6 +9,13 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.7.0
+### Added
+- Added support for `HTML` field type.
+
+### Changed
+- Improved `DocFieldSectionView` to properly render long Labels with round borders.
+
 ## 0.6.1
 ### Fixed
 - Fixed minor UI issue with `RadioGroup`

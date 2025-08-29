@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:adeptannotations/adeptannotations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:frappe_form/src/entity/doc_field.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
@@ -38,15 +38,15 @@ class DocForm extends DocType {
     super.description,
     List<DocField>? fields,
     List<String>? fieldsOrder,
-  })  : fields = fields ?? [],
-        fieldsOrder = fieldsOrder ?? [];
+  }) : fields = fields ?? [],
+       fieldsOrder = fieldsOrder ?? [];
 
   Map<String, dynamic> toAnswerMap() => {
-        if (owner != null) ParamUtils.owner: owner,
-        if (docStatus != null) ParamUtils.docStatus: docStatus,
-        if (idx != null) ParamUtils.idx: idx,
-        if (name != null) ParamUtils.docType: name,
-      };
+    if (owner != null) ParamUtils.owner: owner,
+    if (docStatus != null) ParamUtils.docStatus: docStatus,
+    if (idx != null) ParamUtils.idx: idx,
+    if (name != null) ParamUtils.docType: name,
+  };
 
   void sortFields() {
     for (int i = 0; i < fieldsOrder.length; ++i) {

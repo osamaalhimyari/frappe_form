@@ -10,7 +10,7 @@ enum GeometryPropertyType {
   final String name;
   const GeometryPropertyType(this.name);
 
-  static GeometryPropertyType? valueOf(String? name) =>
-      GeometryPropertyType.values
-          .firstWhereOrNull((value) => value.name == name);
+  static GeometryPropertyType? valueOf(String? name) => GeometryPropertyType
+      .values
+      .firstWhereOrNull((value) => value.name == name);
 }

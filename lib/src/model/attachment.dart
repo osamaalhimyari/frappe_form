@@ -1,4 +1,4 @@
-import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:adeptannotations/adeptannotations.dart';
 import 'package:frappe_form/src/logic/utils/text_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 

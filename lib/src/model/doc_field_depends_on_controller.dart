@@ -28,7 +28,8 @@ class DocFieldDependsOnController {
   }
 
   bool listenOnVisibilityDependsOnChangesAndCheck(
-      ValueChanged<bool>? listener) {
+    ValueChanged<bool>? listener,
+  ) {
     _onVisibilityDependsOnChanged = listener;
     visibilityDependsOn?.addListener(checkIfVisible);
     return checkIfVisible();

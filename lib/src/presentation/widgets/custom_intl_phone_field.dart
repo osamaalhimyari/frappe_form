@@ -50,18 +50,24 @@ class CustomIntlPhoneField extends IntlPhoneField {
     PickerDialogStyle? pickerDialogStyle,
     super.flagsButtonMargin = EdgeInsets.zero,
   }) : super(
-          initialCountryCode: initialCountryCode ?? defaultInitialCountryCode,
-          invalidNumberMessage: invalidNumberMessage ??
-              DocFormLocalization
-                  .instance.localization.exceptionInvalidPhoneNumber,
-          pickerDialogStyle: pickerDialogStyle ??
-              PickerDialogStyle(
-                searchFieldInputDecoration: InputDecoration(
-                  hintText: DocFormLocalization
-                      .instance.localization.textSearchPhoneCountryCode,
-                ),
-              ),
-        );
+         initialCountryCode: initialCountryCode ?? defaultInitialCountryCode,
+         invalidNumberMessage:
+             invalidNumberMessage ??
+             DocFormLocalization
+                 .instance
+                 .localization
+                 .exceptionInvalidPhoneNumber,
+         pickerDialogStyle:
+             pickerDialogStyle ??
+             PickerDialogStyle(
+               searchFieldInputDecoration: InputDecoration(
+                 hintText: DocFormLocalization
+                     .instance
+                     .localization
+                     .textSearchPhoneCountryCode,
+               ),
+             ),
+       );
 
   static String get defaultInitialCountryCode =>
       DocFormLocalization.instance.localization.locale.countryCode ?? 'US';

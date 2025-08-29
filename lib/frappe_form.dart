@@ -66,6 +66,7 @@ export 'package:frappe_form/src/presentation/widgets/doc_field_item/text_input/d
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/text_input/doc_field_text_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/text_input/doc_field_text_editor_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/open_choice/doc_field_drop_down_open_choice_view.dart';
+export 'package:frappe_form/src/presentation/widgets/doc_field_item/display/doc_field_html_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/display/doc_field_heading_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/bar/doc_field_rating_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';

@@ -25,11 +25,14 @@ targets:
         generate_for:
           - '**/entity/*.dart'
           - '**/model/*.dart'
-      copy_with_extension_gen:
+      adeptgenerator:
         enabled: true
-        options:
-          copy_with_null: false # Default is false. Generate `copyWithNull` functions.
-          skip_fields: true # Default is false. Prevent generation of individual field methods, e.g. `instance.copyWith.id("123")`.
         generate_for:
           - '**/entity/*.dart'
           - '**/model/*.dart'
+        options:
+          copy_with_ignore_synthetic: false
+          copy_with_allow_nullable: false
+          copy_with_consider_empty_collection_as_null: true
+          copy_with_include_private_fields: false
+          copy_with_avoid_constructor: false

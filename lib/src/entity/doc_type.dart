@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:adeptannotations/adeptannotations.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
 import 'package:frappe_form/src/logic/utils/param_utils.dart';
@@ -40,8 +40,9 @@ class DocType with EquatableMixin {
   @JsonKey(name: 'allow_auto_repeat')
   final int? allowAutoRepeat;
   @JsonKey(
-      name: ParamUtils.docType,
-      unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+    name: ParamUtils.docType,
+    unknownEnumValue: JsonKey.nullForUndefinedEnumValue,
+  )
   final DocTypeType? docType;
   @JsonKey(name: ParamUtils.docStatus)
   final int? docStatus;

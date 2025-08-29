@@ -8,8 +8,8 @@ class DocFormLoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final shimmerFieldRadius = (theme.inputDecorationTheme.border
-            is OutlineInputBorder)
+    final shimmerFieldRadius =
+        (theme.inputDecorationTheme.border is OutlineInputBorder)
         ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
         : const BorderRadius.all(Radius.circular(4));
     final baseColor = theme.brightness == Brightness.light

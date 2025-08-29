@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:adeptannotations/adeptannotations.dart';
 import 'package:frappe_form/src/entity/enumerator/feature_type.dart';
 import 'package:frappe_form/src/entity/enumerator/geolocation_type.dart';
 import 'package:frappe_form/src/entity/enumerator/geometry_property_type.dart';
@@ -93,8 +93,8 @@ class Geometry {
       : null;
   double? get longitude =>
       type == GeometryType.point && coordinates?.length == 2
-          ? coordinates![0]
-          : null;
+      ? coordinates![0]
+      : null;
 
   factory Geometry.fromJson(Map<String, dynamic> json) {
     return _$GeometryFromJson(json);

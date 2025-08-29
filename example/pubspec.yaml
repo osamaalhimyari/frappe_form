@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
   flutter: '>=3.3.0'
 
 # Dependencies specify other packages that your package needs in order to work.
@@ -33,13 +33,13 @@ dependencies:
     sdk: flutter
   frappe_form:
     path: ../
-  image_picker: ^1.1.2
-  file_picker: ^10.2.0
+  image_picker: ^1.2.0
+  file_picker: ^10.3.2
   crypto: ^3.0.6
   json_field_editor: ^1.2.1
 
-dependency_overrides:
-  file_picker: ^10.2.0 # Necessary override because frappe_form depends on html_editor_enhanced which depends on file_picker < 10.0.0
+#dependency_overrides:
+#  file_picker: ^10.3.2 # Necessary override because frappe_form depends on html_editor_enhanced which depends on file_picker < 10.0.0
 
 dev_dependencies:
   flutter_test:

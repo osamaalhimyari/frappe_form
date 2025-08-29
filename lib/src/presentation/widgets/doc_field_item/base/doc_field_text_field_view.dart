@@ -9,9 +9,9 @@ abstract class DocFieldTextFieldView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller:
-              controller ?? CustomTextEditingController(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomTextEditingController(focusNode: FocusNode()),
+       );
 
   @override
   CustomTextEditingController get controller =>
@@ -58,8 +58,9 @@ abstract class DocFieldTextFieldViewState<SF extends DocFieldTextFieldView>
       enabled: !isReadOnly,
       maxLength: maxLength,
       maxLines: maxLines,
-      textInputAction:
-          (maxLines != null && maxLines! > 1) ? null : textInputAction,
+      textInputAction: (maxLines != null && maxLines! > 1)
+          ? null
+          : textInputAction,
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
       inputFormatters: formatDecimals > 0
@@ -71,8 +72,9 @@ abstract class DocFieldTextFieldViewState<SF extends DocFieldTextFieldView>
             ]
           : null,
       obscuringCharacter: obscuringCharacter,
-      customButtonDefaultAction:
-          obscureText ? CustomButtonDefaultAction.passwordToggle : null,
+      customButtonDefaultAction: obscureText
+          ? CustomButtonDefaultAction.passwordToggle
+          : null,
     );
   }
 }

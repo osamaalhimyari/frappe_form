@@ -29,7 +29,8 @@ class DocFormLocalization {
       }
     }
     if (locale != null) {
-      localization = _localizationsMap[locale.toLanguageTag()] ??
+      localization =
+          _localizationsMap[locale.toLanguageTag()] ??
           _localizationsMap[locale.languageCode] ??
           _defaultLocalization;
     }
