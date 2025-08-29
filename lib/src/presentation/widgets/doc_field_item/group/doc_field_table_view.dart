@@ -21,7 +21,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   late final PageController pageController;
   final pageIndexNotifier = ValueNotifier<int>(0);
   double pageViewSize = 0;
-  final double removeButtonOffset = 8.0;
+  double removeButtonOffset = 16.0;
 
   @override
   void initState() {
@@ -93,12 +93,17 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     ),
   );
 
-  Widget removeButton(int index) => MaterialButton(
-    onPressed: () => onRemove(index),
+  Widget removeButton(int index) => Material(
     shape: const CircleBorder(),
     color: theme.colorScheme.error,
-    minWidth: 0,
-    child: Icon(Icons.delete, color: theme.colorScheme.onError),
+    clipBehavior: Clip.hardEdge,
+    child: InkWell(
+      onTap: () => onRemove(index),
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Icon(Icons.delete, color: theme.colorScheme.onError),
+      ),
+    ),
   );
 
   Widget get addButton => Center(

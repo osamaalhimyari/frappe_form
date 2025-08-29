@@ -97,7 +97,7 @@ class DocFormSamples {
         "description": "A section with multiple type of \ntexts.",
         "fieldname": "section_multiline_texts",
         "fieldtype": "Section Break",
-        "label": "This is a sample of a Section Label too long, to see how it fit in a mobile screen. And repeat: This is a sample of a Section Label too long, to see how it fit in a mobile screen"
+        "label": "This is a sample of a Section Label too long, to see how it fit in a mobile screen"
       },
       {
         "fieldname": "column_break_ofje",
