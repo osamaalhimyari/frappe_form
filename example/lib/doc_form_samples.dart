@@ -23,6 +23,10 @@ class DocFormSamples {
       "percent",
       "password",
       "phone",
+      "full_name",
+      "first_name",
+      "last_name",
+      "email",
       "column_break_vswc",
       "text",
       "small_text",
@@ -86,7 +90,7 @@ class DocFormSamples {
       {
         "fieldname": "html_intro",
         "fieldtype": "HTML",
-        "options": "<section>\n  <h2 style=\"color:#d35400;\">Freshly Hand-Tossed Pizza</h2>\n\n  <p>\n    <strong>Freshly hand-tossed dough</strong>, <em>slow-risen</em> for the perfect \n    <span style=\"color:#8e44ad;\">crunch</span> and <span style=\"color:#16a085;\">chew</span>, \n    topped with <span style=\"color:#c0392b;\"><strong>rich tomato sauce</strong></span> \n    and the <em>finest mozzarella</em>.\n  </p>\n\n  <p>\n    Each pizza is baked to <strong>golden perfection</strong> in our \n    <span style=\"color:#7f8c8d;\"><em>stone oven</em></span>, bringing out \n    <span style=\"color:#2c3e50;\">bold flavors</span> in every bite.\n  </p>\n\n  <h3 style=\"color:#2980b9;\">Choose Your Experience</h3>\n  <ul>\n    <li><em>Timeless classics</em></li>\n    <li><strong><span style=\"color:#27ae60;\">Chef\u2019s specialty creations</span></strong></li>\n  </ul>\n\n  <ol>\n    <li>Always made to share</li>\n    <li><strong><span style=\"color:#e74c3c;\">Always made with love</span></strong></li>\n  </ol>\n</section>\n"
+        "options": "<section>\n  <h2 style=\"color:#d35400;\">Freshly Hand-Tossed Pizza</h2>\n\n  <p>\n    <strong>Freshly hand-tossed dough</strong>, <em>slow-risen</em> for the perfect \n    <span style=\"color:#8e44ad;\">crunch</span> and <span style=\"color:#16a085;\">chew</span>, \n    topped with <span style=\"color:#c0392b;\"><strong>rich tomato sauce</strong></span> \n    and the <em>finest mozzarella</em>.\n  </p>\n\n  <p>\n    Each pizza is baked to <strong>golden perfection</strong> in our \n    <span style=\"color:#7f8c8d;\"><em>stone oven</em></span>, bringing out \n    <span style=\"color:#2c3e50;\">bold flavors</span> in every bite.\n  </p>\n\n  <br>\n  <ol>\n    <li><a target=\"_blank\" href=\"https://www.google.com\">\ud83d\udc40 Tap here to see</a></li>\n    <li><a target=\"_blank\" href=\"https://www.google.com\">\ud83c\udf10 www.google.com</a></li>\n    <li><a target=\"_blank\" href=\"mailto:smith@example.org?subject=News&amp;body=New%20plugin\">\ud83d\udce7 Send email</a></li>\n    <li><a target=\"_blank\" href=\"tel:+1-555-010-999\">\ud83d\udcde Make call</a></li>\n    <li><a target=\"_blank\" href=\"sms:+1-555-010-999\">\ud83d\udcac Send message</a></li>\n  </ol>\n\n  <h3 style=\"color:#2980b9;\">Choose Your Experience</h3>\n  <ul>\n    <li><em>Timeless classics</em></li>\n    <li><strong><span style=\"color:#27ae60;\">Chef\u2019s specialty creations</span></strong></li>\n  </ul>\n\n  <ol>\n    <li>Always made to share</li>\n    <li><strong><span style=\"color:#e74c3c;\">Always made with love</span></strong></li>\n  </ol>\n</section>\n"
       },
       {
         "fieldname": "tab_texts",
@@ -143,7 +147,32 @@ class DocFormSamples {
       {
         "fieldname": "phone",
         "fieldtype": "Phone",
-        "label": "Phone"
+        "label": "Phone",
+        "render_rules": "{\n  \"type\": \"FILL_WITH_PHONE\"\n}"
+      },
+      {
+        "fieldname": "full_name",
+        "fieldtype": "Data",
+        "label": "Full name",
+        "render_rules": "{\n  \"type\": \"FILL_WITH_FULL_NAME\"\n}"
+      },
+      {
+        "fieldname": "first_name",
+        "fieldtype": "Data",
+        "label": "First name",
+        "render_rules": "{\n  \"type\": \"FILL_WITH_FIRST_NAME\"\n}"
+      },
+      {
+        "fieldname": "last_name",
+        "fieldtype": "Data",
+        "label": "Last name",
+        "render_rules": "{\n  \"type\": \"FILL_WITH_LAST_NAME\"\n}"
+      },
+      {
+        "fieldname": "email",
+        "fieldtype": "Data",
+        "label": "Email",
+        "render_rules": "{\n  \"type\": \"FILL_WITH_EMAIL\"\n}"
       },
       {
         "fieldname": "column_break_vswc",
@@ -510,7 +539,7 @@ class DocFormSamples {
     ],
     "index_web_pages_for_search": 1,
     "links": [],
-    "modified": "2025-08-29 09:49:53.773425",
+    "modified": "2025-09-25 04:43:24.086347",
     "modified_by": "user@mail.com",
     "module": "Culinary Forms",
     "name": "FieldTest",
@@ -532,7 +561,7 @@ class DocFormSamples {
     "sort_field": "modified",
     "sort_order": "DESC",
     "states": []
-}
+  }
   ''';
 
   static const tableTest = r'''

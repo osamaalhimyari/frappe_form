@@ -37,7 +37,7 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | Rating | :white_check_mark: |
 | Heading | :white_check_mark: |
 | Table | :white_check_mark: _(relies on having a `child_table` property that contains the JSON DocType definition of the referenced DocType)_ |
-| HTML | :white_check_mark: |  
+| HTML | :white_check_mark: _(With support for link tap behavior by using the [url_launcher](https://pub.dev/packages/url_launcher) plugin)_ |  
 | Link | :ballot_box_with_check: |  
 | Dynamic Link | :ballot_box_with_check: |  
 | Barcode | :ballot_box_with_check: |  

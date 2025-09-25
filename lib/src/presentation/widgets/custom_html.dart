@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 extension HtmlStyle on TextStyle {
   Style get asHtmlStyle => Style(
@@ -14,11 +15,18 @@ extension HtmlStyle on TextStyle {
 }
 
 class CustomHtml extends Html {
+  static OnTap defaultOnLinkTap = (url, attributes, element) {
+    final Uri? uri = Uri.tryParse(url ?? '');
+    if (uri != null) {
+      launchUrl(uri);
+    }
+  };
+
   CustomHtml({
     super.key,
     super.anchorKey,
     super.data,
-    super.onLinkTap,
+    OnTap? onLinkTap,
     super.onAnchorTap,
     super.extensions = const [],
     super.onCssParseError,
@@ -28,6 +36,7 @@ class CustomHtml extends Html {
     Map<String, Style>? styleMap,
     Style? style,
   }) : super(
+         onLinkTap: onLinkTap ?? defaultOnLinkTap,
          style: styleMap ?? (style == null ? {} : {'body': style, 'p': style}),
        );
 }

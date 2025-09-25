@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.8.0
+### Added
+- Implemented link tap behavior for `HTML` fields.
+
 ## 0.7.0
 ### Added
 - Added support for `HTML` field type.
