@@ -59,7 +59,19 @@ class DocFieldCheckViewState<SF extends DocFieldCheckView>
       controlAffinity: ListTileControlAffinity.leading,
       contentPadding: EdgeInsets.zero,
       dense: false,
-      title: Text(field.title),
+      title: Text.rich(
+        TextSpan(
+          style: theme.textTheme.titleMedium,
+          children: [
+            if (field.title.isNotEmpty) TextSpan(text: field.title),
+            if (isRequired)
+              TextSpan(
+                text: '${field.title.isNotEmpty ? ' ' : ''}*',
+                style: TextStyle(color: theme.colorScheme.error),
+              ),
+          ],
+        ),
+      ),
       value: isSelected,
       onChanged: onSelectedValueChanged,
       enabled: !isReadOnly,

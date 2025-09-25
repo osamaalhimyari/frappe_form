@@ -9,7 +9,7 @@ class DocFieldTableView extends DocFieldView {
     super.children,
     super.childrenBundles,
     super.dependsOnController,
-  }) : super(controller: DummyController());
+  }) : super(controller: CustomTextEditingController());
 
   @override
   State createState() => DocFieldTableViewState();
@@ -17,6 +17,10 @@ class DocFieldTableView extends DocFieldView {
 
 class DocFieldTableViewState<SF extends DocFieldTableView>
     extends DocFieldViewState<SF> {
+  @override
+  CustomTextEditingController get controller =>
+      super.controller as CustomTextEditingController;
+
   late final DocFormController docFormController;
   late final PageController pageController;
   final pageIndexNotifier = ValueNotifier<int>(0);
@@ -142,6 +146,9 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       childrenBundles.removeAt(index);
       setState(() {});
       animateToPage(pageIndexNotifier.value);
+      // Update the controller text value to comply with controller validation if field is required
+      int value = (int.tryParse(controller.text) ?? 0) - 1;
+      controller.text = '${value > 0 ? value : ''}';
     }
   }
 
@@ -162,6 +169,8 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       setState(() {});
       // Scroll to the last item added
       animateToPage(childrenBundles.length - 1);
+      // Update the controller text value to comply with controller validation if field is required
+      controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
     }
   }
 

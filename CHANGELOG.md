@@ -12,6 +12,7 @@ Types of changes
 ## 0.8.0
 ### Added
 - Implemented link tap behavior for `HTML` fields.
+- Added visual indication for required fields by displaying a red asterisk (*) in field labels.
 
 ## 0.7.0
 ### Added

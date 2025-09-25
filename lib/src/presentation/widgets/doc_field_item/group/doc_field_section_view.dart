@@ -114,7 +114,7 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
                     )
                   : childrenView,
             ),
-            if (field.title.isNotEmpty)
+            if (field.title.isNotEmpty || isRequired)
               Positioned(
                 left: 16,
                 right: 16,
@@ -133,9 +133,21 @@ class DocFieldSectionViewState<SF extends DocFieldSectionView>
                         horizontal: 8 + (borderRadius / 4),
                         vertical: 8 + (borderRadius / 16),
                       ),
-                      child: Text(
-                        field.title,
-                        style: theme.textTheme.titleMedium,
+                      child: Text.rich(
+                        TextSpan(
+                          style: theme.textTheme.titleMedium,
+                          children: [
+                            if (field.title.isNotEmpty)
+                              TextSpan(text: field.title),
+                            if (isRequired)
+                              TextSpan(
+                                text: '${field.title.isNotEmpty ? ' ' : ''}*',
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -35,11 +35,11 @@ abstract class DocFieldView extends StatefulWidget {
   int? get maxLength => field.maxLength;
 
   void initController() {
-    controller.validations.addAll([
+    controller.validations.addAll({
       if (isRequired) defaultRequiredFieldValidation,
       if ((maxLength ?? 0) > 0)
         ValidationUtils.maxLengthValidation(maxLength: maxLength!),
-    ]);
+    });
   }
 }
 
@@ -134,7 +134,7 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
   Widget buildBody(BuildContext context);
 
   Widget? buildTitleView(BuildContext context) {
-    if (field.title.isEmpty) return null;
+    if (field.title.isEmpty && !isRequired) return null;
     final fieldRadius =
         (theme.inputDecorationTheme.border is OutlineInputBorder)
         ? (theme.inputDecorationTheme.border as OutlineInputBorder).borderRadius
@@ -145,7 +145,19 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
         right: fieldRadius.topRight.x / 2,
         bottom: 4.0,
       ),
-      child: Text(field.title, style: theme.textTheme.titleSmall),
+      child: Text.rich(
+        TextSpan(
+          style: theme.textTheme.titleSmall,
+          children: [
+            if (field.title.isNotEmpty) TextSpan(text: field.title),
+            if (isRequired)
+              TextSpan(
+                text: '${field.title.isNotEmpty ? ' ' : ''}*',
+                style: TextStyle(color: theme.colorScheme.error),
+              ),
+          ],
+        ),
+      ),
     );
   }
 

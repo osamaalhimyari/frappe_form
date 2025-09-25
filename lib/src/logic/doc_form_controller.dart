@@ -10,6 +10,7 @@ class DocFormController {
   /// [DocFieldView] widgets.
   Future<DocFieldView?> Function(
     DocField field,
+    List<DocFieldBundle> childrenBundles,
     Future<Attachment?> Function()? onAttachmentLoaded,
   )?
   onBuildFieldView;
@@ -145,7 +146,11 @@ class DocFormController {
     );
 
     field = await onOverrideField?.call(field) ?? field;
-    fieldView = await onBuildFieldView?.call(field, onAttachmentLoaded);
+    fieldView = await onBuildFieldView?.call(
+      field,
+      children,
+      onAttachmentLoaded,
+    );
 
     if (fieldView == null) {
       switch (fieldType) {

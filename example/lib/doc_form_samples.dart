@@ -115,7 +115,9 @@ class DocFormSamples {
       {
         "fieldname": "data",
         "fieldtype": "Data",
-        "label": "Data"
+        "in_list_view": 1,
+        "label": "Data",
+        "reqd": 1
       },
       {
         "fieldname": "int",
@@ -364,7 +366,8 @@ class DocFormSamples {
       {
         "fieldname": "photo_1",
         "fieldtype": "Attach Image",
-        "label": "Photo 1"
+        "label": "Photo 1",
+        "reqd": 1
       },
       {
         "fieldname": "photo_2",
@@ -408,7 +411,8 @@ class DocFormSamples {
       {
         "fieldname": "place_data",
         "fieldtype": "Long Text",
-        "label": "Place Data"
+        "label": "Place Data",
+        "reqd": 1
       },
       {
         "fieldname": "section_break_moic",
@@ -435,6 +439,7 @@ class DocFormSamples {
         "fieldtype": "Table",
         "label": "Recipe Evaluation Ingredients",
         "options": "Recipe Evaluation Ingredients",
+        "reqd": 1,
         "child_table": {
           "actions": [],
           "allow_rename": 1,
