@@ -9,6 +9,13 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.9.0
+### Added
+- Added support for basic arithmetic operators _(like +,-,*,/)_ on **Mandatory Depends On (JS)**, **Read Only Depends On (JS)** and **Display Depends On (JS)** expressions in fields.
+
+### Removed
+- Removed bold style in checkbox labels.
+
 ## 0.8.0
 ### Added
 - Implemented link tap behavior for `HTML` fields.

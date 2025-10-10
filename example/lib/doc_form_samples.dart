@@ -58,6 +58,12 @@ class DocFormSamples {
       "check_3",
       "none_of_the_above_check",
       "none_of_the_above_text",
+      "another_section_with_depends_section",
+      "check1",
+      "check2",
+      "check3",
+      "check4",
+      "check5",
       "custom_fields_tab",
       "gallery_section",
       "photo_1",
@@ -353,6 +359,47 @@ class DocFormSamples {
         "mandatory_depends_on": "eval:doc.none_of_the_above_check == 1"
       },
       {
+        "description": "Only 3 checks can be checked",
+        "fieldname": "another_section_with_depends_section",
+        "fieldtype": "Section Break",
+        "label": "Another section with Depends"
+      },
+      {
+        "default": "0",
+        "fieldname": "check1",
+        "fieldtype": "Check",
+        "label": "Check 1",
+        "read_only_depends_on": "eval:doc.check2 + doc.check3 + doc.check4 + doc.check5 >= 3"
+      },
+      {
+        "default": "0",
+        "fieldname": "check2",
+        "fieldtype": "Check",
+        "label": "Check 2",
+        "read_only_depends_on": "eval:doc.check1 + doc.check3 + doc.check4 + doc.check5 >= 3"
+      },
+      {
+        "default": "0",
+        "fieldname": "check3",
+        "fieldtype": "Check",
+        "label": "Check 3",
+        "read_only_depends_on": "eval:doc.check1 + doc.check2 + doc.check4 + doc.check5 >= 3"
+      },
+      {
+        "default": "0",
+        "fieldname": "check4",
+        "fieldtype": "Check",
+        "label": "Check 4",
+        "read_only_depends_on": "eval:doc.check1 + doc.check2 + doc.check3 + doc.check5 >= 3"
+      },
+      {
+        "default": "0",
+        "fieldname": "check5",
+        "fieldtype": "Check",
+        "label": "Check 5",
+        "read_only_depends_on": "eval:doc.check1 + doc.check2 + doc.check3 + doc.check4 >= 3"
+      },
+      {
         "fieldname": "custom_fields_tab",
         "fieldtype": "Tab Break",
         "label": "Custom fields"
@@ -544,7 +591,7 @@ class DocFormSamples {
     ],
     "index_web_pages_for_search": 1,
     "links": [],
-    "modified": "2025-09-25 04:43:24.086347",
+    "modified": "2025-10-10 03:57:48.220332",
     "modified_by": "user@mail.com",
     "module": "Culinary Forms",
     "name": "FieldTest",

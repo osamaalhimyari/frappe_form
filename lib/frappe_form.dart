@@ -18,6 +18,7 @@ export 'package:frappe_form/src/logic/utils/date_utils.dart';
 export 'package:frappe_form/src/logic/doc_field_group_controller.dart';
 export 'package:frappe_form/src/logic/doc_form_controller.dart';
 export 'package:frappe_form/src/logic/enumerator/doc_field_depends_on_behavior.dart';
+export 'package:frappe_form/src/logic/enumerator/doc_field_depends_on_arithmetic.dart';
 export 'package:frappe_form/src/logic/enumerator/doc_field_depends_on_operator.dart';
 export 'package:frappe_form/src/logic/enumerator/doc_field_depends_on_condition.dart';
 export 'package:frappe_form/src/model/doc_field_depends_on_controller.dart';

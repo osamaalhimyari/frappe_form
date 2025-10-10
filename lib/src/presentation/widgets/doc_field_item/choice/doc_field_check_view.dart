@@ -61,7 +61,6 @@ class DocFieldCheckViewState<SF extends DocFieldCheckView>
       dense: false,
       title: Text.rich(
         TextSpan(
-          style: theme.textTheme.titleMedium,
           children: [
             if (field.title.isNotEmpty) TextSpan(text: field.title),
             if (isRequired)

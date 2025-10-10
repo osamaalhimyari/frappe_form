@@ -8,6 +8,10 @@ class DocFieldDependsOnBundle {
   final dynamic expectedAnswer;
   final DocFieldDependsOnBundle? and;
   final DocFieldDependsOnBundle? or;
+  final DocFieldDependsOnBundle? sum;
+  final DocFieldDependsOnBundle? subtract;
+  final DocFieldDependsOnBundle? multiply;
+  final DocFieldDependsOnBundle? divide;
   final List<FieldController> dependencyControllers;
 
   DocFieldDependsOnBundle({
@@ -17,11 +21,20 @@ class DocFieldDependsOnBundle {
     required this.expectedAnswer,
     this.and,
     this.or,
+    this.sum,
+    this.subtract,
+    this.multiply,
+    this.divide,
   }) : dependencyControllers = [] {
     dependencyControllers.addAll(_gatherDependencyControllers());
   }
 
-  bool check() {
+  bool check({
+    num? parentSumControllerAnswer,
+    num? parentSubtractControllerAnswer,
+    num? parentMultiplyControllerAnswer,
+    num? parentDivideControllerAnswer,
+  }) {
     bool result = true;
     dynamic controllerAnswer;
     if (controller.rawValue is DocGeolocation) {
@@ -38,13 +51,29 @@ class DocFieldDependsOnBundle {
     num? controllerAnswerAsNum = NumUtils.tryParse(
       controllerAnswer?.toString(),
     );
+
+    if (controllerAnswerAsNum != null) {
+      controllerAnswerAsNum += parentSumControllerAnswer ?? 0;
+      controllerAnswerAsNum = parentSubtractControllerAnswer == null
+          ? controllerAnswerAsNum
+          : (parentSubtractControllerAnswer - controllerAnswerAsNum);
+      controllerAnswerAsNum *= parentMultiplyControllerAnswer ?? 1;
+      controllerAnswerAsNum = parentDivideControllerAnswer == null
+          ? controllerAnswerAsNum
+          : (parentDivideControllerAnswer / controllerAnswerAsNum);
+    }
+
     num? expectedValueAsNum = NumUtils.tryParse(expectedAnswer?.toString());
 
     result = switch (operator) {
       DocFieldDependsOnOperator.equals =>
-        controllerAnswer?.toString() == expectedAnswer?.toString(),
+        controllerAnswerAsNum != null && expectedValueAsNum != null
+            ? controllerAnswerAsNum == expectedValueAsNum
+            : controllerAnswer?.toString() == expectedAnswer?.toString(),
       DocFieldDependsOnOperator.notEquals =>
-        controllerAnswer?.toString() != expectedAnswer?.toString(),
+        controllerAnswerAsNum != null && expectedValueAsNum != null
+            ? controllerAnswerAsNum != expectedValueAsNum
+            : controllerAnswer?.toString() != expectedAnswer?.toString(),
       DocFieldDependsOnOperator.greaterThan =>
         controllerAnswerAsNum == null || expectedValueAsNum == null
             ? false
@@ -61,12 +90,37 @@ class DocFieldDependsOnBundle {
         controllerAnswerAsNum == null || expectedValueAsNum == null
             ? false
             : controllerAnswerAsNum <= expectedValueAsNum,
+      DocFieldDependsOnOperator.none => result,
     };
     if (and != null) {
       result = result && and!.check();
     }
     if (or != null) {
       result = result || or!.check();
+    }
+    if (sum != null) {
+      result =
+          result &&
+          sum!.check(parentSumControllerAnswer: controllerAnswerAsNum);
+    }
+    if (subtract != null) {
+      result =
+          result &&
+          subtract!.check(
+            parentSubtractControllerAnswer: controllerAnswerAsNum,
+          );
+    }
+    if (multiply != null) {
+      result =
+          result &&
+          multiply!.check(
+            parentMultiplyControllerAnswer: controllerAnswerAsNum,
+          );
+    }
+    if (divide != null) {
+      result =
+          result &&
+          divide!.check(parentDivideControllerAnswer: controllerAnswerAsNum);
     }
     return result;
   }
@@ -85,8 +139,12 @@ class DocFieldDependsOnBundle {
 
   List<FieldController> _gatherDependencyControllers() => [
     controller,
-    if (and != null) ...and!._gatherDependencyControllers(),
-    if (or != null) ...or!._gatherDependencyControllers(),
+    ...?and?._gatherDependencyControllers(),
+    ...?or?._gatherDependencyControllers(),
+    ...?sum?._gatherDependencyControllers(),
+    ...?subtract?._gatherDependencyControllers(),
+    ...?multiply?._gatherDependencyControllers(),
+    ...?divide?._gatherDependencyControllers(),
   ];
 
   DocFieldDependsOnBundle withCondition({
@@ -114,6 +172,48 @@ class DocFieldDependsOnBundle {
     );
   }
 
+  DocFieldDependsOnBundle withArithmetic({
+    required DocFieldDependsOnArithmetic arithmetic,
+    required DocFieldDependsOnBundle? value,
+  }) {
+    DocFieldDependsOnBundle? sum = this.sum;
+    DocFieldDependsOnBundle? subtract = this.subtract;
+    DocFieldDependsOnBundle? multiply = this.multiply;
+    DocFieldDependsOnBundle? divide = this.divide;
+    switch (arithmetic) {
+      case DocFieldDependsOnArithmetic.sum:
+        sum =
+            sum?.withArithmetic(arithmetic: arithmetic, value: value) ?? value;
+        break;
+      case DocFieldDependsOnArithmetic.subtract:
+        subtract =
+            subtract?.withArithmetic(arithmetic: arithmetic, value: value) ??
+            value;
+        break;
+      case DocFieldDependsOnArithmetic.multiply:
+        multiply =
+            multiply?.withArithmetic(arithmetic: arithmetic, value: value) ??
+            value;
+        break;
+      case DocFieldDependsOnArithmetic.divide:
+        divide =
+            divide?.withArithmetic(arithmetic: arithmetic, value: value) ??
+            value;
+        break;
+    }
+
+    return DocFieldDependsOnBundle(
+      fieldName: fieldName,
+      controller: controller,
+      operator: operator,
+      expectedAnswer: expectedAnswer,
+      sum: sum,
+      subtract: subtract,
+      multiply: multiply,
+      divide: divide,
+    );
+  }
+
   static DocFieldDependsOnBundle? fromExpression(
     String? expression,
     List<DocFieldBundle> itemBundles,
@@ -123,7 +223,7 @@ class DocFieldDependsOnBundle {
       final dependsOnParts = expression.split('eval:');
       if (dependsOnParts.length <= 1) return null;
       final evalExpression = dependsOnParts[1];
-      return _analyzeConditionExpression(evalExpression, itemBundles);
+      return _analyzeExpression(evalExpression, itemBundles);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -132,7 +232,7 @@ class DocFieldDependsOnBundle {
     return null;
   }
 
-  static DocFieldDependsOnBundle? _analyzeConditionExpression(
+  static DocFieldDependsOnBundle? _analyzeExpression(
     String expression,
     List<DocFieldBundle> itemBundles,
   ) {
@@ -143,14 +243,11 @@ class DocFieldDependsOnBundle {
         DocFieldDependsOnBundle? field1;
         for (int i = 0; i < conditionExpression.length; ++i) {
           String conditionExpressionPart1 = conditionExpression[i].trim();
-          field1 = _analyzeConditionExpression(
-            conditionExpressionPart1,
-            itemBundles,
-          );
+          field1 = _analyzeExpression(conditionExpressionPart1, itemBundles);
           if (i + 1 < conditionExpression.length) {
             ++i;
             String conditionExpressionPart2 = conditionExpression[i].trim();
-            DocFieldDependsOnBundle? field2 = _analyzeConditionExpression(
+            DocFieldDependsOnBundle? field2 = _analyzeExpression(
               conditionExpressionPart2,
               itemBundles,
             );
@@ -164,6 +261,38 @@ class DocFieldDependsOnBundle {
             field = field1;
           } else {
             field = field.withCondition(condition: condition, value: field1);
+          }
+        }
+      }
+    }
+
+    for (final arithmetic in DocFieldDependsOnArithmetic.values) {
+      final arithmeticExpression = expression.split(arithmetic.name);
+      if (arithmeticExpression.length > 1) {
+        DocFieldDependsOnBundle? field1;
+        for (int i = 0; i < arithmeticExpression.length; ++i) {
+          String arithmeticExpressionPart1 = arithmeticExpression[i].trim();
+          field1 = _analyzeExpression(arithmeticExpressionPart1, itemBundles);
+          if (i + 1 < arithmeticExpression.length) {
+            ++i;
+            String conditionExpressionPart2 = arithmeticExpression[i].trim();
+            DocFieldDependsOnBundle? field2 = _analyzeExpression(
+              conditionExpressionPart2,
+              itemBundles,
+            );
+            if (field2 != null) {
+              field1 =
+                  field1?.withArithmetic(
+                    arithmetic: arithmetic,
+                    value: field2,
+                  ) ??
+                  field2;
+            }
+          }
+          if (field == null) {
+            field = field1;
+          } else {
+            field = field.withArithmetic(arithmetic: arithmetic, value: field1);
           }
         }
       }
@@ -198,7 +327,16 @@ class DocFieldDependsOnBundle {
               );
       }
     }
-    return null;
+    final fieldName = expression.trim().replaceAll('doc.', '');
+    final itemBundle = _findBundle(fieldName, itemBundles);
+    return itemBundle == null
+        ? null
+        : DocFieldDependsOnBundle(
+            fieldName: fieldName,
+            controller: itemBundle.controller,
+            operator: DocFieldDependsOnOperator.none,
+            expectedAnswer: null,
+          );
   }
 
   static DocFieldBundle? _findBundle(
