@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.9.1
+### Changed
+- Improved phone number parsing when filling phone input field to ensure proper US number handling.
+
 ## 0.9.0
 ### Added
 - Added support for basic arithmetic operators _(like +,-,*,/)_ on **Mandatory Depends On (JS)**, **Read Only Depends On (JS)** and **Display Depends On (JS)** expressions in fields.

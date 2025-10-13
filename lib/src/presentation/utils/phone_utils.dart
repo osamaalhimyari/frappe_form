@@ -39,14 +39,20 @@ extension PhoneUtils on PhoneNumber {
         .replaceAll(')', '')
         .replaceAll('-', '')
         .replaceAll(' ', '');
-    final country = countries.firstWhere((country) {
-      if (tempNumber.startsWith(country.dialCode)) {
+    Country country = countries.firstWhere((country) {
+      if (tempNumber.startsWith(country.dialCode) &&
+          tempNumber.length - country.dialCode.length == country.minLength) {
         final numberLength = tempNumber.length - country.dialCode.length;
         return numberLength >= country.minLength &&
             numberLength <= country.maxLength;
       }
       return false;
     }, orElse: () => defaultInitialCountry);
+    // Treat Canada as US for phone number search purposes, as US numbers are more common.
+    // This is because in the search of country, the first match will be CA.
+    if (country.code == 'CA') {
+      country = countries.firstWhere((c) => c.code == 'US');
+    }
     return PhoneInfo(
       number: tempNumber.length >= country.dialCode.length
           ? tempNumber.substring(country.dialCode.length)
