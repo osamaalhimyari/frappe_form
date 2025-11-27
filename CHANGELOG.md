@@ -9,6 +9,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## 0.9.2
+### Fixed
+- `TextField` button icon disabled state fixed. 
+
 ## 0.9.1
 ### Changed
 - Improved phone number parsing when filling phone input field to ensure proper US number handling.

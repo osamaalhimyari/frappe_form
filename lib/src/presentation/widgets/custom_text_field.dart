@@ -270,16 +270,19 @@ class CustomTextFieldState<S extends CustomTextField> extends State<S> {
   }
 
   Widget get customButtonIcon {
+    final color = (widget.enabled ?? true)
+        ? widget.customButtonColor
+        : Theme.of(context).disabledColor;
     if (widget.customButtonIcon != null) {
-      return Icon(widget.customButtonIcon, color: widget.customButtonColor);
+      return Icon(widget.customButtonIcon, color: color);
     }
     switch (widget.customButtonDefaultAction) {
       case CustomButtonDefaultAction.clear:
-        return Icon(Icons.clear, color: widget.customButtonColor);
+        return Icon(Icons.clear, color: color);
       case CustomButtonDefaultAction.passwordToggle:
         return Icon(
           obscureText ? Icons.visibility_off : Icons.visibility,
-          color: widget.customButtonColor,
+          color: color,
         );
       default:
         return const SizedBox();
