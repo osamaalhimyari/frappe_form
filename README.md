@@ -46,7 +46,7 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | Color | :ballot_box_with_check: |  
 | Image | :ballot_box_with_check: |  
 | Read Only | :ballot_box_with_check: |  
-| Signature | :ballot_box_with_check: |  
+| Signature | :white_check_mark: |  
 | Table MultiSelect | :ballot_box_with_check: |  
 | Duration | :ballot_box_with_check: |  
 | HTML Editor | :ballot_box_with_check: |  
