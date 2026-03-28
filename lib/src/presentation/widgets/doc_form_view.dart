@@ -26,11 +26,19 @@ class DocFormView extends StatefulWidget {
   /// of DocFormView
   final Future<Attachment?> Function()? onAttachmentLoaded;
 
+  /// for fetching link field suggestions in doc form view,
+  final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)? fetchSuggestions;
+
   /// To add custom actions to the AppBar.
   final List<Widget>? actions;
 
   /// To indicate there is an ongoing loading process
   final bool isLoading;
+
+  /// this is the base url that will be used to load attachments if there are any attachment fields in the form.
+  ///  It is necessary because attachments in Frappe are usually stored with relative paths,
+  ///  so we need a base url to load them.
+  final String baseUrl;
 
   /// Indicates what should be the fallback localization if loalce is not
   /// supported.
@@ -50,6 +58,7 @@ class DocFormView extends StatefulWidget {
   const DocFormView({
     super.key,
     required this.form,
+     this.baseUrl='',
     this.onSubmit,
     this.onCancel,
     this.onResponse,
@@ -59,7 +68,7 @@ class DocFormView extends StatefulWidget {
     this.isLoading = false,
     this.defaultLocalization,
     this.localizations,
-    this.locale,
+    this.locale,required this.fetchSuggestions,
   });
 
   @override
@@ -159,6 +168,8 @@ class DocFormViewState extends State<DocFormView>
     fieldBundles = await controller.buildFormFields(
       form,
       onAttachmentLoaded: widget.onAttachmentLoaded,
+      baseUrl: widget.baseUrl,
+      fetchSuggestions: widget.fetchSuggestions
     );
     tabsCount = fieldBundles.length;
     tabController = TabController(

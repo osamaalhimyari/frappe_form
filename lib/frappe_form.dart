@@ -77,3 +77,8 @@ export 'package:frappe_form/src/presentation/localization/doc_form_es_localizati
 export 'package:frappe_form/src/presentation/localization/doc_form_base_localization.dart';
 export 'package:frappe_form/src/presentation/localization/doc_form_en_localization.dart';
 export 'package:frappe_form/src/presentation/localization/doc_form_localization.dart';
+//
+export 'package:frappe_form/src/presentation/widgets/new_fields/dashboard/connections_view.dart';
+export 'package:frappe_form/src/presentation/widgets/new_fields/dashboard/heat_map_view.dart';
+export 'package:frappe_form/src/model/new_models/transaction.dart';
+export 'package:frappe_form/src/presentation/widgets/new_fields/link_field/doc_field_link_view.dart';

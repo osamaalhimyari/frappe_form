@@ -4,6 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 /// The following are the types of fields you can define while creating new ones, or while amending standard ones.
 /// Docs: https://docs.frappe.io/erpnext/v14/user/manual/en/customize-erpnext/articles/field-types#field-types
 enum FieldType {
+ 
+
   /// Link field is connected to another master from where it fetches data. For example, in the Quotation master, the Customer is a Link field.
   /// Docs: https://docs.frappe.io/erpnext/v14/user/manual/en/customize-erpnext/articles/field-types#link
   @JsonValue('Link')
@@ -214,9 +216,19 @@ enum FieldType {
   @JsonValue('JSON')
   json('JSON'),
 
+   /// Only for internal use
+  @JsonValue('Heatmap')
+  heatmap('Heatmap'),
+  
+   /// Only for internal use
+  @JsonValue('Connections')
+  connections('Connections'),
+
   /// Only for internal use
   @JsonValue('unknown')
   unknown('unknown');
+
+
 
   final String name;
   const FieldType(this.name);

@@ -1,5 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form/src/presentation/widgets/new_fields/attach_image/doc_field_attach_iamge_view.dart';
+import 'package:frappe_form/src/presentation/widgets/new_fields/barcode_field/doc_field_barcode_view.dart';
+import 'package:frappe_form/src/presentation/widgets/new_fields/color_field/doc_field_color_view.dart';
+import 'package:frappe_form/src/presentation/widgets/new_fields/multi_select/doc_field_multi_select_view.dart';
+import 'package:frappe_form/src/presentation/widgets/new_fields/signature/doc_field_signature_view.dart';
 
 class DocFormController {
   /// Allows to override a [DocField] before building its view and controller.
@@ -30,10 +35,12 @@ class DocFormController {
     this.onBuildFieldView,
     this.onGenerateFieldAnswer,
   });
-
   Future<List<DocFieldBundle>> buildFormFields(
     DocForm form, {
     Future<Attachment?> Function()? onAttachmentLoaded,
+          final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)? fetchSuggestions,
+
+    String baseUrl = '',
   }) async {
     List<DocFieldBundle> fieldBundles = [];
     try {
@@ -41,6 +48,8 @@ class DocFormController {
       fieldBundles = await buildFormFieldBundles(
         fields: fieldGroups,
         onAttachmentLoaded: onAttachmentLoaded,
+        baseUrl: baseUrl,
+       fetchSuggestions: fetchSuggestions
       );
       handleDependsOnLogic(fieldBundles: fieldBundles);
     } catch (e) {
@@ -98,6 +107,9 @@ class DocFormController {
     required Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltFieldBundles,
+    final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)?
+    fetchSuggestions,
+    required String baseUrl,
   }) async {
     List<DocFieldBundle> fieldBundles = [];
     try {
@@ -105,6 +117,8 @@ class DocFormController {
         final field = fields[i];
 
         final fieldBundle = await buildFormFieldBundle(
+          baseUrl: baseUrl,
+          fetchSuggestions: fetchSuggestions,
           field: field,
           onAttachmentLoaded: onAttachmentLoaded,
           groupId: groupId,
@@ -130,6 +144,8 @@ class DocFormController {
     Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltItemBundles,
+    final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)? fetchSuggestions,
+    required String baseUrl,
   }) async {
     DocFieldView? fieldView;
     List<DocFieldBundle>? children;
@@ -140,9 +156,11 @@ class DocFormController {
 
     children = await buildFormFieldBundles(
       fields: field.children,
+      baseUrl: baseUrl,
       onAttachmentLoaded: onAttachmentLoaded,
       groupId: groupIdForChildren,
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
+      fetchSuggestions: fetchSuggestions
     );
 
     field = await onOverrideField?.call(field) ?? field;
@@ -280,15 +298,79 @@ class DocFormController {
           break;
         //TODO: pending implementation
         case FieldType.link:
+          List<Map<String, dynamic>> rawData = [];
+          Future<List<Map<String, dynamic>>> _filterLinkData(
+            List<Map<String, dynamic>> data,
+            String pattern,
+          ) async {
+            if (pattern.isEmpty) return data;
+            final lowerPattern = pattern.toLowerCase();
+            return data.where((e) {
+              final value = e['value']?.toString().toLowerCase() ?? '';
+              final description =
+                  e['description']?.toString().toLowerCase() ?? '';
+              return value.contains(lowerPattern) ||
+                  description.contains(lowerPattern);
+            }).toList();
+          }
+          fieldView = DocFieldLinkView(
+            field: field,
+
+            fetchSuggestions: (pattern) async {
+              try {
+                final localMatches = await _filterLinkData(rawData, pattern);
+                if (localMatches.isNotEmpty) return localMatches;
+
+                rawData =await fetchSuggestions!(pattern,field.options );
+          
+                return rawData;
+              } catch (e) {
+                return [];
+              }
+            },
+            // onChanged: (value) {
+
+            // },
+          );
+
+          break;
         case FieldType.dynamicLink:
+          break;
+        //TODO: prepare the functions
+        case FieldType.heatmap:
+          // is external
+          break;
+        case FieldType.connections:
+          // is external
+          break;
+
         case FieldType.barcode:
-        case FieldType.button:
-        case FieldType.code:
+          fieldView = DocFieldBarcodeView(field: field);
+          break;
+
         case FieldType.color:
+          fieldView = DocFieldColorView(field: field);
+          break;
+
         case FieldType.image:
-        case FieldType.readOnly:
+          fieldView = DocFieldAttachIamgeView(
+            field: field,
+            onAttachmentLoaded: onAttachmentLoaded,
+            baseUrl: baseUrl,
+          );
+          break;
+
         case FieldType.signature:
+          fieldView = DocFieldSignatureView(field: field);
+          break;
+
+        case FieldType.button:
         case FieldType.tableMultiSelect:
+          fieldView = DocFieldMultiSelectView(field: field);
+          break;
+
+        case FieldType.readOnly:
+        case FieldType.code:
         case FieldType.duration:
         case FieldType.htmlEditor:
         case FieldType.icon:
@@ -443,22 +525,24 @@ class DocFormController {
       FieldType.heading => null,
       FieldType.html => null,
       //TODO: pending implementation
-      FieldType.link => null,
+      FieldType.link => fieldBundle.controller.rawValue?.toString(),
       FieldType.dynamicLink => null,
       FieldType.table => null,
-      FieldType.barcode => null,
+      FieldType.barcode => fieldBundle.controller.rawValue?.toString(),
       FieldType.button => null,
       FieldType.code => null,
-      FieldType.color => null,
-      FieldType.image => null,
+      FieldType.color => fieldBundle.controller.rawValue?.toString(),
+      FieldType.image => fieldBundle.controller.rawValue?.toString(),
       FieldType.readOnly => null,
-      FieldType.signature => null,
-      FieldType.tableMultiSelect => null,
+      FieldType.signature => fieldBundle.controller.rawValue?.toString(),
+      FieldType.tableMultiSelect => fieldBundle.controller.rawValue?.toString(),
       FieldType.duration => null,
       FieldType.htmlEditor => null,
       FieldType.icon => null,
       FieldType.json => null,
       FieldType.unknown => null,
+      FieldType.heatmap => null,
+      FieldType.connections => null,
     };
 
     DocFieldAnswer fieldAnswer =

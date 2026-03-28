@@ -1,3 +1,5 @@
+// ignore_for_file: constant_pattern_never_matches_value_type
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
@@ -13,6 +15,43 @@ void main() {
   runApp(const MyApp());
 }
 
+var transactions = [
+  {
+    "label": "Groups",
+    "items": ["BOM", "Product Bundle", "Item Alternative"],
+  },
+  {
+    "label": "Pricing",
+    "items": ["Item Price", "Pricing Rule"],
+  },
+  {
+    "label": "Sell",
+    "items": ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"],
+  },
+  {
+    "label": "Buy",
+    "items": [
+      "Material Request",
+      "Supplier Quotation",
+      "Request for Quotation",
+      "Purchase Order",
+      "Purchase Receipt",
+      "Purchase Invoice",
+    ],
+  },
+  {
+    "label": "Manufacture",
+    "items": ["Production Plan", "Work Order", "Item Manufacturer"],
+  },
+  {
+    "label": "Traceability",
+    "items": ["Serial No", "Batch"],
+  },
+  {
+    "label": "Stock Movement",
+    "items": ["Stock Entry", "Stock Reconciliation"],
+  },
+];
 StreamController<
   ({ThemeData? theme, InputDecorationTheme? inputDecorationTheme})
 >
@@ -67,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
   final List<({String name, String value})> forms = [
     (name: 'Supported Fields Test', value: DocFormSamples.fieldTest),
-    (name: 'Table Test', value: DocFormSamples.tableTest),
+    // (name: 'Table Test', value: DocFormSampRles.tableTest),
   ];
   final List<({String name, InputDecorationTheme? value})>
   inputDecorationThemes = [
@@ -440,21 +479,93 @@ class DocFormPageState extends State<DocFormPage> {
   @override
   void initState() {
     super.initState();
+    // widget.form.fields.add(
+    //   DocField(
+    //     fieldName: "heatmap_chart",
+    //     fieldType: "Heatmap",
+    //     label: "Heatmap Chart",
+    //     name: "Stock Movement",
+    //   ),
+    // );
+
+    // int index = (widget.form.fieldsOrder).indexWhere(
+    //   (element) => element == "dashboard_tab",
+    // );
+    // (widget.form.fieldsOrder).insert(index + 1, "heatmap_chart");
+
+    // //  if (widget.form.dashboard!.transactions.isNotEmpty){
+
+    // widget.form.fields.insert(
+    //   0,
+    //   DocField.fromJson({
+    //     "fieldname": "dash_connections",
+    //     "label": "Connections",
+    //     "fieldtype": "Connections",
+    //   }),
+    // );
+    // (widget.form.fieldsOrder).insert(index + 2, "dash_connections");
+    //  }
+
     Future.delayed(
       const Duration(seconds: 1),
       () => setState(() => loading = false),
     );
   }
+//  Future<List<Map<String, dynamic>>> _filterLinkData(
+//     List<Map<String, dynamic>> data,
+//     String pattern,
+//   ) async {
+//     if (pattern.isEmpty) return data;
+//     final lowerPattern = pattern.toLowerCase();
+//     return data.where((e) {
+//       final value = e['value']?.toString().toLowerCase() ?? '';
+//       final description = e['description']?.toString().toLowerCase() ?? '';
+//       return value.contains(lowerPattern) || description.contains(lowerPattern);
+//     }).toList();
+//   }
 
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
+
     return DocFormView(
       key: ValueKey(loading),
       form: widget.form,
       onAttachmentLoaded: onAttachmentLoaded,
       locale: widget.locale,
       localizations: widget.localizations,
+      baseUrl: "https://img.freepik.com/", // Set your base URL here
+      fetchSuggestions: (pattern, options)async =>  [
+                          'Apple',
+                          'Banana',
+                          'Cherry',
+                          'Date',
+                          'Elderberry',
+                          'Fig',
+                          'Grape',
+                        ]
+                        .map(
+                          (e) => {'value': e, 'description': '$e description'},
+                        )
+                        .toList(),
+      controller: DocFormController(
+        onBuildFieldView: (field, children, onAttachmentLoaded) async {
+          switch (field.type) {
+            case FieldType.heatmap:
+              return HeatMapView(field: field, activityData: []);
+            case FieldType.connections:
+              return ConnectionsView(
+                transactions: transactions
+                    .map((e) => Transaction.fromMap(e))
+                    .toList(),
+                onTap: (String link) {},
+              );
+            default:
+              return null;
+          }
+        },
+      ),
+
       isLoading: loading,
       onSubmit: onSubmit,
       onCancel: onCancel,
