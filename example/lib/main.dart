@@ -560,6 +560,31 @@ class DocFormPageState extends State<DocFormPage> {
                     .toList(),
                 onTap: (String link) {},
               );
+               case FieldType.dynamicLink:
+            //ToDo: Implement dynamic link docTypes data
+            return DocFieldDynamicLinkView(
+              field: field,
+              fetchLinkData: (pattern, doctype) async {
+                // return await SearchData.searchlink(
+                //   SearchLinkRequest(doctype: doctype, txt: pattern),
+                // );
+                return [
+                         'lion',
+                          'tiger',
+                          'leopard',
+                          'cheetah',
+                          'panther',
+                          'jaguar',
+                          'cougar',
+                        ]
+                        .map(
+                          (e) => {'value': e, 'description': '$e description'},
+                        )
+                        .toList();
+              },
+              docTypes: const ["Item", "Customer", "Selling"],
+            );
+
             default:
               return null;
           }
