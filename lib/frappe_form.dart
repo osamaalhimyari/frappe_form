@@ -1,3 +1,4 @@
+
 export 'package:frappe_form/src/entity/doc_form.dart';
 export 'package:frappe_form/src/entity/doc_geolocation.dart';
 export 'package:frappe_form/src/entity/doc_field.dart';
@@ -82,3 +83,4 @@ export 'package:frappe_form/src/presentation/widgets/new_fields/dashboard/connec
 export 'package:frappe_form/src/presentation/widgets/new_fields/dashboard/heat_map_view.dart';
 export 'package:frappe_form/src/model/new_models/transaction.dart';
 export 'package:frappe_form/src/presentation/widgets/new_fields/link_field/doc_field_link_view.dart';
+export 'package:frappe_form/src/presentation/widgets/new_fields/field_dynamic_link/doc_field_dynamic_link_view.dart';
