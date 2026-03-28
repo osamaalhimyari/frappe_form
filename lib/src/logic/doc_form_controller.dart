@@ -526,7 +526,7 @@ class DocFormController {
       FieldType.html => null,
       //TODO: pending implementation
       FieldType.link => fieldBundle.controller.rawValue?.toString(),
-      FieldType.dynamicLink => null,
+      FieldType.dynamicLink =>  fieldBundle.controller.rawValue?.toString(),
       FieldType.table => null,
       FieldType.barcode => fieldBundle.controller.rawValue?.toString(),
       FieldType.button => null,
