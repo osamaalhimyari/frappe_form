@@ -40,14 +40,14 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | HTML | :white_check_mark: _(With support for link tap behavior by using the [url_launcher](https://pub.dev/packages/url_launcher) plugin)_ |  
 | Link | :ballot_box_with_check: |  
 | Dynamic Link | :ballot_box_with_check: |  
-| Barcode | :ballot_box_with_check: |  
+| Barcode |:white_check_mark:|  
 | Button | :ballot_box_with_check: |  
 | Code | :ballot_box_with_check: |  
-| Color | :ballot_box_with_check: |  
-| Image | :ballot_box_with_check: |  
+| Color | :white_check_mark: |  
+| Image |:white_check_mark: |  
 | Read Only | :ballot_box_with_check: |  
 | Signature | :white_check_mark: |  
-| Table MultiSelect | :ballot_box_with_check: |  
+| Table MultiSelect | :white_check_mark: |  
 | Duration | :ballot_box_with_check: |  
 | HTML Editor | :ballot_box_with_check: |  
 | Icon | :ballot_box_with_check: |  
