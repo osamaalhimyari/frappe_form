@@ -29,7 +29,7 @@ class DocFormView extends StatefulWidget {
   /// for fetching link field suggestions in doc form view,
   final Future<List<Map<String, dynamic>>> Function(
     String pattern,
-    String? options,
+    DocField field,
   )?
   fetchSuggestions;
 
@@ -45,6 +45,8 @@ class DocFormView extends StatefulWidget {
   final String baseUrl;
 // get doctypes for dynamic link fields
   final Future<List<String>> Function(String fieldName) getDoctypesForDynamicLink;
+  /// ondocTypeChane
+  final void Function(String? doctype, String? option)? onDocTypeChanged;
   /// Indicates what should be the fallback localization if loalce is not
   /// supported.
   /// Defaults to English
@@ -75,7 +77,7 @@ class DocFormView extends StatefulWidget {
     this.localizations,
     this.locale,
     required this.fetchSuggestions,
-    required this.getDoctypesForDynamicLink,
+    required this.getDoctypesForDynamicLink, this.onDocTypeChanged,
   });
 
   @override
@@ -176,6 +178,7 @@ class DocFormViewState extends State<DocFormView>
       form,
       onAttachmentLoaded: widget.onAttachmentLoaded,
       baseUrl: widget.baseUrl,
+      onDocTypeChanged: widget.onDocTypeChanged,
       fetchSuggestions: widget.fetchSuggestions, getDoctypesForDynamicLink: widget.getDoctypesForDynamicLink,
     );
     tabsCount = fieldBundles.length;

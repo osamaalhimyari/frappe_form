@@ -39,9 +39,10 @@ class DocFormController {
     DocForm form, {
     Future<Attachment?> Function()? onAttachmentLoaded,
      Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
+      void Function(String? doctype, String? option)? onDocTypeChanged,
     final Future<List<Map<String, dynamic>>> Function(
       String pattern,
-      String? options,
+    DocField field,
     )?
     fetchSuggestions,
 
@@ -53,6 +54,7 @@ class DocFormController {
       fieldBundles = await buildFormFieldBundles(
         fields: fieldGroups,
         onAttachmentLoaded: onAttachmentLoaded,
+        onDocTypeChanged:onDocTypeChanged,
         baseUrl: baseUrl,
         fetchSuggestions: fetchSuggestions, getDoctypesForDynamicLink: getDoctypesForDynamicLink,
       );
@@ -113,9 +115,10 @@ class DocFormController {
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltFieldBundles,
      Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
+     required Function(String? doctype, String? option)? onDocTypeChanged,
     final Future<List<Map<String, dynamic>>> Function(
       String pattern,
-      String? options,
+    DocField field,
     )?
     fetchSuggestions,
     required String baseUrl,
@@ -130,6 +133,7 @@ class DocFormController {
           fetchSuggestions: fetchSuggestions,
           field: field,
           onAttachmentLoaded: onAttachmentLoaded,
+          onDocTypeChanged:onDocTypeChanged,
           groupId: groupId,
           alreadyBuiltItemBundles: [
             ...(alreadyBuiltFieldBundles ?? []),
@@ -149,18 +153,6 @@ class DocFormController {
     return fieldBundles;
   }
 
-  Future<List<Map<String, dynamic>>> _filterLinkData(
-    List<Map<String, dynamic>> data,
-    String pattern,
-  ) async {
-    if (pattern.isEmpty) return data;
-    final lowerPattern = pattern.toLowerCase();
-    return data.where((e) {
-      final value = e['value']?.toString().toLowerCase() ?? '';
-      final description = e['description']?.toString().toLowerCase() ?? '';
-      return value.contains(lowerPattern) || description.contains(lowerPattern);
-    }).toList();
-  }
 
   Future<DocFieldBundle?> buildFormFieldBundle({
     required DocField field,
@@ -168,10 +160,11 @@ class DocFormController {
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltItemBundles,
      Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
+    void Function(String? doctype, String? option)? onDocTypeChanged,
     
     final Future<List<Map<String, dynamic>>> Function(
       String pattern,
-      String? options,
+    DocField field,
     )?
     fetchSuggestions,
     required String baseUrl,
@@ -189,6 +182,7 @@ class DocFormController {
       onAttachmentLoaded: onAttachmentLoaded,
       groupId: groupIdForChildren,
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
+      onDocTypeChanged:onDocTypeChanged,
       fetchSuggestions: fetchSuggestions,
       getDoctypesForDynamicLink: getDoctypesForDynamicLink,
     );
@@ -328,42 +322,16 @@ class DocFormController {
           break;
         //TODO: pending implementation
         case FieldType.link:
-          List<Map<String, dynamic>> rawData = [];
-
           fieldView = DocFieldLinkView(
             field: field,
-
-            fetchSuggestions: (pattern) async {
-              try {
-                final localMatches = await _filterLinkData(rawData, pattern);
-                if (localMatches.isNotEmpty) return localMatches;
-
-                rawData = await fetchSuggestions!(pattern, field.options);
-
-                return rawData;
-              } catch (e) {
-                return [];
-              }
-            },
-            // onChanged: (value) {
-
-            // },
+            fetchSuggestions: (pattern) async =>fetchSuggestions!(pattern, field),
           );
 
           break;
         case FieldType.dynamicLink:
-          List<Map<String, dynamic>> rawData = [];
-          //
      fieldView = DocFieldDynamicLinkView(
             field: field,
-            fetchSuggestions: (pattern, doctype) async {
-              final localMatches = await _filterLinkData(rawData, pattern);
-              if (localMatches.isNotEmpty) return localMatches;
-
-              rawData = await fetchSuggestions!(pattern, doctype);
-
-              return rawData;
-            },
+            onDocTypeChanged:onDocTypeChanged,
             docTypes:(getDoctypesForDynamicLink != null)?await getDoctypesForDynamicLink(field.fieldName ?? ''):[],
             //  const ["Item", "Customer", "Selling"],
           );
