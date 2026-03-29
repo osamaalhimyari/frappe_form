@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:adeptannotations/adeptannotations.dart';
 import 'package:frappe_form/src/entity/doc_form.dart';
 import 'package:frappe_form/src/entity/doc_type.dart';
@@ -15,6 +14,7 @@ part 'doc_field.g.dart';
 @JsonSerializable()
 @CopyWith()
 class DocField extends DocType {
+  // ... existing fields ...
   @JsonKey(name: 'parent')
   final String? parent;
   @JsonKey(name: 'parentfield')
@@ -29,6 +29,10 @@ class DocField extends DocType {
   final String? options;
   @JsonKey(name: 'fieldtype')
   final String? fieldType;
+
+  @JsonKey(name: 'search_fields') 
+  final List<String> searchFields;
+
   @JsonKey(includeFromJson: false, includeToJson: false)
   @CopyWithKey(ignore: true)
   final FieldType type;
@@ -134,9 +138,11 @@ class DocField extends DocType {
     this.childTable,
     this.renderRules,
     List<DocField>? children,
+    List<String>? searchFields, // <--- New Param
   }) : type = type ?? FieldType.valueOf(fieldType) ?? FieldType.unknown,
        fieldType = fieldType ?? type?.name,
        children = children ?? [],
+       searchFields = searchFields ?? [], // <--- Initialize
        optionsAsList =
            options
                ?.split('\n')
@@ -146,17 +152,15 @@ class DocField extends DocType {
        initialAsDateTime = DateTime.tryParse('$initial'),
        childForm = DocForm.fromJsonObject(childTable);
 
+  // ... rest of the file (factories, getters, etc) remains the same ...
   factory DocField.dummy() => DocField();
 
   @override
   String get title => label ?? '';
 
   bool get isReadOnly => readOnly.asBool;
-
   bool get isGroupType => type.isGroup;
-
   bool get isParentGroupType => type.isParentGroup;
-
   bool get isHidden => hidden.asBool;
   bool get isRequired => required.asBool;
   int? get maxLength => (length ?? 0) == 0 ? null : length!;

@@ -95,7 +95,7 @@ DocForm _$DocFormFromJson(Map<String, dynamic> json) => DocForm(
       .toList(),
   dashboard: json['__dashboard'] == null
       ? null
-      : Dashboard.fromMap(json['__dashboard'] as Map<String, dynamic>),
+      : Dashboard.fromJson(json['__dashboard'] as String),
 );
 
 Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
@@ -116,7 +116,7 @@ Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
   'doctype': ?_$DocTypeTypeEnumMap[instance.docType],
   'docstatus': ?instance.docStatus,
   'description': ?instance.description,
-  '__dashboard': instance.dashboard!.toMap(),
+  '__dashboard': ?instance.dashboard,
   'fields': instance.fields,
   'field_order': instance.fieldsOrder,
 };

@@ -33,6 +33,7 @@ extension $DocFieldCopyWithExtension on DocField {
     String? label,
     String? options,
     String? fieldType,
+    List<String>? searchFields,
     int? hidden,
     int? setOnlyOnce,
     int? required,
@@ -81,6 +82,9 @@ extension $DocFieldCopyWithExtension on DocField {
       label: label ?? this.label,
       options: options ?? this.options,
       fieldType: fieldType ?? this.fieldType,
+      searchFields:
+          ((searchFields?.isNotEmpty ?? false) ? searchFields : null) ??
+          this.searchFields,
       hidden: hidden ?? this.hidden,
       setOnlyOnce: setOnlyOnce ?? this.setOnlyOnce,
       required: required ?? this.required,
@@ -166,6 +170,9 @@ DocField _$DocFieldFromJson(Map<String, dynamic> json) => DocField(
   precision: json['precision'] as String?,
   childTable: json['child_table'],
   renderRules: json['render_rules'] as String?,
+  searchFields: (json['search_fields'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
@@ -193,6 +200,7 @@ Map<String, dynamic> _$DocFieldToJson(DocField instance) => <String, dynamic>{
   'label': ?instance.label,
   'options': ?instance.options,
   'fieldtype': ?instance.fieldType,
+  'search_fields': instance.searchFields,
   'hidden': ?instance.hidden,
   'set_only_once': ?instance.setOnlyOnce,
   'reqd': ?instance.required,
