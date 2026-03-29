@@ -564,7 +564,7 @@ class DocFormPageState extends State<DocFormPage> {
             //ToDo: Implement dynamic link docTypes data
             return DocFieldDynamicLinkView(
               field: field,
-              fetchLinkData: (pattern, doctype) async {
+              fetchSuggestions: (pattern, doctype) async {
                 // return await SearchData.searchlink(
                 //   SearchLinkRequest(doctype: doctype, txt: pattern),
                 // );
@@ -595,6 +595,9 @@ class DocFormPageState extends State<DocFormPage> {
       onSubmit: onSubmit,
       onCancel: onCancel,
       onResponse: onResponse,
+       getDoctypesForDynamicLink: (String fieldName)async { 
+      
+        return widget.form.getDynamicLinkOptions(fieldName); },
     );
   }
 

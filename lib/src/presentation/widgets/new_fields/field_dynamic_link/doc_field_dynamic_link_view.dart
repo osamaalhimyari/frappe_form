@@ -9,12 +9,12 @@ class DocFieldDynamicLinkView extends DocFieldView {
   final List<String> docTypes;
 
   /// Function to fetch records for the selected DocType
-  final Future<List<Map<String, dynamic>>> Function(String doctype, String txt) fetchLinkData;
+  final Future<List<Map<String, dynamic>>> Function(String doctype, String txt) fetchSuggestions;
 
   DocFieldDynamicLinkView({
     super.key,
     required super.field,
-    required this.fetchLinkData,
+    required this.fetchSuggestions,
     required this.docTypes,
     CustomTextEditingController? controller,
     super.dependsOnController,
@@ -73,7 +73,7 @@ class _DocFieldDynamicLinkViewState
 
     setState(() => _isLoading = true);
     try {
-      final data = await widget.fetchLinkData(_selectedDocType!, '');
+      final data = await widget.fetchSuggestions(_selectedDocType!, '');
       setState(() {
         _linkData = data.map((e) => Message.fromMap(e)).toList();
       });

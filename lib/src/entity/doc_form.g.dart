@@ -27,6 +27,7 @@ extension $DocFormCopyWithExtension on DocForm {
     int? docStatus,
     String? description,
     Dashboard? dashboard,
+    String? jsContent,
     List<DocField>? fields,
     List<String>? fieldsOrder,
   }) {
@@ -49,6 +50,7 @@ extension $DocFormCopyWithExtension on DocForm {
       docStatus: docStatus ?? this.docStatus,
       description: description ?? this.description,
       dashboard: dashboard ?? this.dashboard,
+      jsContent: jsContent ?? this.jsContent,
       fields: ((fields?.isNotEmpty ?? false) ? fields : null) ?? this.fields,
       fieldsOrder:
           ((fieldsOrder?.isNotEmpty ?? false) ? fieldsOrder : null) ??
@@ -95,7 +97,8 @@ DocForm _$DocFormFromJson(Map<String, dynamic> json) => DocForm(
       .toList(),
   dashboard: json['__dashboard'] == null
       ? null
-      : Dashboard.fromMap(json['__dashboard'] as  Map<String, dynamic>),
+      : Dashboard.fromMap(json['__dashboard'] as Map<String, dynamic>),
+  jsContent: json['__js'] as String?,
 );
 
 Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
@@ -117,6 +120,7 @@ Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
   'docstatus': ?instance.docStatus,
   'description': ?instance.description,
   '__dashboard': instance.dashboard!.toMap(),
+  '__js': ?instance.jsContent,
   'fields': instance.fields,
   'field_order': instance.fieldsOrder,
 };

@@ -16,7 +16,10 @@ part 'doc_form.g.dart';
 class DocForm extends DocType {
   @JsonKey(name: '__dashboard')
   final Dashboard? dashboard;
-  
+
+  @JsonKey(name: '__js') // Map from Frappe's __js key
+  final String? jsContent;
+
   @JsonKey(name: 'fields')
   final List<DocField> fields;
   
@@ -43,9 +46,38 @@ class DocForm extends DocType {
     super.description,
     List<DocField>? fields,
     List<String>? fieldsOrder,
-    this.dashboard, // Added here
+    this.dashboard, 
+    this.jsContent, // Added to constructor
   }) : fields = fields ?? [],
        fieldsOrder = fieldsOrder ?? [];
+
+  /// Utility to extract dynamic link options (like for opportunity_from) 
+  /// directly from the form's javascript content.
+  List<String> getDynamicLinkOptions(String fieldName) {
+    final code = jsContent;
+    if (code == null || code.isEmpty) return [];
+
+    final pattern = RegExp(
+      'set_query\\s*\\(\\s*["\']$fieldName["\']' 
+      '[\\s\\S]*?'                               
+      '["\']in["\']\\s*,\\s*\\['                 
+      '([^\\]]+)'                                
+      '\\]',                                      
+      caseSensitive: false,
+    );
+
+    final match = pattern.firstMatch(code);
+    final rawCapture = match?.group(1);
+
+    if (rawCapture == null) return [];
+
+    return rawCapture
+        .split(',')
+        .map((item) => item.trim())
+        .map((item) => item.replaceAll(RegExp("['\"]"), "")) 
+        .where((item) => item.isNotEmpty)
+        .toList();
+  }
 
   Map<String, dynamic> toAnswerMap() => {
     if (owner != null) ParamUtils.owner: owner,

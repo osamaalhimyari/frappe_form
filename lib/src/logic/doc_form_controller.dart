@@ -38,7 +38,12 @@ class DocFormController {
   Future<List<DocFieldBundle>> buildFormFields(
     DocForm form, {
     Future<Attachment?> Function()? onAttachmentLoaded,
-          final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)? fetchSuggestions,
+     Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
+    final Future<List<Map<String, dynamic>>> Function(
+      String pattern,
+      String? options,
+    )?
+    fetchSuggestions,
 
     String baseUrl = '',
   }) async {
@@ -49,7 +54,7 @@ class DocFormController {
         fields: fieldGroups,
         onAttachmentLoaded: onAttachmentLoaded,
         baseUrl: baseUrl,
-       fetchSuggestions: fetchSuggestions
+        fetchSuggestions: fetchSuggestions, getDoctypesForDynamicLink: getDoctypesForDynamicLink,
       );
       handleDependsOnLogic(fieldBundles: fieldBundles);
     } catch (e) {
@@ -107,7 +112,11 @@ class DocFormController {
     required Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltFieldBundles,
-    final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)?
+     Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
+    final Future<List<Map<String, dynamic>>> Function(
+      String pattern,
+      String? options,
+    )?
     fetchSuggestions,
     required String baseUrl,
   }) async {
@@ -125,7 +134,8 @@ class DocFormController {
           alreadyBuiltItemBundles: [
             ...(alreadyBuiltFieldBundles ?? []),
             ...fieldBundles,
-          ],
+          ], getDoctypesForDynamicLink: getDoctypesForDynamicLink,
+          
         );
         if (fieldBundle != null) {
           fieldBundles.add(fieldBundle);
@@ -139,12 +149,31 @@ class DocFormController {
     return fieldBundles;
   }
 
+  Future<List<Map<String, dynamic>>> _filterLinkData(
+    List<Map<String, dynamic>> data,
+    String pattern,
+  ) async {
+    if (pattern.isEmpty) return data;
+    final lowerPattern = pattern.toLowerCase();
+    return data.where((e) {
+      final value = e['value']?.toString().toLowerCase() ?? '';
+      final description = e['description']?.toString().toLowerCase() ?? '';
+      return value.contains(lowerPattern) || description.contains(lowerPattern);
+    }).toList();
+  }
+
   Future<DocFieldBundle?> buildFormFieldBundle({
     required DocField field,
     Future<Attachment?> Function()? onAttachmentLoaded,
     String? groupId,
     List<DocFieldBundle>? alreadyBuiltItemBundles,
-    final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)? fetchSuggestions,
+     Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
+    
+    final Future<List<Map<String, dynamic>>> Function(
+      String pattern,
+      String? options,
+    )?
+    fetchSuggestions,
     required String baseUrl,
   }) async {
     DocFieldView? fieldView;
@@ -160,7 +189,8 @@ class DocFormController {
       onAttachmentLoaded: onAttachmentLoaded,
       groupId: groupIdForChildren,
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
-      fetchSuggestions: fetchSuggestions
+      fetchSuggestions: fetchSuggestions,
+      getDoctypesForDynamicLink: getDoctypesForDynamicLink,
     );
 
     field = await onOverrideField?.call(field) ?? field;
@@ -299,20 +329,7 @@ class DocFormController {
         //TODO: pending implementation
         case FieldType.link:
           List<Map<String, dynamic>> rawData = [];
-          Future<List<Map<String, dynamic>>> _filterLinkData(
-            List<Map<String, dynamic>> data,
-            String pattern,
-          ) async {
-            if (pattern.isEmpty) return data;
-            final lowerPattern = pattern.toLowerCase();
-            return data.where((e) {
-              final value = e['value']?.toString().toLowerCase() ?? '';
-              final description =
-                  e['description']?.toString().toLowerCase() ?? '';
-              return value.contains(lowerPattern) ||
-                  description.contains(lowerPattern);
-            }).toList();
-          }
+
           fieldView = DocFieldLinkView(
             field: field,
 
@@ -321,8 +338,8 @@ class DocFormController {
                 final localMatches = await _filterLinkData(rawData, pattern);
                 if (localMatches.isNotEmpty) return localMatches;
 
-                rawData =await fetchSuggestions!(pattern,field.options );
-          
+                rawData = await fetchSuggestions!(pattern, field.options);
+
                 return rawData;
               } catch (e) {
                 return [];
@@ -335,6 +352,22 @@ class DocFormController {
 
           break;
         case FieldType.dynamicLink:
+          List<Map<String, dynamic>> rawData = [];
+          //
+     fieldView = DocFieldDynamicLinkView(
+            field: field,
+            fetchSuggestions: (pattern, doctype) async {
+              final localMatches = await _filterLinkData(rawData, pattern);
+              if (localMatches.isNotEmpty) return localMatches;
+
+              rawData = await fetchSuggestions!(pattern, doctype);
+
+              return rawData;
+            },
+            docTypes:(getDoctypesForDynamicLink != null)?await getDoctypesForDynamicLink(field.fieldName ?? ''):[],
+            //  const ["Item", "Customer", "Selling"],
+          );
+
           break;
         //TODO: prepare the functions
         case FieldType.heatmap:
@@ -526,7 +559,7 @@ class DocFormController {
       FieldType.html => null,
       //TODO: pending implementation
       FieldType.link => fieldBundle.controller.rawValue?.toString(),
-      FieldType.dynamicLink =>  fieldBundle.controller.rawValue?.toString(),
+      FieldType.dynamicLink => fieldBundle.controller.rawValue?.toString(),
       FieldType.table => null,
       FieldType.barcode => fieldBundle.controller.rawValue?.toString(),
       FieldType.button => null,

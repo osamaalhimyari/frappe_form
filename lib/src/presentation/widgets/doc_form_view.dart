@@ -27,7 +27,11 @@ class DocFormView extends StatefulWidget {
   final Future<Attachment?> Function()? onAttachmentLoaded;
 
   /// for fetching link field suggestions in doc form view,
-  final Future<List<Map<String, dynamic>>> Function(String pattern, String? options)? fetchSuggestions;
+  final Future<List<Map<String, dynamic>>> Function(
+    String pattern,
+    String? options,
+  )?
+  fetchSuggestions;
 
   /// To add custom actions to the AppBar.
   final List<Widget>? actions;
@@ -39,7 +43,8 @@ class DocFormView extends StatefulWidget {
   ///  It is necessary because attachments in Frappe are usually stored with relative paths,
   ///  so we need a base url to load them.
   final String baseUrl;
-
+// get doctypes for dynamic link fields
+  final Future<List<String>> Function(String fieldName) getDoctypesForDynamicLink;
   /// Indicates what should be the fallback localization if loalce is not
   /// supported.
   /// Defaults to English
@@ -58,7 +63,7 @@ class DocFormView extends StatefulWidget {
   const DocFormView({
     super.key,
     required this.form,
-     this.baseUrl='',
+    this.baseUrl = '',
     this.onSubmit,
     this.onCancel,
     this.onResponse,
@@ -68,7 +73,9 @@ class DocFormView extends StatefulWidget {
     this.isLoading = false,
     this.defaultLocalization,
     this.localizations,
-    this.locale,required this.fetchSuggestions,
+    this.locale,
+    required this.fetchSuggestions,
+    required this.getDoctypesForDynamicLink,
   });
 
   @override
@@ -169,7 +176,7 @@ class DocFormViewState extends State<DocFormView>
       form,
       onAttachmentLoaded: widget.onAttachmentLoaded,
       baseUrl: widget.baseUrl,
-      fetchSuggestions: widget.fetchSuggestions
+      fetchSuggestions: widget.fetchSuggestions, getDoctypesForDynamicLink: widget.getDoctypesForDynamicLink,
     );
     tabsCount = fieldBundles.length;
     tabController = TabController(
@@ -263,7 +270,27 @@ class DocFormViewState extends State<DocFormView>
           title: form.title.isEmpty
               ? null
               : Text(form.title, textAlign: TextAlign.center, maxLines: 2),
-          actions: widget.actions,
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: canSubmit ? null : theme.disabledColor,
+                foregroundColor: canSubmit ? null : theme.disabledColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    8.0,
+                  ), 
+                ),
+                minimumSize: const Size(60, 40),
+              ),
+              onPressed: onSubmit,
+              child: Text(
+                showSubmitButton
+                    ? DocFormLocalization.instance.localization.btnSubmit
+                    : '',
+              ),
+            ),
+            ...(widget.actions ?? []),
+          ],
           bottom: offstage || tabsCount < 2
               ? null
               : TabBar.secondary(
