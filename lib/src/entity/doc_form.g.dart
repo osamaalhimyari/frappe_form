@@ -116,7 +116,7 @@ Map<String, dynamic> _$DocFormToJson(DocForm instance) => <String, dynamic>{
   'doctype': ?_$DocTypeTypeEnumMap[instance.docType],
   'docstatus': ?instance.docStatus,
   'description': ?instance.description,
-  '__dashboard': ?instance.dashboard!.toMap(),
+  '__dashboard': instance.dashboard!.toMap(),
   'fields': instance.fields,
   'field_order': instance.fieldsOrder,
 };

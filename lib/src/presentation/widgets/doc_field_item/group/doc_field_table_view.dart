@@ -112,7 +112,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
   Widget get addButton => Center(
     child: FloatingActionButton(
-      heroTag: null,
+      heroTag: '${field.fieldName}${field.idx}_add_button',
       onPressed: onAdd,
       child: const Icon(Icons.add),
     ),
