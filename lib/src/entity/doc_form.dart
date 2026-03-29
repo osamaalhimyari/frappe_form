@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:adeptannotations/adeptannotations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:frappe_form/src/entity/doc_field.dart';
@@ -8,13 +7,19 @@ import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
 import 'package:frappe_form/src/logic/utils/param_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../model/new_models/dashboard.dart';
+
 part 'doc_form.g.dart';
 
 @JsonSerializable()
 @CopyWith()
 class DocForm extends DocType {
+  @JsonKey(name: '__dashboard')
+  final Dashboard? dashboard;
+  
   @JsonKey(name: 'fields')
   final List<DocField> fields;
+  
   @JsonKey(name: 'field_order')
   final List<String> fieldsOrder;
 
@@ -38,6 +43,7 @@ class DocForm extends DocType {
     super.description,
     List<DocField>? fields,
     List<String>? fieldsOrder,
+    this.dashboard, // Added here
   }) : fields = fields ?? [],
        fieldsOrder = fieldsOrder ?? [];
 
