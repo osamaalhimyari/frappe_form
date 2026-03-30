@@ -1,5 +1,5 @@
 
-# Frappe Form
+# Frappe Form Updated package
 
 A Flutter package for rendering Frappe Forms.
 
@@ -38,16 +38,16 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | Heading | :white_check_mark: |
 | Table | :white_check_mark: _(relies on having a `child_table` property that contains the JSON DocType definition of the referenced DocType)_ |
 | HTML | :white_check_mark: _(With support for link tap behavior by using the [url_launcher](https://pub.dev/packages/url_launcher) plugin)_ |  
-| Link | :ballot_box_with_check: |  
-| Dynamic Link | :ballot_box_with_check: |  
+| Link | :white_check_mark: |  
+| Dynamic Link | :white_check_mark: |  
 | Barcode |:white_check_mark:|  
-| Button | :ballot_box_with_check: |  
-| Code | :ballot_box_with_check: |  
-| Color | :white_check_mark: |  
-| Image |:white_check_mark: |  
-| Read Only | :ballot_box_with_check: |  
 | Signature | :white_check_mark: |  
 | Table MultiSelect | :white_check_mark: |  
+| Color | :white_check_mark: |  
+| Image |:white_check_mark: |  
+| Button | :ballot_box_with_check: |  
+| Code | :ballot_box_with_check: |  
+| Read Only | :ballot_box_with_check: |  
 | Duration | :ballot_box_with_check: |  
 | HTML Editor | :ballot_box_with_check: |  
 | Icon | :ballot_box_with_check: |  
