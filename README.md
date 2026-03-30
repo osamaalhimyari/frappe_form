@@ -54,6 +54,8 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | JSON | :ballot_box_with_check: |  
 
 ## Supported fields for dashboard
+| Field Type | Supported |  
+| ------ | ------ |  
 | heatmap | :white_check_mark: |  
 | connections links | :white_check_mark: |  
 ## Supported extra features
