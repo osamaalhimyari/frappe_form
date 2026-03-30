@@ -97,7 +97,8 @@ DocForm _$DocFormFromJson(Map<String, dynamic> json) => DocForm(
       .toList(),
   dashboard: json['__dashboard'] == null
       ? null
-      : Dashboard.fromMap(json['__dashboard'] as Map<String, dynamic>),
+      : Dashboard.fromMap((json['__dashboard'] as Map).cast<String, dynamic>())
+,
   jsContent: json['__js'] as String?,
 );
 
