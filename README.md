@@ -53,6 +53,9 @@ So far this package supports the following [Field Types](https://docs.frappe.io/
 | Icon | :ballot_box_with_check: |  
 | JSON | :ballot_box_with_check: |  
 
+## Supported fields for dashboard
+| heatmap | :white_check_mark: |  
+| connections links | :white_check_mark: |  
 ## Supported extra features
 1. **Mandatory Depends On (JS)** expressions for validations
 2. **Read Only Depends On (JS)** expressions for validations
