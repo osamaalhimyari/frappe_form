@@ -68,8 +68,8 @@ Just add a `DocFormView` widget to your widget tree and you will have your Frapp
 
 ```dart
 
-
-final Map<String, List<Map<String, String>>> mockDocTypeData = {
+    //
+    final Map<String, List<Map<String, String>>> mockDocTypeData = {
       "Fruit": [
         {"value": "Apple", "description": "Red Crunchy"},
         {"value": "Banana", "description": "Yellow Sweet"},
@@ -99,88 +99,87 @@ final Map<String, List<Map<String, String>>> mockDocTypeData = {
       final List<Map<String, String>>? sourceList = mockDocTypeData[doctype];
 
       if (sourceList == null) return [];
+      final lowerPattern = query.toLowerCase();
 
       // 3. Filter by 'value' (the primary link field)
-      return sourceList.where((item) {
-        final String name = item['value']?.toLowerCase() ?? "";
-        return name.contains(query.toLowerCase());
-      }).toList();
-    } //
-
-    Future<List<Map<String, dynamic>>> _filterLinkData(
-      List<Map<String, dynamic>> data,
-      String pattern,
-    ) async {
-      if (pattern.isEmpty) return data;
-      final lowerPattern = pattern.toLowerCase();
-      return data.where((e) {
+      return sourceList.where((e) {
         final value = e['value']?.toString().toLowerCase() ?? '';
         final description = e['description']?.toString().toLowerCase() ?? '';
         return value.contains(lowerPattern) ||
             description.contains(lowerPattern);
       }).toList();
+    } //
+
+  Map<String, String> _formValues = {};
+
+// ... inside build ...
+
+return DocFormView(
+  key: ValueKey(loading),
+  form: widget.form,
+  baseUrl: "https://your-frappe-instance.com/",
+  
+  // ───────── STEP 1: CAPTURE CHANGES ─────────
+  onDocTypeChanged: (fieldname, value) {
+    setState(() {
+      _formValues[fieldname??""] = value ?? "";
+      print(" Field '$fieldname' changed to '$value'");
+    });
+  },
+
+  // ───────── STEP 2: RESOLVE DYNAMIC DOCTYPE ─────────
+  fetchSuggestions: (pattern, field) async {
+    try {
+      print('Searching in: ${field.options} for pattern: $pattern');
+      // Get the string from the field's 'options' metadata
+      final String? name = field.fieldName;
+
+      final String resolvedDocType = 
+      // "Animal"??"";
+      (_formValues.containsKey(name))
+          ? (_formValues[name] ?? "none")
+          : (field.options ?? "none");
+
+
+      // Call your API
+      final List<Map<String, dynamic>> results = await fetchLinkSuggestions(
+        doctype: resolvedDocType,
+        query: pattern,
+      );
+
+      return results;
+    } catch (e) {
+      return [];
     }
-    
-  DocFormView(
-      key: ValueKey(loading),
-      form: widget.form,
-      onAttachmentLoaded: onAttachmentLoaded,
-      locale: widget.locale,
-      localizations: widget.localizations,
-      baseUrl: "https://img.freepik.com/", // Set your base URL here
-      fetchSuggestions: (pattern, doctype) async {
-        List<Map<String, dynamic>> rawData = [];
-
-        try {
-          final localMatches = await _filterLinkData(rawData, pattern);
-          if (localMatches.isNotEmpty) return localMatches;
-          print(
-            'Fetching new suggestions for pattern: "$pattern" and docType: "$doctype"==========',
+  },
+  controller: DocFormController(
+    onBuildFieldView: (field, children, onAttachmentLoaded) async {
+      switch (field.type) {
+        case FieldType.heatmap:
+          return HeatMapView(field: field, activityData: []);
+        case FieldType.connections:
+          return ConnectionsView(
+            transactions: transactions.map((e) => Transaction.fromMap(e)).toList(),
+            onTap: (String link) {},
           );
-          rawData = await fetchLinkSuggestions(
-            doctype: doctype ?? "none",
-            query: pattern,
-          );
+        default:
+          return null;
+      }
+    },
+  ),
+  isLoading: loading,
+  onSubmit: onSubmit,
+  onCancel: onCancel,
+  onResponse: onResponse,
+  getDoctypesForDynamicLink: (String fieldName) async {
+    var list = widget.form.getDynamicLinkOptions(fieldName);
+    if (list.isEmpty) {
+      list = ["Job", "Fruit", "Animal"];
+    }
+    return list;
+  },
+);
 
-          return rawData;
-        } catch (e) {
-          return [];
-        }
-      }, // (pattern, options)async {
-      // return   fetchLinkSuggestions(doctype:"Animal", query: pattern);
-      // },
-      controller: DocFormController(
-        onBuildFieldView: (field, children, onAttachmentLoaded) async {
-          switch (field.type) {
-            case FieldType.heatmap:
-              return HeatMapView(field: field, activityData: []);
-            case FieldType.connections:
-              return ConnectionsView(
-                transactions: transactions
-                    .map((e) => Transaction.fromMap(e))
-                    .toList(),
-                onTap: (String link) {},
-              );
-
-            default:
-              return null;
-          }
-        },
-      ),
-
-      isLoading: loading,
-      onSubmit: onSubmit,
-      onCancel: onCancel,
-      onResponse: onResponse,
-      getDoctypesForDynamicLink: (String fieldName) async {
-        var list = widget.form.getDynamicLinkOptions(fieldName);
-        if (list.isEmpty) {
-          list = ["Job", "Fruit", "Animal"];
-        }
-        return list;
-      },
-    );
- 
 ```
 
 ## DocFormView
