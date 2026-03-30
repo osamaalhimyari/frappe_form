@@ -204,6 +204,6 @@ return DocFormView(
 1. This widget will use the app Theme to build, so if you want to change colors, InputDecorations, etc, you just have to change it in your app Theme. Also all the package widgets are public and exposed so you could override it if necessary.
 2. The `DocFormView` implementation takes care of validations depending on each `DocField` definition.
 3. Check the example project which shows all the features in action.
-
+<!-- 
 ## Demo
-### [Try example demo app here](https://luis901101.github.io/frappe_form)
+### [Try example demo app here](https://luis901101.github.io/frappe_form) -->
