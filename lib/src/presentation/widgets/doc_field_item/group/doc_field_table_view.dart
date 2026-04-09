@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 07/10/25.
 class DocFieldTableView extends DocFieldView {
+  final Future<List<Map<String, dynamic>>> Function(String, DocField)? fetchSuggestions;
+  final String baseUrl;
+  final Future<Attachment?> Function()? onAttachmentLoaded;
   DocFieldTableView({
     super.key,
     required super.field,
     super.children,
     super.childrenBundles,
-    super.dependsOnController,
+    super.dependsOnController, this.fetchSuggestions, required this.baseUrl, this.onAttachmentLoaded,
   }) : super(controller: CustomTextEditingController());
 
   @override
@@ -155,7 +158,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   Future<void> onAdd() async {
     // Get all the children from the child table as DocFieldBundle
     List<DocFieldBundle> childrenFieldBundles = await docFormController
-        .buildFormFields(field.childForm ?? DocForm());
+        .buildFormFields(field.childForm ?? DocForm(),fetchSuggestions: (pattern, field) => widget.fetchSuggestions!(pattern, field),baseUrl: widget.baseUrl,onAttachmentLoaded: widget.onAttachmentLoaded,);
 
     // Get the first child bundle if exists, a Child Table must only have one Parent Group which must be a Tab Break
     final DocFieldBundle? parentChildBundle = childrenFieldBundles.firstOrNull;
@@ -188,3 +191,4 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     }
   }
 }
+// 
