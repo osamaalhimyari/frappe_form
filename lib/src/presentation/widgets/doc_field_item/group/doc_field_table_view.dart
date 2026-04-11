@@ -32,7 +32,9 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   late final ScrollController scrollController;
   final itemCountNotifier = ValueNotifier<int>(0);
   double removeButtonOffset = 12.0;
-  bool _hasLoadedInitialRows = false;
+
+  // 🔥 FIX: Prevents duplicate loading on rebuild/scroll
+  bool _isInitialized = false;
 
   @override
   void initState() {
@@ -56,40 +58,53 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     docFormController = DocFormController();
   }
 
-  /// Load initial rows from field.defaultValue (the "default" array in JSON)
+  /// 🔥 FIX: Idempotent initialization. Runs exactly ONCE.
   Future<void> _loadInitialRows() async {
-    if (_hasLoadedInitialRows) return;
-    _hasLoadedInitialRows = true;
+    if (_isInitialized) return;
 
-    // field.defaultValue maps to the "default" key in your JSON
-    // which contains: [{uom: "Nos", conversion_factor: 1}, {uom: "Box", conversion_factor: 2}]
+    // If bundles already exist (e.g. restored state), trust them.
+    if (childrenBundles.isNotEmpty) {
+      _isInitialized = true;
+      itemCountNotifier.value = childrenBundles.length;
+      return;
+    }
+
+    _isInitialized = true;
+
     final defaultData = field.initial;
 
     if (defaultData is List && defaultData.isNotEmpty) {
-      // Create ONE separate independent form for EACH item in the default list
+      final List<DocFieldBundle> newBundles = [];
+
       for (final rowData in defaultData) {
         if (rowData is Map<String, dynamic>) {
-          await _addRowWithData(Map<String, dynamic>.from(rowData));
+          final rowBundles = await _buildRowBundles(rowData);
+          newBundles.addAll(rowBundles);
         }
       }
+
+      if (newBundles.isNotEmpty) {
+        setState(() {
+          childrenBundles.clear();
+          childrenBundles.addAll(newBundles);
+          itemCountNotifier.value = childrenBundles.length;
+        });
+      }
     } else {
-      // No default data → add one empty row
       await onAdd();
     }
   }
 
-  /// Builds ONE row form with pre-filled data from [rowData]
-  /// Each call is completely independent
-  Future<void> _addRowWithData(Map<String, dynamic> rowData) async {
-    if (field.childForm == null) return;
+  /// Helper: Builds bundles for a single row from data
+  Future<List<DocFieldBundle>> _buildRowBundles(
+      Map<String, dynamic> rowData) async {
+    if (field.childForm == null) return [];
 
-    // Create a fresh child form with initial values injected per field
     final DocForm mergedChildForm = _buildMergedChildForm(
       field.childForm!,
       rowData,
     );
 
-    // Build this row's fields independently
     final List<DocFieldBundle> builtBundles =
         await docFormController.buildFormFields(
       mergedChildForm,
@@ -101,26 +116,24 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       onAttachmentLoaded: widget.onAttachmentLoaded,
     );
 
-    // The first bundle is the parent wrapper; its children are the actual row fields
     final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
-    final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
-
-    if (rowBundles.isNotEmpty) {
-      setState(() {
-        childrenBundles.addAll(rowBundles);
-        itemCountNotifier.value = childrenBundles.length;
-      });
-      controller.text =
-          '${(int.tryParse(controller.text) ?? 0) + 1}';
-    }
+    return parentBundle?.children ?? [];
   }
 
-  /// Creates a NEW [DocForm] instance where each field has its initial
-  /// value set from [rowData].
-  ///
-  /// Example rowData: {uom: "Nos", conversion_factor: 1}
-  /// This will set field "uom" initial → "Nos" and
-  /// field "conversion_factor" initial → 1
+  /// Adds a row with pre-filled data (used during init)
+  // Future<void> _addRowWithData(Map<String, dynamic> rowData) async {
+  //   final rowBundles = await _buildRowBundles(rowData);
+
+  //   if (rowBundles.isNotEmpty) {
+  //     setState(() {
+  //       childrenBundles.addAll(rowBundles);
+  //       itemCountNotifier.value = childrenBundles.length;
+  //     });
+  //     controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
+  //   }
+  // }
+
+  /// Merges child form schema with row data to set initial values
   DocForm _buildMergedChildForm(
     DocForm childForm,
     Map<String, dynamic> rowData,
@@ -129,14 +142,11 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       final String? fieldName = docField.fieldName;
 
       if (fieldName != null && rowData.containsKey(fieldName)) {
-        // Inject the value from rowData as the initial value for this field
         return docField.copyWith(
           initial: rowData[fieldName],
         );
       }
 
-      // No matching key in rowData → keep field as-is but still copy
-      // to ensure each row gets its own independent field instance
       return docField.copyWith();
     }).toList();
 
@@ -147,7 +157,12 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     if (index >= childrenBundles.length) return const SizedBox.shrink();
 
     final childView = childrenBundles[index].view;
+
+    // 🔥 FIX: Unique key per row to prevent state reuse during scroll
+    final Key rowKey = ValueKey('row_$index');
+
     return SizedBox(
+      key: rowKey,
       width: width,
       child: Stack(
         children: [
@@ -183,8 +198,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       builder: (context, constraints) {
         final double totalWidth = constraints.maxWidth;
         final bool isMobile = totalWidth < 600;
-        final double itemWidth =
-            isMobile ? totalWidth : totalWidth / 2;
+        final double itemWidth = isMobile ? totalWidth : totalWidth / 2;
 
         return Wrap(
           children: List.generate(
@@ -232,7 +246,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
   Widget removeButton(int index) => Material(
         shape: const CircleBorder(),
-        color: theme.colorScheme.error,
+        color: Theme.of(context).colorScheme.error,
         elevation: 2,
         clipBehavior: Clip.hardEdge,
         child: InkWell(
@@ -251,7 +265,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
             onPressed: onAdd,
             style: TextButton.styleFrom(
               backgroundColor:
-                  theme.colorScheme.primary.withOpacity(0.1),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
             ),
             label: const Text("Add Row"),
             icon: const Icon(Icons.add, size: 18),
@@ -274,7 +288,6 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   Future<void> onAdd() async {
     if (field.childForm == null) return;
 
-    // Pass the original childForm with NO initial values → empty row
     final List<DocFieldBundle> builtBundles =
         await docFormController.buildFormFields(
       field.childForm!,

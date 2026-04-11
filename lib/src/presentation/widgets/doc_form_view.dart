@@ -33,8 +33,6 @@ class DocFormView extends StatefulWidget {
   )?
   fetchSuggestions;
 
-  /// for fetching link field suggestions in doc form view,
-  final Function(DocField field)? getChildTableRows;
 
   /// To add custom actions to the AppBar.
   final List<Widget>? actions;
@@ -85,7 +83,6 @@ class DocFormView extends StatefulWidget {
     required this.fetchSuggestions,
     required this.getDoctypesForDynamicLink,
     this.onDocTypeChanged,
-    this.getChildTableRows,
   });
 
   @override
@@ -188,7 +185,6 @@ class DocFormViewState extends State<DocFormView>
       baseUrl: widget.baseUrl,
       onDocTypeChanged: widget.onDocTypeChanged,
       fetchSuggestions: widget.fetchSuggestions,
-      getChildTableRows:widget.getChildTableRows ,
       getDoctypesForDynamicLink: widget.getDoctypesForDynamicLink,
     );
     tabsCount = fieldBundles.length;
