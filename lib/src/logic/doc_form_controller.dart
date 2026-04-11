@@ -40,6 +40,7 @@ class DocFormController {
     Future<Attachment?> Function()? onAttachmentLoaded,
     Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
     void Function(String? doctype, String? option)? onDocTypeChanged,
+    Function(DocField field)? getChildTableRows,
     final Future<List<Map<String, dynamic>>> Function(
       String pattern,
       DocField field,
@@ -57,6 +58,7 @@ class DocFormController {
         onDocTypeChanged: onDocTypeChanged,
         baseUrl: baseUrl,
         fetchSuggestions: fetchSuggestions,
+        getChildTableRows: getChildTableRows,
         getDoctypesForDynamicLink: getDoctypesForDynamicLink,
       );
       handleDependsOnLogic(fieldBundles: fieldBundles);
@@ -117,6 +119,7 @@ class DocFormController {
     List<DocFieldBundle>? alreadyBuiltFieldBundles,
     Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
     required Function(String? doctype, String? option)? onDocTypeChanged,
+    Function(DocField field)? getChildTableRows,
     final Future<List<Map<String, dynamic>>> Function(
       String pattern,
       DocField field,
@@ -136,6 +139,7 @@ class DocFormController {
           onAttachmentLoaded: onAttachmentLoaded,
           onDocTypeChanged: onDocTypeChanged,
           groupId: groupId,
+          getChildTableRows: getChildTableRows,
           alreadyBuiltItemBundles: [
             ...(alreadyBuiltFieldBundles ?? []),
             ...fieldBundles,
@@ -161,6 +165,7 @@ class DocFormController {
     List<DocFieldBundle>? alreadyBuiltItemBundles,
     Future<List<String>> Function(String fieldName)? getDoctypesForDynamicLink,
     void Function(String? doctype, String? option)? onDocTypeChanged,
+    Function(DocField field)? getChildTableRows,
 
     final Future<List<Map<String, dynamic>>> Function(
       String pattern,
@@ -184,6 +189,7 @@ class DocFormController {
       alreadyBuiltFieldBundles: alreadyBuiltItemBundles,
       onDocTypeChanged: onDocTypeChanged,
       fetchSuggestions: fetchSuggestions,
+      getChildTableRows: getChildTableRows,
       getDoctypesForDynamicLink: getDoctypesForDynamicLink,
     );
 
@@ -315,7 +321,13 @@ class DocFormController {
           fieldView = DocFieldRatingView(field: field);
           break;
         case FieldType.table:
-          fieldView = DocFieldTableView(field: field, fetchSuggestions:(pattern, field) =>fetchSuggestions!(pattern, field) ,baseUrl: baseUrl,onAttachmentLoaded: onAttachmentLoaded,);
+          fieldView = DocFieldTableView(
+            field: field,
+            fetchSuggestions: (pattern, field) =>
+                fetchSuggestions!(pattern, field),
+            baseUrl: baseUrl,
+            onAttachmentLoaded: onAttachmentLoaded,
+          );
           break;
         case FieldType.html:
           fieldView = DocFieldHtmlView(field: field);

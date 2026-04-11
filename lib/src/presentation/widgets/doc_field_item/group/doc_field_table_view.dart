@@ -1,17 +1,21 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
 
-/// Created by luis901101 on 07/10/25.
 class DocFieldTableView extends DocFieldView {
-  final Future<List<Map<String, dynamic>>> Function(String, DocField)? fetchSuggestions;
+  final Future<List<Map<String, dynamic>>> Function(String, DocField)?
+      fetchSuggestions;
   final String baseUrl;
   final Future<Attachment?> Function()? onAttachmentLoaded;
+
   DocFieldTableView({
     super.key,
     required super.field,
     super.children,
     super.childrenBundles,
-    super.dependsOnController, this.fetchSuggestions, required this.baseUrl, this.onAttachmentLoaded,
+    super.dependsOnController,
+    this.fetchSuggestions,
+    required this.baseUrl,
+    this.onAttachmentLoaded,
   }) : super(controller: CustomTextEditingController());
 
   @override
@@ -25,170 +29,273 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       super.controller as CustomTextEditingController;
 
   late final DocFormController docFormController;
-  late final PageController pageController;
-  final pageIndexNotifier = ValueNotifier<int>(0);
-  double pageViewSize = 0;
-  double removeButtonOffset = 16.0;
+  late final ScrollController scrollController;
+  final itemCountNotifier = ValueNotifier<int>(0);
+  double removeButtonOffset = 12.0;
+  bool _hasLoadedInitialRows = false;
 
   @override
   void initState() {
     super.initState();
     initFormController();
-    pageController = PageController(initialPage: pageIndexNotifier.value);
+    scrollController = ScrollController();
+    itemCountNotifier.value = childrenBundles.length;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInitialRows();
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   void initFormController() {
     docFormController = DocFormController();
   }
 
-  void onMediaPageChanged(int index) {
-    pageIndexNotifier.value = index;
-  }
+  /// Load initial rows from field.defaultValue (the "default" array in JSON)
+  Future<void> _loadInitialRows() async {
+    if (_hasLoadedInitialRows) return;
+    _hasLoadedInitialRows = true;
 
-  Widget? pageItemView(BuildContext context, int index) {
-    final childView = childrenBundles[index].view;
-    return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: removeButtonOffset),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Center(child: childView),
-            ),
-          ),
-        ),
-        Positioned(right: 0, top: 0, child: removeButton(index)),
-      ],
-    );
-  }
+    // field.defaultValue maps to the "default" key in your JSON
+    // which contains: [{uom: "Nos", conversion_factor: 1}, {uom: "Box", conversion_factor: 2}]
+    final defaultData = field.initial;
 
-  Widget get pageView => PageView.builder(
-    key: ValueKey('pageView-${childrenBundles.length}'),
-    controller: pageController,
-    onPageChanged: onMediaPageChanged,
-    padEnds: true,
-    itemCount: childrenBundles.length,
-    itemBuilder: pageItemView,
-  );
-
-  Widget get pageViewContainer {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (pageViewSize == 0)
-          Offstage(
-            child: SizeRenderer(
-              onSizeRendered: onPageViewChildSizeRendered,
-              child: childrenBundles.firstOrNull?.view ?? const SizedBox(),
-            ),
-          ),
-        if (pageViewSize > 0) ...[
-          SizedBox(height: pageViewSize, child: pageView),
-          pageIndicatorView,
-        ],
-      ],
-    );
-  }
-
-  Widget get pageIndicatorView => Padding(
-    padding: const EdgeInsets.only(bottom: 16.0),
-    child: ValueListenableBuilder(
-      valueListenable: pageIndexNotifier,
-      builder: (context, value, child) =>
-          Text('${pageIndexNotifier.value + 1} / ${childrenBundles.length}'),
-    ),
-  );
-
-  Widget removeButton(int index) => Material(
-    shape: const CircleBorder(),
-    color: theme.colorScheme.error,
-    clipBehavior: Clip.hardEdge,
-    child: InkWell(
-      onTap: () => onRemove(index),
-      child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Icon(Icons.delete, color: theme.colorScheme.onError),
-      ),
-    ),
-  );
-
-  Widget get addButton => Center(
-    child: FloatingActionButton(
-      heroTag: '${field.fieldName}${field.idx}_add_button',
-      onPressed: onAdd,
-      child: const Icon(Icons.add),
-    ),
-  );
-
-  @override
-  Widget buildBody(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Column(
-        children: [
-          if (childrenBundles.isNotEmpty) pageViewContainer,
-          if (field.childForm != null) addButton,
-        ],
-      ),
-    );
-  }
-
-  void onPageViewChildSizeRendered(Size size, GlobalKey key) {
-    if (pageViewSize == 0) {
-      setState(() => pageViewSize = size.height + removeButtonOffset);
+    if (defaultData is List && defaultData.isNotEmpty) {
+      // Create ONE separate independent form for EACH item in the default list
+      for (final rowData in defaultData) {
+        if (rowData is Map<String, dynamic>) {
+          await _addRowWithData(Map<String, dynamic>.from(rowData));
+        }
+      }
+    } else {
+      // No default data → add one empty row
+      await onAdd();
     }
   }
 
+  /// Builds ONE row form with pre-filled data from [rowData]
+  /// Each call is completely independent
+  Future<void> _addRowWithData(Map<String, dynamic> rowData) async {
+    if (field.childForm == null) return;
+
+    // Create a fresh child form with initial values injected per field
+    final DocForm mergedChildForm = _buildMergedChildForm(
+      field.childForm!,
+      rowData,
+    );
+
+    // Build this row's fields independently
+    final List<DocFieldBundle> builtBundles =
+        await docFormController.buildFormFields(
+      mergedChildForm,
+      fetchSuggestions: widget.fetchSuggestions != null
+          ? (pattern, docField) =>
+              widget.fetchSuggestions!(pattern, docField)
+          : null,
+      baseUrl: widget.baseUrl,
+      onAttachmentLoaded: widget.onAttachmentLoaded,
+    );
+
+    // The first bundle is the parent wrapper; its children are the actual row fields
+    final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
+    final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
+
+    if (rowBundles.isNotEmpty) {
+      setState(() {
+        childrenBundles.addAll(rowBundles);
+        itemCountNotifier.value = childrenBundles.length;
+      });
+      controller.text =
+          '${(int.tryParse(controller.text) ?? 0) + 1}';
+    }
+  }
+
+  /// Creates a NEW [DocForm] instance where each field has its initial
+  /// value set from [rowData].
+  ///
+  /// Example rowData: {uom: "Nos", conversion_factor: 1}
+  /// This will set field "uom" initial → "Nos" and
+  /// field "conversion_factor" initial → 1
+  DocForm _buildMergedChildForm(
+    DocForm childForm,
+    Map<String, dynamic> rowData,
+  ) {
+    final List<DocField> mergedFields = childForm.fields.map((docField) {
+      final String? fieldName = docField.fieldName;
+
+      if (fieldName != null && rowData.containsKey(fieldName)) {
+        // Inject the value from rowData as the initial value for this field
+        return docField.copyWith(
+          initial: rowData[fieldName],
+        );
+      }
+
+      // No matching key in rowData → keep field as-is but still copy
+      // to ensure each row gets its own independent field instance
+      return docField.copyWith();
+    }).toList();
+
+    return childForm.copyWith(fields: mergedFields);
+  }
+
+  Widget gridItemView(BuildContext context, int index, double width) {
+    if (index >= childrenBundles.length) return const SizedBox.shrink();
+
+    final childView = childrenBundles[index].view;
+    return SizedBox(
+      width: width,
+      child: Stack(
+        children: [
+          Card(
+            margin: EdgeInsets.only(
+              top: removeButtonOffset,
+              right: 4,
+              left: 4,
+              bottom: 4,
+            ),
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color: Colors.grey.shade200),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: childView,
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: removeButton(index),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getGridView(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double totalWidth = constraints.maxWidth;
+        final bool isMobile = totalWidth < 600;
+        final double itemWidth =
+            isMobile ? totalWidth : totalWidth / 2;
+
+        return Wrap(
+          children: List.generate(
+            childrenBundles.length,
+            (index) => gridItemView(context, index, itemWidth),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (childrenBundles.isEmpty)
+          const Padding(
+            padding: EdgeInsets.all(10),
+            child: CircularProgressIndicator(),
+          )
+        else ...[
+          getGridView(context),
+          totalCountIndicator,
+        ],
+        if (field.childForm != null) addButton,
+      ],
+    );
+  }
+
+  Widget get totalCountIndicator => Padding(
+        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+        child: ValueListenableBuilder<int>(
+          valueListenable: itemCountNotifier,
+          builder: (context, value, child) => Text(
+            'Total Items: $value',
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      );
+
+  Widget removeButton(int index) => Material(
+        shape: const CircleBorder(),
+        color: theme.colorScheme.error,
+        elevation: 2,
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          onTap: () => onRemove(index),
+          child: const Padding(
+            padding: EdgeInsets.all(4),
+            child: Icon(Icons.close, size: 14, color: Colors.white),
+          ),
+        ),
+      );
+
+  Widget get addButton => Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 12),
+        child: Center(
+          child: TextButton.icon(
+            onPressed: onAdd,
+            style: TextButton.styleFrom(
+              backgroundColor:
+                  theme.colorScheme.primary.withOpacity(0.1),
+            ),
+            label: const Text("Add Row"),
+            icon: const Icon(Icons.add, size: 18),
+          ),
+        ),
+      );
+
   Future<void> onRemove(int index) async {
     if (index >= 0 && index < childrenBundles.length) {
-      if (pageIndexNotifier.value > 0 &&
-          pageIndexNotifier.value == childrenBundles.length - 1) {
-        --pageIndexNotifier.value;
-      }
-      childrenBundles.removeAt(index);
-      setState(() {});
-      animateToPage(pageIndexNotifier.value);
-      // Update the controller text value to comply with controller validation if field is required
-      int value = (int.tryParse(controller.text) ?? 0) - 1;
+      setState(() {
+        childrenBundles.removeAt(index);
+        itemCountNotifier.value = childrenBundles.length;
+      });
+      final int value = (int.tryParse(controller.text) ?? 0) - 1;
       controller.text = '${value > 0 ? value : ''}';
     }
   }
 
+  /// Add a new empty row using the original child_table structure
   Future<void> onAdd() async {
-    // Get all the children from the child table as DocFieldBundle
-    List<DocFieldBundle> childrenFieldBundles = await docFormController
-        .buildFormFields(field.childForm ?? DocForm(),fetchSuggestions: (pattern, field) => widget.fetchSuggestions!(pattern, field),baseUrl: widget.baseUrl,onAttachmentLoaded: widget.onAttachmentLoaded,);
+    if (field.childForm == null) return;
 
-    // Get the first child bundle if exists, a Child Table must only have one Parent Group which must be a Tab Break
-    final DocFieldBundle? parentChildBundle = childrenFieldBundles.firstOrNull;
+    // Pass the original childForm with NO initial values → empty row
+    final List<DocFieldBundle> builtBundles =
+        await docFormController.buildFormFields(
+      field.childForm!,
+      fetchSuggestions: widget.fetchSuggestions != null
+          ? (pattern, docField) =>
+              widget.fetchSuggestions!(pattern, docField)
+          : null,
+      baseUrl: widget.baseUrl,
+      onAttachmentLoaded: widget.onAttachmentLoaded,
+    );
 
-    // Get the children of the parent bundle, we ignore the parent bundle itself, because we only want the children, so no Tabs will be rendered here.
-    final List<DocFieldBundle> childrenOfParentBundle =
-        parentChildBundle?.children ?? [];
+    final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
+    final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
 
-    if (childrenOfParentBundle.isNotEmpty) {
-      childrenBundles.addAll(childrenOfParentBundle);
-      setState(() {});
-      // Scroll to the last item added
-      animateToPage(childrenBundles.length - 1);
-      // Update the controller text value to comply with controller validation if field is required
-      controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
-    }
-  }
-
-  void animateToPage(int index) {
-    if (index >= 0 && index < childrenBundles.length) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (pageController.hasClients) {
-          pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
+    if (rowBundles.isNotEmpty) {
+      setState(() {
+        childrenBundles.addAll(rowBundles);
+        itemCountNotifier.value = childrenBundles.length;
       });
+      controller.text =
+          '${(int.tryParse(controller.text) ?? 0) + 1}';
     }
   }
 }
-// 

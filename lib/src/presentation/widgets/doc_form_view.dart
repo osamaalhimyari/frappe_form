@@ -33,6 +33,9 @@ class DocFormView extends StatefulWidget {
   )?
   fetchSuggestions;
 
+  /// for fetching link field suggestions in doc form view,
+  final Function(DocField field)? getChildTableRows;
+
   /// To add custom actions to the AppBar.
   final List<Widget>? actions;
 
@@ -43,10 +46,13 @@ class DocFormView extends StatefulWidget {
   ///  It is necessary because attachments in Frappe are usually stored with relative paths,
   ///  so we need a base url to load them.
   final String baseUrl;
-// get doctypes for dynamic link fields
-  final Future<List<String>> Function(String fieldName) getDoctypesForDynamicLink;
+  // get doctypes for dynamic link fields
+  final Future<List<String>> Function(String fieldName)
+  getDoctypesForDynamicLink;
+
   /// ondocTypeChane
   final void Function(String? doctype, String? option)? onDocTypeChanged;
+
   /// Indicates what should be the fallback localization if loalce is not
   /// supported.
   /// Defaults to English
@@ -77,7 +83,9 @@ class DocFormView extends StatefulWidget {
     this.localizations,
     this.locale,
     required this.fetchSuggestions,
-    required this.getDoctypesForDynamicLink, this.onDocTypeChanged,
+    required this.getDoctypesForDynamicLink,
+    this.onDocTypeChanged,
+    this.getChildTableRows,
   });
 
   @override
@@ -179,7 +187,9 @@ class DocFormViewState extends State<DocFormView>
       onAttachmentLoaded: widget.onAttachmentLoaded,
       baseUrl: widget.baseUrl,
       onDocTypeChanged: widget.onDocTypeChanged,
-      fetchSuggestions: widget.fetchSuggestions, getDoctypesForDynamicLink: widget.getDoctypesForDynamicLink,
+      fetchSuggestions: widget.fetchSuggestions,
+      getChildTableRows:widget.getChildTableRows ,
+      getDoctypesForDynamicLink: widget.getDoctypesForDynamicLink,
     );
     tabsCount = fieldBundles.length;
     tabController = TabController(
@@ -279,9 +289,7 @@ class DocFormViewState extends State<DocFormView>
                 backgroundColor: canSubmit ? null : theme.disabledColor,
                 foregroundColor: canSubmit ? null : theme.disabledColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    8.0,
-                  ), 
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 minimumSize: const Size(60, 40),
               ),
