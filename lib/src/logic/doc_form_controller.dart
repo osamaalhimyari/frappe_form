@@ -321,8 +321,12 @@ class DocFormController {
           fieldView = DocFieldRatingView(field: field);
           break;
         case FieldType.table:
+      var  field1=field;
+      if(getChildTableRows!=null){
+        field1=field1.copyWith(getChildTableRows:getChildTableRows(field1) );
+      }
           fieldView = DocFieldTableView(
-            field: field,
+            field: field1,
             fetchSuggestions: (pattern, field) =>
                 fetchSuggestions!(pattern, field),
             baseUrl: baseUrl,
