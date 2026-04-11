@@ -323,7 +323,7 @@ class DocFormController {
         case FieldType.table:
       var  field1=field;
       if(getChildTableRows!=null){
-        field1=field1.copyWith(getChildTableRows:getChildTableRows(field1) );
+        field1=field1.copyWith(childTable:getChildTableRows(field1) );
       }
           fieldView = DocFieldTableView(
             field: field1,
