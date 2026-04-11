@@ -533,7 +533,66 @@ class DocFormPageState extends State<DocFormPage> {
   Map<String, String> _formValues = {};
 
 // ... inside build ...
+List<Map<String, dynamic>> getChildTableRows(dynamic field) {
+  // 1. Your actual data rows (initials)
+  List initials = [
+    {
+      "name": "row_1",
+      "uom": "Nos",
+      "conversion_factor": 1,
+      "doctype": "UOM Conversion Detail",
+    },
+    {
+      "name": "row_2",
+      "uom": "Box",
+      "conversion_factor": 2,
+      "doctype": "UOM Conversion Detail",
+    },
+  ];
 
+  // 2. Your structural definition (The Template)
+  Map<String, dynamic> childTableStructure = {
+    "name": "UOM Conversion Detail",
+    "fields": [
+      {"fieldname": "uom", "label": "UOM", "fieldtype": "Link"},
+      {"fieldname": "conversion_factor", "label": "Conversion Factor", "fieldtype": "Float"},
+    ],
+  };
+
+  List<Map<String, dynamic>> rows = [];
+
+  // Loop through each data entry (The Rows)
+  for (int i = 0; i < initials.length; i++) {
+    var rowData = initials[i];
+    
+    // For every row of data, we create a fresh set of fields based on the structure
+    List<Map<String, dynamic>> fieldsForThisRow = [];
+
+    for (var structureField in (childTableStructure['fields'] as List)) {
+      // Create a deep copy of the field definition template
+      Map<String, dynamic> fieldInstance = Map<String, dynamic>.from(structureField);
+      
+      String fieldName = fieldInstance['fieldname'];
+
+      // Assign the value from the data row to this specific field instance
+      fieldInstance['value'] = rowData[fieldName] ?? fieldInstance['default'];
+      
+      // Crucial: Create a unique key for the UI (e.g., row index + fieldname)
+      fieldInstance['unique_id'] = "row_${i}_${fieldName}";
+      fieldInstance['row_index'] = i;
+
+      fieldsForThisRow.add(fieldInstance);
+    }
+
+    // Add the fully constructed row to our list
+    rows.add({
+      "row_id": rowData['name'] ?? i.toString(),
+      "fields": fieldsForThisRow,
+    });
+  }
+
+  return rows;
+}
 return DocFormView(
   key: ValueKey(loading),
   form: widget.form,
@@ -572,6 +631,9 @@ return DocFormView(
       return [];
     }
   },
+  // ------------------------------------
+  getChildTableRows: getChildTableRows,
+  // ------------------------------------
   controller: DocFormController(
     onBuildFieldView: (field, children, onAttachmentLoaded) async {
       switch (field.type) {

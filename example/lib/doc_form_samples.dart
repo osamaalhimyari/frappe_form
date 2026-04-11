@@ -60,6 +60,57 @@ class DocFormSamples {
     "index_web_pages_for_search": 0,
     "row_format": "Dynamic",
     "fields": [
+       {
+        "fieldname": "recipe_evaluation_ingredients",
+        "fieldtype": "Table",
+        "label": "Recipe Evaluation Ingredients",
+        "options": "Recipe Evaluation Ingredients",
+        "reqd": 1,
+        "child_table": {
+          "actions": [],
+          "allow_rename": 1,
+          "creation": "2025-06-26 13:04:50.708296",
+          "doctype": "DocType",
+          "editable_grid": 1,
+          "engine": "InnoDB",
+          "field_order": [
+            "ingredient",
+            "quantity",
+            "photo"
+          ],
+          "fields": [
+            {
+              "fieldname": "ingredient",
+              "fieldtype": "Small Text",
+              "in_list_view": 1,
+              "label": "Ingredient"
+            },
+            {
+              "fieldname": "quantity",
+              "fieldtype": "Data",
+              "in_list_view": 1,
+              "label": "Quantity"
+            },
+            {
+              "fieldname": "photo",
+              "fieldtype": "Attach Image",
+              "label": "Photo"
+            }
+          ],
+          "index_web_pages_for_search": 1,
+          "istable": 1,
+          "links": [],
+          "modified": "2025-07-16 14:37:15.069235",
+          "modified_by": "Administrator",
+          "module": "Culinary Forms",
+          "name": "Recipe Evaluation Ingredients",
+          "owner": "Administrator",
+          "permissions": [],
+          "sort_field": "modified",
+          "sort_order": "DESC",
+          "states": []
+        }
+      },
       //  ---------------------------
       //     this is the section
       {
@@ -361,6 +412,7 @@ class DocFormSamples {
           "links": [],
           "states": [],
         },
+       
         "default": [
           {
             "name": "gbea26ot8b",
@@ -377,7 +429,23 @@ class DocFormSamples {
             "parenttype": "Item",
             "doctype": "UOM Conversion Detail",
           },
+          {
+            "name": "gbea26ot8b",
+            "owner": "khaled@im2m.ws",
+            "creation": "2025-11-25 11:46:41.467015",
+            "modified": "2025-11-25 11:46:41.467015",
+            "modified_by": "khaled@im2m.ws",
+            "docstatus": 0,
+            "idx": 1,
+            "uom": "Box",
+            "conversion_factor": 2,
+            "parent": "SKU004",
+            "parentfield": "uoms",
+            "parenttype": "Item",
+            "doctype": "UOM Conversion Detail",
+          },
         ],
+     
       },
       // {
       //   "doctype": "DocField",
