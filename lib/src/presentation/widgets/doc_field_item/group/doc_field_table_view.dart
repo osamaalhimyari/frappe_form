@@ -1,6 +1,12 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Global cache: survives tab switches because it lives outside any widget/state.
+// Key = field.fieldName (unique per table field in the form).
+// ─────────────────────────────────────────────────────────────────────────────
+final Map<String, List<DocFieldBundle>> _tableCache = {};
+
 class DocFieldTableView extends DocFieldView {
   final Future<List<Map<String, dynamic>>> Function(String, DocField)?
       fetchSuggestions;
@@ -33,23 +39,22 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   final itemCountNotifier = ValueNotifier<int>(0);
   double removeButtonOffset = 12.0;
 
-  // 🔥 FIX: Local snapshot of bundles so parent rebuilds don't overwrite
-  // user edits (removals/additions) when switching tabs.
-  late List<DocFieldBundle> _localBundles;
-
-  // Prevents duplicate loading on rebuild/scroll
   bool _isInitialized = false;
+
+  // Cache key is the field's unique name
+  String get _cacheKey => field.fieldName ?? field.label ?? 'table';
+
+  // Always read/write through the global cache.
+  // putIfAbsent creates an empty list the very first time.
+  List<DocFieldBundle> get _bundles =>
+      _tableCache.putIfAbsent(_cacheKey, () => []);
 
   @override
   void initState() {
     super.initState();
-    // Snapshot the bundles ONCE from the widget at construction time.
-    // All mutations (add/remove) happen on _localBundles only.
-    _localBundles = List.from(widget.childrenBundles);
-
     initFormController();
     scrollController = ScrollController();
-    itemCountNotifier.value = _localBundles.length;
+    itemCountNotifier.value = _bundles.length;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadInitialRows();
@@ -67,21 +72,25 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     docFormController = DocFormController();
   }
 
-  /// Idempotent initialization — runs exactly ONCE per State lifetime.
-  /// Uses _localBundles so user removals are never overwritten.
+  /// Runs once per form session (not per tab switch).
+  ///
+  /// Rules:
+  ///   1. Cache already has rows → user came back from another tab, do nothing.
+  ///   2. field.initial has data  → load those rows into cache.
+  ///   3. field.initial is empty  → leave table empty, do NOT auto-add a row.
   Future<void> _loadInitialRows() async {
     if (_isInitialized) return;
     _isInitialized = true;
 
-    // If bundles already exist (restored state or user edited), trust them.
-    // Do NOT re-load from field.initial — user may have removed rows.
-    if (_localBundles.isNotEmpty) {
-      itemCountNotifier.value = _localBundles.length;
+    // Rule 1 — cache already populated, just sync the count
+    if (_bundles.isNotEmpty) {
+      if (mounted) setState(() => itemCountNotifier.value = _bundles.length);
       return;
     }
 
     final defaultData = field.initial;
 
+    // Rule 2 — only load when initial data actually exists
     if (defaultData is List && defaultData.isNotEmpty) {
       final List<DocFieldBundle> newBundles = [];
 
@@ -92,19 +101,18 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
         }
       }
 
-      if (newBundles.isNotEmpty) {
+      if (newBundles.isNotEmpty && mounted) {
         setState(() {
-          _localBundles.clear();
-          _localBundles.addAll(newBundles);
-          itemCountNotifier.value = _localBundles.length;
+          _bundles.addAll(newBundles);
+          itemCountNotifier.value = _bundles.length;
         });
       }
-    } else {
-      await onAdd();
     }
+
+    // Rule 3 — no else: empty initial = empty table, nothing added
   }
 
-  /// Helper: Builds bundles for a single row from data
+  /// Builds bundles for a single row from existing row data
   Future<List<DocFieldBundle>> _buildRowBundles(
       Map<String, dynamic> rowData) async {
     if (field.childForm == null) return [];
@@ -118,8 +126,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
         await docFormController.buildFormFields(
       mergedChildForm,
       fetchSuggestions: widget.fetchSuggestions != null
-          ? (pattern, docField) =>
-              widget.fetchSuggestions!(pattern, docField)
+          ? (pattern, docField) => widget.fetchSuggestions!(pattern, docField)
           : null,
       baseUrl: widget.baseUrl,
       onAttachmentLoaded: widget.onAttachmentLoaded,
@@ -136,29 +143,24 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   ) {
     final List<DocField> mergedFields = childForm.fields.map((docField) {
       final String? fieldName = docField.fieldName;
-
       if (fieldName != null && rowData.containsKey(fieldName)) {
-        return docField.copyWith(
-          initial: rowData[fieldName],
-        );
+        return docField.copyWith(initial: rowData[fieldName]);
       }
-
       return docField.copyWith();
     }).toList();
 
     return childForm.copyWith(fields: mergedFields);
   }
 
+  // ─── UI ───────────────────────────────────────────────────────────────────
+
   Widget gridItemView(BuildContext context, int index, double width) {
-    if (index >= _localBundles.length) return const SizedBox.shrink();
+    if (index >= _bundles.length) return const SizedBox.shrink();
 
-    final childView = _localBundles[index].view;
-
-    // Unique key per row to prevent state reuse during scroll
-    final Key rowKey = ValueKey('row_$index');
+    final childView = _bundles[index].view;
 
     return SizedBox(
-      key: rowKey,
+      key: ValueKey('row_${_cacheKey}_$index'),
       width: width,
       child: Stack(
         children: [
@@ -198,7 +200,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
         return Wrap(
           children: List.generate(
-            _localBundles.length,
+            _bundles.length,
             (index) => gridItemView(context, index, itemWidth),
           ),
         );
@@ -211,12 +213,8 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (_localBundles.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(10),
-            child: CircularProgressIndicator(),
-          )
-        else ...[
+        // No loading spinner — empty table is a valid state
+        if (_bundles.isNotEmpty) ...[
           getGridView(context),
           totalCountIndicator,
         ],
@@ -269,18 +267,19 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
         ),
       );
 
+  // ─── Actions ──────────────────────────────────────────────────────────────
+
   Future<void> onRemove(int index) async {
-    if (index >= 0 && index < _localBundles.length) {
+    if (index >= 0 && index < _bundles.length) {
       setState(() {
-        _localBundles.removeAt(index);
-        itemCountNotifier.value = _localBundles.length;
+        _bundles.removeAt(index); // mutates the global cache directly
+        itemCountNotifier.value = _bundles.length;
       });
       final int value = (int.tryParse(controller.text) ?? 0) - 1;
       controller.text = '${value > 0 ? value : ''}';
     }
   }
 
-  /// Add a new empty row using the original child_table structure
   Future<void> onAdd() async {
     if (field.childForm == null) return;
 
@@ -288,8 +287,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
         await docFormController.buildFormFields(
       field.childForm!,
       fetchSuggestions: widget.fetchSuggestions != null
-          ? (pattern, docField) =>
-              widget.fetchSuggestions!(pattern, docField)
+          ? (pattern, docField) => widget.fetchSuggestions!(pattern, docField)
           : null,
       baseUrl: widget.baseUrl,
       onAttachmentLoaded: widget.onAttachmentLoaded,
@@ -298,13 +296,12 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
     final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
 
-    if (rowBundles.isNotEmpty) {
+    if (rowBundles.isNotEmpty && mounted) {
       setState(() {
-        _localBundles.addAll(rowBundles);
-        itemCountNotifier.value = _localBundles.length;
+        _bundles.addAll(rowBundles); // mutates the global cache directly
+        itemCountNotifier.value = _bundles.length;
       });
-      controller.text =
-          '${(int.tryParse(controller.text) ?? 0) + 1}';
+      controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
     }
   }
 }
