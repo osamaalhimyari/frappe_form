@@ -1,6 +1,12 @@
 // import 'package:frappe_form/frappe_form.dart';
 // import 'package:flutter/material.dart';
 
+// // ─────────────────────────────────────────────────────────────────────────────
+// // Global cache: survives tab switches because it lives outside any widget/state.
+// // Key = field.fieldName (unique per table field in the form).
+// // ─────────────────────────────────────────────────────────────────────────────
+// final Map<String, List<DocFieldBundle>> _tableCache = {};
+
 // class DocFieldTableView extends DocFieldView {
 //   final Future<List<Map<String, dynamic>>> Function(String, DocField)?
 //       fetchSuggestions;
@@ -32,14 +38,23 @@
 //   late final ScrollController scrollController;
 //   final itemCountNotifier = ValueNotifier<int>(0);
 //   double removeButtonOffset = 12.0;
-//   bool _hasLoadedInitialRows = false;
+
+//   bool _isInitialized = false;
+
+//   // Cache key is the field's unique name
+//   String get _cacheKey => field.fieldName ?? field.label ?? 'table';
+
+//   // Always read/write through the global cache.
+//   // putIfAbsent creates an empty list the very first time.
+//   List<DocFieldBundle> get _bundles =>
+//       _tableCache.putIfAbsent(_cacheKey, () => []);
 
 //   @override
 //   void initState() {
 //     super.initState();
 //     initFormController();
 //     scrollController = ScrollController();
-//     itemCountNotifier.value = childrenBundles.length;
+//     itemCountNotifier.value = _bundles.length;
 
 //     WidgetsBinding.instance.addPostFrameCallback((_) {
 //       _loadInitialRows();
@@ -49,6 +64,7 @@
 //   @override
 //   void dispose() {
 //     scrollController.dispose();
+//     itemCountNotifier.dispose();
 //     super.dispose();
 //   }
 
@@ -56,98 +72,95 @@
 //     docFormController = DocFormController();
 //   }
 
-//   /// Load initial rows from field.defaultValue (the "default" array in JSON)
+//   /// Runs once per form session (not per tab switch).
+//   ///
+//   /// Rules:
+//   ///   1. Cache already has rows → user came back from another tab, do nothing.
+//   ///   2. field.initial has data  → load those rows into cache.
+//   ///   3. field.initial is empty  → leave table empty, do NOT auto-add a row.
 //   Future<void> _loadInitialRows() async {
-//     if (_hasLoadedInitialRows) return;
-//     _hasLoadedInitialRows = true;
+//     if (_isInitialized) return;
+//     _isInitialized = true;
 
-//     // field.defaultValue maps to the "default" key in your JSON
-//     // which contains: [{uom: "Nos", conversion_factor: 1}, {uom: "Box", conversion_factor: 2}]
+//     // Rule 1 — cache already populated, just sync the count
+//     if (_bundles.isNotEmpty) {
+//       if (mounted) setState(() => itemCountNotifier.value = _bundles.length);
+//       return;
+//     }
+
 //     final defaultData = field.initial;
 
+//     // Rule 2 — only load when initial data actually exists
 //     if (defaultData is List && defaultData.isNotEmpty) {
-//       // Create ONE separate independent form for EACH item in the default list
+//       final List<DocFieldBundle> newBundles = [];
+
 //       for (final rowData in defaultData) {
 //         if (rowData is Map<String, dynamic>) {
-//           await _addRowWithData(Map<String, dynamic>.from(rowData));
+//           final rowBundles = await _buildRowBundles(rowData);
+//           newBundles.addAll(rowBundles);
 //         }
 //       }
-//     } else {
-//       // No default data → add one empty row
-//       await onAdd();
+
+//       if (newBundles.isNotEmpty && mounted) {
+//         setState(() {
+//           _bundles.addAll(newBundles);
+//           itemCountNotifier.value = _bundles.length;
+//         });
+//       }
 //     }
+
+//     // Rule 3 — no else: empty initial = empty table, nothing added
 //   }
 
-//   /// Builds ONE row form with pre-filled data from [rowData]
-//   /// Each call is completely independent
-//   Future<void> _addRowWithData(Map<String, dynamic> rowData) async {
-//     if (field.childForm == null) return;
+//   /// Builds bundles for a single row from existing row data
+//   Future<List<DocFieldBundle>> _buildRowBundles(
+//       Map<String, dynamic> rowData) async {
+//     if (field.childForm == null) return [];
 
-//     // Create a fresh child form with initial values injected per field
 //     final DocForm mergedChildForm = _buildMergedChildForm(
 //       field.childForm!,
 //       rowData,
 //     );
 
-//     // Build this row's fields independently
 //     final List<DocFieldBundle> builtBundles =
 //         await docFormController.buildFormFields(
 //       mergedChildForm,
 //       fetchSuggestions: widget.fetchSuggestions != null
-//           ? (pattern, docField) =>
-//               widget.fetchSuggestions!(pattern, docField)
+//           ? (pattern, docField) => widget.fetchSuggestions!(pattern, docField)
 //           : null,
 //       baseUrl: widget.baseUrl,
 //       onAttachmentLoaded: widget.onAttachmentLoaded,
 //     );
 
-//     // The first bundle is the parent wrapper; its children are the actual row fields
 //     final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
-//     final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
-
-//     if (rowBundles.isNotEmpty) {
-//       setState(() {
-//         childrenBundles.addAll(rowBundles);
-//         itemCountNotifier.value = childrenBundles.length;
-//       });
-//       controller.text =
-//           '${(int.tryParse(controller.text) ?? 0) + 1}';
-//     }
+//     return parentBundle?.children ?? [];
 //   }
 
-//   /// Creates a NEW [DocForm] instance where each field has its initial
-//   /// value set from [rowData].
-//   ///
-//   /// Example rowData: {uom: "Nos", conversion_factor: 1}
-//   /// This will set field "uom" initial → "Nos" and
-//   /// field "conversion_factor" initial → 1
+//   /// Merges child form schema with row data to set initial values
 //   DocForm _buildMergedChildForm(
 //     DocForm childForm,
 //     Map<String, dynamic> rowData,
 //   ) {
 //     final List<DocField> mergedFields = childForm.fields.map((docField) {
 //       final String? fieldName = docField.fieldName;
-
 //       if (fieldName != null && rowData.containsKey(fieldName)) {
-//         // Inject the value from rowData as the initial value for this field
-//         return docField.copyWith(
-//           initial: rowData[fieldName],
-//         );
+//         return docField.copyWith(initial: rowData[fieldName]);
 //       }
-
-//       // No matching key in rowData → keep field as-is but still copy
-//       // to ensure each row gets its own independent field instance
 //       return docField.copyWith();
 //     }).toList();
 
 //     return childForm.copyWith(fields: mergedFields);
 //   }
 
-//   Widget gridItemView(BuildContext context, int index, double width) {
-//     if (index >= childrenBundles.length) return const SizedBox.shrink();
+//   // ─── UI ───────────────────────────────────────────────────────────────────
 
-//     final childView = childrenBundles[index].view;
+//   Widget gridItemView(BuildContext context, int index, double width) {
+//     if (index >= _bundles.length) return const SizedBox.shrink();
+
+//     final childView = _bundles[index].view;
+
 //     return SizedBox(
+//       key: ValueKey('row_${_cacheKey}_$index'),
 //       width: width,
 //       child: Stack(
 //         children: [
@@ -183,12 +196,11 @@
 //       builder: (context, constraints) {
 //         final double totalWidth = constraints.maxWidth;
 //         final bool isMobile = totalWidth < 600;
-//         final double itemWidth =
-//             isMobile ? totalWidth : totalWidth / 2;
+//         final double itemWidth = isMobile ? totalWidth : totalWidth / 2;
 
 //         return Wrap(
 //           children: List.generate(
-//             childrenBundles.length,
+//             _bundles.length,
 //             (index) => gridItemView(context, index, itemWidth),
 //           ),
 //         );
@@ -201,12 +213,8 @@
 //     return Column(
 //       mainAxisSize: MainAxisSize.min,
 //       children: [
-//         if (childrenBundles.isEmpty)
-//           const Padding(
-//             padding: EdgeInsets.all(10),
-//             child: CircularProgressIndicator(),
-//           )
-//         else ...[
+//         // No loading spinner — empty table is a valid state
+//         if (_bundles.isNotEmpty) ...[
 //           getGridView(context),
 //           totalCountIndicator,
 //         ],
@@ -232,7 +240,7 @@
 
 //   Widget removeButton(int index) => Material(
 //         shape: const CircleBorder(),
-//         color: theme.colorScheme.error,
+//         color: Theme.of(context).colorScheme.error,
 //         elevation: 2,
 //         clipBehavior: Clip.hardEdge,
 //         child: InkWell(
@@ -251,7 +259,7 @@
 //             onPressed: onAdd,
 //             style: TextButton.styleFrom(
 //               backgroundColor:
-//                   theme.colorScheme.primary.withOpacity(0.1),
+//                   Theme.of(context).colorScheme.primary.withOpacity(0.1),
 //             ),
 //             label: const Text("Add Row"),
 //             icon: const Icon(Icons.add, size: 18),
@@ -259,28 +267,27 @@
 //         ),
 //       );
 
+//   // ─── Actions ──────────────────────────────────────────────────────────────
+
 //   Future<void> onRemove(int index) async {
-//     if (index >= 0 && index < childrenBundles.length) {
+//     if (index >= 0 && index < _bundles.length) {
 //       setState(() {
-//         childrenBundles.removeAt(index);
-//         itemCountNotifier.value = childrenBundles.length;
+//         _bundles.removeAt(index); // mutates the global cache directly
+//         itemCountNotifier.value = _bundles.length;
 //       });
 //       final int value = (int.tryParse(controller.text) ?? 0) - 1;
 //       controller.text = '${value > 0 ? value : ''}';
 //     }
 //   }
 
-//   /// Add a new empty row using the original child_table structure
 //   Future<void> onAdd() async {
 //     if (field.childForm == null) return;
 
-//     // Pass the original childForm with NO initial values → empty row
 //     final List<DocFieldBundle> builtBundles =
 //         await docFormController.buildFormFields(
 //       field.childForm!,
 //       fetchSuggestions: widget.fetchSuggestions != null
-//           ? (pattern, docField) =>
-//               widget.fetchSuggestions!(pattern, docField)
+//           ? (pattern, docField) => widget.fetchSuggestions!(pattern, docField)
 //           : null,
 //       baseUrl: widget.baseUrl,
 //       onAttachmentLoaded: widget.onAttachmentLoaded,
@@ -289,13 +296,12 @@
 //     final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
 //     final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
 
-//     if (rowBundles.isNotEmpty) {
+//     if (rowBundles.isNotEmpty && mounted) {
 //       setState(() {
-//         childrenBundles.addAll(rowBundles);
-//         itemCountNotifier.value = childrenBundles.length;
+//         _bundles.addAll(rowBundles); // mutates the global cache directly
+//         itemCountNotifier.value = _bundles.length;
 //       });
-//       controller.text =
-//           '${(int.tryParse(controller.text) ?? 0) + 1}';
+//       controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
 //     }
 //   }
 // }

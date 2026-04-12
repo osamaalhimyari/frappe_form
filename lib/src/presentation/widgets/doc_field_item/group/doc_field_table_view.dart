@@ -1,11 +1,10 @@
 import 'package:frappe_form/frappe_form.dart';
 import 'package:flutter/material.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Global cache: survives tab switches because it lives outside any widget/state.
-// Key = field.fieldName (unique per table field in the form).
-// ─────────────────────────────────────────────────────────────────────────────
+// 1. Global cache for data
 final Map<String, List<DocFieldBundle>> _tableCache = {};
+// 2. Global tracker for initialization status so it survives tab switches
+final Set<String> _initializedKeys = {};
 
 class DocFieldTableView extends DocFieldView {
   final Future<List<Map<String, dynamic>>> Function(String, DocField)?
@@ -39,13 +38,9 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   final itemCountNotifier = ValueNotifier<int>(0);
   double removeButtonOffset = 12.0;
 
-  bool _isInitialized = false;
-
   // Cache key is the field's unique name
   String get _cacheKey => field.fieldName ?? field.label ?? 'table';
 
-  // Always read/write through the global cache.
-  // putIfAbsent creates an empty list the very first time.
   List<DocFieldBundle> get _bundles =>
       _tableCache.putIfAbsent(_cacheKey, () => []);
 
@@ -72,25 +67,19 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     docFormController = DocFormController();
   }
 
-  /// Runs once per form session (not per tab switch).
-  ///
-  /// Rules:
-  ///   1. Cache already has rows → user came back from another tab, do nothing.
-  ///   2. field.initial has data  → load those rows into cache.
-  ///   3. field.initial is empty  → leave table empty, do NOT auto-add a row.
   Future<void> _loadInitialRows() async {
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    // Rule 1 — cache already populated, just sync the count
-    if (_bundles.isNotEmpty) {
-      if (mounted) setState(() => itemCountNotifier.value = _bundles.length);
-      return;
+    // Check global set instead of local boolean
+    if (_initializedKeys.contains(_cacheKey)) {
+       // Already initialized in a previous tab visit, 
+       // don't reload from field.initial even if _bundles is empty.
+       return; 
     }
+
+    // Mark as initialized globally
+    _initializedKeys.add(_cacheKey);
 
     final defaultData = field.initial;
 
-    // Rule 2 — only load when initial data actually exists
     if (defaultData is List && defaultData.isNotEmpty) {
       final List<DocFieldBundle> newBundles = [];
 
@@ -108,11 +97,8 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
         });
       }
     }
-
-    // Rule 3 — no else: empty initial = empty table, nothing added
   }
 
-  /// Builds bundles for a single row from existing row data
   Future<List<DocFieldBundle>> _buildRowBundles(
       Map<String, dynamic> rowData) async {
     if (field.childForm == null) return [];
@@ -136,7 +122,6 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     return parentBundle?.children ?? [];
   }
 
-  /// Merges child form schema with row data to set initial values
   DocForm _buildMergedChildForm(
     DocForm childForm,
     Map<String, dynamic> rowData,
@@ -155,12 +140,13 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   // ─── UI ───────────────────────────────────────────────────────────────────
 
   Widget gridItemView(BuildContext context, int index, double width) {
+    // Safety check for async removals
     if (index >= _bundles.length) return const SizedBox.shrink();
 
     final childView = _bundles[index].view;
 
     return SizedBox(
-      key: ValueKey('row_${_cacheKey}_$index'),
+      key: ValueKey('row_${_cacheKey}_${_bundles[index].hashCode}'),
       width: width,
       child: Stack(
         children: [
@@ -213,7 +199,6 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // No loading spinner — empty table is a valid state
         if (_bundles.isNotEmpty) ...[
           getGridView(context),
           totalCountIndicator,
@@ -272,7 +257,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   Future<void> onRemove(int index) async {
     if (index >= 0 && index < _bundles.length) {
       setState(() {
-        _bundles.removeAt(index); // mutates the global cache directly
+        _bundles.removeAt(index); 
         itemCountNotifier.value = _bundles.length;
       });
       final int value = (int.tryParse(controller.text) ?? 0) - 1;
@@ -298,7 +283,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
     if (rowBundles.isNotEmpty && mounted) {
       setState(() {
-        _bundles.addAll(rowBundles); // mutates the global cache directly
+        _bundles.addAll(rowBundles); 
         itemCountNotifier.value = _bundles.length;
       });
       controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
