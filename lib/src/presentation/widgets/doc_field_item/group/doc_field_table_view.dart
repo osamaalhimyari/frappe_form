@@ -33,15 +33,23 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   final itemCountNotifier = ValueNotifier<int>(0);
   double removeButtonOffset = 12.0;
 
-  // 🔥 FIX: Prevents duplicate loading on rebuild/scroll
+  // 🔥 FIX: Local snapshot of bundles so parent rebuilds don't overwrite
+  // user edits (removals/additions) when switching tabs.
+  late List<DocFieldBundle> _localBundles;
+
+  // Prevents duplicate loading on rebuild/scroll
   bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
+    // Snapshot the bundles ONCE from the widget at construction time.
+    // All mutations (add/remove) happen on _localBundles only.
+    _localBundles = List.from(widget.childrenBundles);
+
     initFormController();
     scrollController = ScrollController();
-    itemCountNotifier.value = childrenBundles.length;
+    itemCountNotifier.value = _localBundles.length;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadInitialRows();
@@ -51,6 +59,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   @override
   void dispose() {
     scrollController.dispose();
+    itemCountNotifier.dispose();
     super.dispose();
   }
 
@@ -58,18 +67,18 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     docFormController = DocFormController();
   }
 
-  /// 🔥 FIX: Idempotent initialization. Runs exactly ONCE.
+  /// Idempotent initialization — runs exactly ONCE per State lifetime.
+  /// Uses _localBundles so user removals are never overwritten.
   Future<void> _loadInitialRows() async {
     if (_isInitialized) return;
+    _isInitialized = true;
 
-    // If bundles already exist (e.g. restored state), trust them.
-    if (childrenBundles.isNotEmpty) {
-      _isInitialized = true;
-      itemCountNotifier.value = childrenBundles.length;
+    // If bundles already exist (restored state or user edited), trust them.
+    // Do NOT re-load from field.initial — user may have removed rows.
+    if (_localBundles.isNotEmpty) {
+      itemCountNotifier.value = _localBundles.length;
       return;
     }
-
-    _isInitialized = true;
 
     final defaultData = field.initial;
 
@@ -85,9 +94,9 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
       if (newBundles.isNotEmpty) {
         setState(() {
-          childrenBundles.clear();
-          childrenBundles.addAll(newBundles);
-          itemCountNotifier.value = childrenBundles.length;
+          _localBundles.clear();
+          _localBundles.addAll(newBundles);
+          itemCountNotifier.value = _localBundles.length;
         });
       }
     } else {
@@ -120,19 +129,6 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     return parentBundle?.children ?? [];
   }
 
-  /// Adds a row with pre-filled data (used during init)
-  // Future<void> _addRowWithData(Map<String, dynamic> rowData) async {
-  //   final rowBundles = await _buildRowBundles(rowData);
-
-  //   if (rowBundles.isNotEmpty) {
-  //     setState(() {
-  //       childrenBundles.addAll(rowBundles);
-  //       itemCountNotifier.value = childrenBundles.length;
-  //     });
-  //     controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';
-  //   }
-  // }
-
   /// Merges child form schema with row data to set initial values
   DocForm _buildMergedChildForm(
     DocForm childForm,
@@ -154,11 +150,11 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   }
 
   Widget gridItemView(BuildContext context, int index, double width) {
-    if (index >= childrenBundles.length) return const SizedBox.shrink();
+    if (index >= _localBundles.length) return const SizedBox.shrink();
 
-    final childView = childrenBundles[index].view;
+    final childView = _localBundles[index].view;
 
-    // 🔥 FIX: Unique key per row to prevent state reuse during scroll
+    // Unique key per row to prevent state reuse during scroll
     final Key rowKey = ValueKey('row_$index');
 
     return SizedBox(
@@ -202,7 +198,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
         return Wrap(
           children: List.generate(
-            childrenBundles.length,
+            _localBundles.length,
             (index) => gridItemView(context, index, itemWidth),
           ),
         );
@@ -215,7 +211,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (childrenBundles.isEmpty)
+        if (_localBundles.isEmpty)
           const Padding(
             padding: EdgeInsets.all(10),
             child: CircularProgressIndicator(),
@@ -274,10 +270,10 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       );
 
   Future<void> onRemove(int index) async {
-    if (index >= 0 && index < childrenBundles.length) {
+    if (index >= 0 && index < _localBundles.length) {
       setState(() {
-        childrenBundles.removeAt(index);
-        itemCountNotifier.value = childrenBundles.length;
+        _localBundles.removeAt(index);
+        itemCountNotifier.value = _localBundles.length;
       });
       final int value = (int.tryParse(controller.text) ?? 0) - 1;
       controller.text = '${value > 0 ? value : ''}';
@@ -304,8 +300,8 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
 
     if (rowBundles.isNotEmpty) {
       setState(() {
-        childrenBundles.addAll(rowBundles);
-        itemCountNotifier.value = childrenBundles.length;
+        _localBundles.addAll(rowBundles);
+        itemCountNotifier.value = _localBundles.length;
       });
       controller.text =
           '${(int.tryParse(controller.text) ?? 0) + 1}';
