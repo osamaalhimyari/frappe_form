@@ -188,6 +188,9 @@ class DocFormViewState extends State<DocFormView>
       getDoctypesForDynamicLink: widget.getDoctypesForDynamicLink,
     );
     tabsCount = fieldBundles.length;
+    tabController
+      ..removeListener(onTabScrollListener)
+      ..dispose();
     tabController = TabController(
       vsync: this,
       length: tabsCount,

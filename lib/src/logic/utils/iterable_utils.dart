@@ -87,10 +87,7 @@ extension ListUtils on List {
         temp.add(element2);
       }
     }
-    for (final element in temp) {
-      add(element);
-    }
-    // addAll(temp); //For some reason this throws exception
+    addAll(temp);
   }
 
   void removeDuplicates<E>({
@@ -104,10 +101,7 @@ extension ListUtils on List {
       }
     }
     clear();
-    for (final element in temp) {
-      add(element);
-    }
-    // addAll(temp); //For some reason this throws exception
+    addAll(temp);
   }
 
   List<E> difference<E>(Iterable<E> other) {

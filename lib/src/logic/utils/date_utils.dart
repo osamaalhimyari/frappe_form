@@ -35,14 +35,7 @@ extension CustomDateUtils on DateTime {
       if (kDebugMode) {
         print(e);
       }
-      try {
-        return intl.DateFormat(format).format(this);
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
-        return intl.DateFormat().format(this);
-      }
+      return intl.DateFormat().format(this);
     }
   }
 }

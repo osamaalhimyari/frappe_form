@@ -19,13 +19,17 @@ class DocFieldSignatureView extends DocFieldView {
              controller ??
              CustomValueController<String>(focusNode: FocusNode()),
        );
-         @override
+
+  @override
   CustomValueController<String> get controller =>
       super.controller as CustomValueController<String>;
+
   @override
   void initController() {
     super.initController();
-    controller.value ??= '${field.initial}';
+    if (field.initial != null) {
+      controller.value ??= field.initial.toString();
+    }
   }
 
   @override

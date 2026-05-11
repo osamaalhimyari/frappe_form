@@ -40,7 +40,7 @@ class DocFieldColumnViewState<SF extends DocFieldColumnView>
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: columnChildren.map((itemView) => itemView).toList(),
+      children: columnChildren,
     );
   }
 }

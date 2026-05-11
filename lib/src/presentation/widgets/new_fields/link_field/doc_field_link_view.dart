@@ -90,6 +90,7 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
     _focusNode.removeListener(_onFocusChange);
     _displayController.removeListener(_onTextChanged);
     _displayController.dispose();
+    _focusNode.dispose();
     _removeOverlay();
     super.dispose();
   }

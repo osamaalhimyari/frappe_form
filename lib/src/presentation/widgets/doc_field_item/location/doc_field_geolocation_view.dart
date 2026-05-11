@@ -85,6 +85,15 @@ class DocFieldGeolocationViewState<SF extends DocFieldGeolocationView>
   }
 
   @override
+  void dispose() {
+    latController.focusNode?.dispose();
+    lngController.focusNode?.dispose();
+    latController.dispose();
+    lngController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget buildBody(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,

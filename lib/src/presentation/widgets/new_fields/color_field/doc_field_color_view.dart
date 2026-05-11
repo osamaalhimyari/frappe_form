@@ -40,6 +40,7 @@ class DocFieldColorView extends DocFieldView {
 
 class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewState<SF> {
   late Color _currentColor;
+  late final TextEditingController _hexDisplayController;
 
   @override
   CustomValueController<String> get controller =>
@@ -50,6 +51,13 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
     super.initState();
     // Initialize the local Color object from the controller's string
     _currentColor = _parseHexColor(controller.value??'#FFFFFF');
+    _hexDisplayController = TextEditingController(text: controller.value);
+  }
+
+  @override
+  void dispose() {
+    _hexDisplayController.dispose();
+    super.dispose();
   }
 
   @override
@@ -97,9 +105,7 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
         Expanded(
           child: TextFormField(
             readOnly: true,
-            // Create a temporary controller for the display or use the value directly
-            // onChanged: (value) => controller.value = value,
-            controller: TextEditingController(text: controller.value),
+            controller: _hexDisplayController,
             decoration: const InputDecoration(
               hintText: '#FFFFFF',
               // labelText: controller.value, // Shows the hex code
@@ -129,6 +135,7 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
                 _currentColor = color;
                 // Update the Form Controller with Hex String
                 controller.value = _toHex(color);
+                _hexDisplayController.text = controller.value ?? '';
               });
             },
             enableAlpha: false, // Frappe doesn't usually use Alpha in standard Color fields

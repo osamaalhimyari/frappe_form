@@ -126,6 +126,7 @@ class DocFormController {
   }) async {
     List<DocFieldBundle> fieldBundles = [];
     try {
+      final accumulated = [...?alreadyBuiltFieldBundles];
       for (int i = 0; i < fields.length; i++) {
         final field = fields[i];
 
@@ -136,14 +137,12 @@ class DocFormController {
           onAttachmentLoaded: onAttachmentLoaded,
           onDocTypeChanged: onDocTypeChanged,
           groupId: groupId,
-          alreadyBuiltItemBundles: [
-            ...(alreadyBuiltFieldBundles ?? []),
-            ...fieldBundles,
-          ],
+          alreadyBuiltItemBundles: accumulated,
           getDoctypesForDynamicLink: getDoctypesForDynamicLink,
         );
         if (fieldBundle != null) {
           fieldBundles.add(fieldBundle);
+          accumulated.add(fieldBundle);
         }
       }
     } catch (e) {
@@ -386,36 +385,6 @@ class DocFormController {
         case FieldType.json:
         case FieldType.unknown:
           break;
-        // case FieldType.quantity:
-        //   itemView = DocFieldQuantityView(
-        //     item: item,
-        //   );
-        //   break;
-        // case FieldType.boolean:
-        //   fieldView = DocFieldBooleanView(
-        //     field: field,
-        //   );
-        //   break;
-        // case FieldType.checkOpen:
-        //   fieldView = DocFieldCheckOpenView(
-        //     field: field,
-        //   );
-        //   break;
-        // case FieldType.radioOpen:
-        //   fieldView = DocFieldRadioOpenView(
-        //     field: field,
-        //   );
-        //   break;
-        // case FieldType.selectOpen:
-        //   fieldView = DocFieldSelectOpenView(
-        //     field: field,
-        //   );
-        //   break;
-        // case FieldType.url:
-        //   fieldView = DocFieldUrlView(
-        //     field: field,
-        //   );
-        //   break;
       }
     }
 

@@ -65,14 +65,12 @@ class DocFieldMultiSelectViewState<SF extends DocFieldMultiSelectView>
       final String? rawOptions = widget.field.options;
 
       if (rawOptions != null && rawOptions.isNotEmpty) {
-        setState(() {
-          // Splits "Option 1, Option 3" into ["Option 1", "Option 3"]
-          _allItems = rawOptions
-              .split(',')
-              .map((e) => e.trim()) // Removes extra spaces
-              .where((e) => e.isNotEmpty) // Removes empty entries
-              .toList();
-        });
+        // Splits "Option 1, Option 3" into ["Option 1", "Option 3"]
+        _allItems = rawOptions
+            .split(',')
+            .map((e) => e.trim()) // Removes extra spaces
+            .where((e) => e.isNotEmpty) // Removes empty entries
+            .toList();
       }
     }
 

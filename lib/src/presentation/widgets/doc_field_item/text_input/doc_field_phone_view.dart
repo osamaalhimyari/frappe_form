@@ -47,7 +47,6 @@ class DocFieldPhoneViewState<SF extends DocFieldPhoneView>
   void initState() {
     super.initState();
     try {
-      isValidPhoneNumber = true;
       final phoneInfo = PhoneUtils.parse(controller.text);
       initialPhoneNumber = phoneInfo.number;
       phoneCountry = phoneInfo.country;

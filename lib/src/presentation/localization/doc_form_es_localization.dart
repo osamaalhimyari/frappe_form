@@ -15,7 +15,7 @@ class DocFormEsLocalization extends DocFormBaseLocalization {
   @override
   String get btnRemove => 'Quitar';
   @override
-  String get textOtherOption => 'Optra opción';
+  String get textOtherOption => 'Otra opción';
   @override
   String get textDate => 'Fecha';
   @override
@@ -38,8 +38,7 @@ class DocFormEsLocalization extends DocFormBaseLocalization {
   String get exceptionValueMustBeAPositiveNumber =>
       'El valor debe ser un número positivo.';
   @override
-  String get exceptionValueMustBeANumber =>
-      'El valor debe ser un número positivo.';
+  String get exceptionValueMustBeANumber => 'El valor debe ser un número.';
   @override
   String get exceptionInvalidUrl => 'Url inválida.';
   @override

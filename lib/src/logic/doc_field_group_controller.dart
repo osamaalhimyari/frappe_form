@@ -108,18 +108,6 @@ class DocFieldGroupController {
     return parentGroups;
   }
 
-  // int _lengthOfGroup(List<DocField> fields) {
-  //   int length = 0;
-  //   for (final field in fields) {
-  //     if (field.isGroupType) {
-  //       length += 1 + _lengthOfGroup(field.children);
-  //     } else {
-  //       ++length;
-  //     }
-  //   }
-  //   return length;
-  // }
-
   int _indexOfField(DocField? field, List<DocField> fields) {
     if (field == null || fields.isEmpty) return -1;
     for (int i = 0; i < fields.length; ++i) {

@@ -83,6 +83,7 @@ class _HeatMapState extends State<HeatMapView> {
                         });
 
                         Future.delayed(const Duration(seconds: 5), () {
+                          if (!mounted) return;
                           setState(() => _tooltipText = null);
                         });
                       },
