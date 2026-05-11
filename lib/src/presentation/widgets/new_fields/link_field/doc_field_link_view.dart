@@ -55,6 +55,7 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
   final TextEditingController _displayController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final LayerLink _layerLink = LayerLink();
+  final GlobalKey _fieldKey = GlobalKey();
   OverlayEntry? _overlayEntry;
 
   List<Message> _fullData = [];
@@ -129,8 +130,10 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
   void _showSuggestionsOverlay() {
     _removeOverlay();
     _filterSuggestions(_displayController.text);
-    
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+
+    final renderBox =
+        _fieldKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
     final size = renderBox.size;
 
     _overlayEntry = OverlayEntry(
@@ -139,7 +142,7 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
         child: CompositedTransformFollower(
           link: _layerLink,
           showWhenUnlinked: false,
-          offset: Offset(0, size.height),
+          offset: Offset(0, size.height + 4),
           child: Material(
             elevation: 8,
             borderRadius: BorderRadius.circular(8),
@@ -245,6 +248,7 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
     if (!_isVisible) return const SizedBox.shrink();
 
     return CompositedTransformTarget(
+      key: _fieldKey,
       link: _layerLink,
       child: TextFormField(
         controller: _displayController,
