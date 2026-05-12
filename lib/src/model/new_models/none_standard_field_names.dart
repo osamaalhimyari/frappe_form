@@ -13,7 +13,8 @@ class NonStandardFieldnames {
     this.communication,
     this.toDo,
     this.tokenCache,
-  });
+    Map<String, String>? raw,
+  }) : raw = raw ?? const {};
 
   factory NonStandardFieldnames.fromMap(Map<String, dynamic> data) {
     return NonStandardFieldnames(
@@ -28,8 +29,20 @@ class NonStandardFieldnames {
       communication: data['Communication'] as String?,
       toDo: data['ToDo'] as String?,
       tokenCache: data['Token Cache'] as String?,
+      // Keep the full doctype→fieldname map so callers can resolve
+      // arbitrary connected doctypes (e.g. ERPNext's BOM → `item`),
+      // not just the handful of typed getters above.
+      raw: {
+        for (final entry in data.entries)
+          if (entry.value is String) entry.key: entry.value as String,
+      },
     );
   }
+
+  /// Untyped lookup for connected doctypes whose link field deviates
+  /// from `dashboard.fieldname`. Empty when the parent dashboard had
+  /// no `non_standard_fieldnames` block.
+  final Map<String, String> raw;
 
   /// `dart:convert`
   ///
