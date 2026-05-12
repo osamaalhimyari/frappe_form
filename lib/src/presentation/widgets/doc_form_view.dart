@@ -364,6 +364,7 @@ class DocFormViewState extends State<DocFormView>
       width: showSubmitButton ? 200 : 0,
       height: showSubmitButton ? null : 0,
       child: FloatingActionButton.extended(
+        heroTag: 'doc_form_view_submit_fab',
         shape: const StadiumBorder(),
         backgroundColor: canSubmit ? null : theme.disabledColor,
         foregroundColor: canSubmit ? null : theme.disabledColor,
@@ -381,6 +382,7 @@ class DocFormViewState extends State<DocFormView>
     duration: const Duration(milliseconds: 300),
     child: FloatingActionButton(
       key: ValueKey('next-btn-$canGoNext'),
+      heroTag: 'doc_form_view_next_fab',
       shape: const StadiumBorder(),
       backgroundColor: canGoNext ? null : theme.disabledColor,
       foregroundColor: canGoNext ? null : theme.disabledColor,
@@ -393,6 +395,7 @@ class DocFormViewState extends State<DocFormView>
     duration: const Duration(milliseconds: 300),
     child: FloatingActionButton(
       key: ValueKey('back-btn-$canGoBack'),
+      heroTag: 'doc_form_view_back_fab',
       shape: const StadiumBorder(),
       backgroundColor: canGoBack ? null : theme.disabledColor,
       foregroundColor: canGoBack ? null : theme.disabledColor,
