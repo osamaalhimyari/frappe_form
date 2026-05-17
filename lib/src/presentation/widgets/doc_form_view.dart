@@ -408,6 +408,11 @@ class DocFormViewState extends State<DocFormView>
       fieldBundles.mapIndexed(tabContentView).toList();
   Widget tabContentView(int index, DocFieldBundle fieldBundle) {
     final controller = scrollControllers[index];
+    // Add the soft-keyboard height to the bottom padding so the last
+    // fields can always be scrolled clear of the keyboard. Reading the
+    // inset via MediaQuery registers a dependency, so the list re-pads
+    // itself the moment the keyboard opens or closes.
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
     return Scrollbar(
       controller: controller,
       child: ListView.builder(
@@ -416,11 +421,11 @@ class DocFormViewState extends State<DocFormView>
         physics: const AlwaysScrollableScrollPhysics(
           parent: BouncingScrollPhysics(),
         ),
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           top: 16,
           left: 16,
           right: 16,
-          bottom: fabSize + 64,
+          bottom: fabSize + 64 + keyboardInset,
         ),
         // shrinkWrap: true,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
