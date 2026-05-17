@@ -48,6 +48,7 @@ export 'package:frappe_form/src/presentation/widgets/doc_field_item/group/doc_fi
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/group/doc_field_column_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/group/doc_field_check_list_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/group/doc_field_table_view.dart';
+export 'package:frappe_form/src/presentation/widgets/doc_field_item/group/doc_field_table_check_list_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/location/doc_field_geolocation_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/attachment/doc_field_attachment_view.dart';
 export 'package:frappe_form/src/presentation/widgets/doc_field_item/date/doc_field_date_time_view.dart';

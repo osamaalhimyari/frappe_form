@@ -25,7 +25,15 @@ class DocFieldAnswer {
   // }
 
   Map<String, dynamic> toAnswerMap() {
-    if (name.isEmpty || (value?.toString().isEmpty ?? true)) {
+    if (name.isEmpty) return {};
+    // An explicitly-typed list of row-maps is a fully-formed child-table
+    // answer (the junction-table checklist). Emit it verbatim — even
+    // when empty, so unchecking every row persists as a real "clear
+    // all" rather than being silently dropped.
+    if (value is List<Map<String, dynamic>>) {
+      return {name!: value};
+    }
+    if (value?.toString().isEmpty ?? true) {
       return {};
     }
     dynamic valueParsed;

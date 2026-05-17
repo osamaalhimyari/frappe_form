@@ -313,13 +313,23 @@ class DocFormController {
           fieldView = DocFieldRatingView(field: field);
           break;
         case FieldType.table:
-          fieldView = DocFieldTableView(
-            field: field,
-            fetchSuggestions: (pattern, field) =>
-                fetchSuggestions!(pattern, field),
-            baseUrl: baseUrl,
-            onAttachmentLoaded: onAttachmentLoaded,
-          );
+          // A junction table — child doctype with a single Link field,
+          // e.g. User.`roles` → `Has Role`.`role` — is far clearer as a
+          // checklist than as a row-by-row "Add Row" grid.
+          final junctionLinkField = _junctionLinkField(field.childForm);
+          fieldView = junctionLinkField != null
+              ? DocFieldTableCheckListView(
+                  field: field,
+                  linkField: junctionLinkField,
+                  fetchSuggestions: fetchSuggestions,
+                )
+              : DocFieldTableView(
+                  field: field,
+                  fetchSuggestions: (pattern, field) =>
+                      fetchSuggestions!(pattern, field),
+                  baseUrl: baseUrl,
+                  onAttachmentLoaded: onAttachmentLoaded,
+                );
           break;
         case FieldType.html:
           fieldView = DocFieldHtmlView(field: field);
@@ -399,6 +409,20 @@ class DocFormController {
         : null;
   }
 
+  /// A child ("junction") table whose child doctype has exactly one
+  /// answerable field, and that field is a [FieldType.link], is far
+  /// better presented as a checklist than as a row grid. Returns that
+  /// lone Link field, or `null` when the grid editor should be used.
+  DocField? _junctionLinkField(DocForm? childForm) {
+    if (childForm == null) return null;
+    final answerable = childForm.fields
+        .where((field) => field.type.isAnswerable)
+        .toList();
+    if (answerable.length != 1) return null;
+    final only = answerable.first;
+    return only.type == FieldType.link ? only : null;
+  }
+
   Future<Map<String, dynamic>> generateResponse({
     required DocForm form,
     required List<DocFieldBundle> itemBundles,
@@ -448,6 +472,21 @@ class DocFormController {
     if (fieldBundle.field.type != FieldType.table) {
       return generateFieldAnswer(fieldBundle);
     }
+
+    // A junction table rendered as a checklist holds its rows on the
+    // view's controller. Emit them as a typed `List<Map>` so the answer
+    // round-trips even when every option is unchecked — an empty list
+    // is a meaningful "clear all", which the generic answer-map logic
+    // would otherwise drop.
+    final view = fieldBundle.view;
+    if (view is DocFieldTableCheckListView) {
+      return DocFieldAnswer(
+        type: fieldBundle.field.type,
+        name: fieldBundle.field.fieldName,
+        value: view.rows,
+      );
+    }
+
     List<List<DocFieldAnswer>> fieldAnswersLists = [];
     for (final fieldBundle in fieldBundle.view.childrenBundles) {
       List<DocFieldAnswer> fieldAnswers = await generateFieldAnswers(
