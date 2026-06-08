@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:intl/intl.dart';
 import 'package:contribution_heatmap/contribution_heatmap.dart';
 // import 'package:get/get.dart';
@@ -63,8 +63,9 @@ class _HeatMapState extends State<HeatMapView> {
 
                       weekdayTextStyle: Theme.of(context).textTheme.bodyLarge,
                       monthTextStyle: Theme.of(context).textTheme.bodyLarge,
-                      cellDateTextStyle: Theme.of(context).textTheme.bodyLarge!
-                          .copyWith(color: Colors.black),
+                      cellDateTextStyle: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge!.copyWith(color: Colors.black),
 
                       //  Controlled by buttons
                       splittedMonthView: splitMonth,

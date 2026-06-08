@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 
 class DocFieldDependsOnController {
   DocFieldDependsOnBundle? requiredDependsOn;

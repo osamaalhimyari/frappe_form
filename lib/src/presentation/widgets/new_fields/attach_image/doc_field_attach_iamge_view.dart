@@ -3,7 +3,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class DocFieldAttachIamgeView extends DocFieldView {
@@ -18,9 +18,10 @@ class DocFieldAttachIamgeView extends DocFieldView {
     required this.baseUrl,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomValueController<Attachment>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<Attachment>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<Attachment> get controller =>
@@ -29,9 +30,11 @@ class DocFieldAttachIamgeView extends DocFieldView {
   @override
   void initController() {
     super.initController();
-    
+
     // Transform the initial string URL from Frappe into an Attachment object
-    if (controller.value == null && field.initial != null && field.initial.toString().isNotEmpty) {
+    if (controller.value == null &&
+        field.initial != null &&
+        field.initial.toString().isNotEmpty) {
       final initialUrl = field.initial.toString();
       controller.value = Attachment(
         url: initialUrl,
@@ -51,7 +54,8 @@ class DocFieldAttachIamgeView extends DocFieldView {
   }
 
   @override
-  State<DocFieldAttachIamgeView> createState() => DocFieldAttachIamgeViewState();
+  State<DocFieldAttachIamgeView> createState() =>
+      DocFieldAttachIamgeViewState();
 }
 
 class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
@@ -68,8 +72,9 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
   /// Combines relative Frappe paths with the baseUrl
   String? _buildSafeImageUrl(String? rawUrl) {
     if (rawUrl == null || rawUrl.isEmpty) return null;
-    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) return rawUrl;
-    
+    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://'))
+      return rawUrl;
+
     try {
       final baseUri = Uri.parse(widget.baseUrl);
       return baseUri.resolve(rawUrl).toString();
@@ -116,8 +121,12 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: isReadOnly || isLoading ? null : _onBtnUpload,
-                icon: isLoading 
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                icon: isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
                     : Icon(value == null ? Icons.upload_file : Icons.refresh),
                 label: Text(
                   value == null
@@ -136,7 +145,7 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
                 ),
                 icon: const Icon(Icons.delete_outline),
               ),
-            ]
+            ],
           ],
         ),
       ],
@@ -145,9 +154,11 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
 
   Widget _buildImageWidget(String imageUrl) {
     // Check if it's a local file first (for newly picked images)
-    if (!kIsWeb && value!.path.isNotEmpty && File((value!.path??'')).existsSync()) {
+    if (!kIsWeb &&
+        value!.path.isNotEmpty &&
+        File((value!.path ?? '')).existsSync()) {
       return Image.file(
-        File(value!.path??''),
+        File(value!.path ?? ''),
         height: 200,
         fit: BoxFit.cover,
       );
@@ -162,12 +173,12 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
         fit: BoxFit.contain,
         placeholder: (context, url) => Container(
           height: 200,
-          color: theme.dividerColor.withAlpha(255~/0.1),
+          color: theme.dividerColor.withAlpha(255 ~/ 0.1),
           child: const Center(child: CircularProgressIndicator()),
         ),
         errorWidget: (context, url, error) => Container(
           height: 200,
-          color: theme.dividerColor.withAlpha(255~/0.1),
+          color: theme.dividerColor.withAlpha(255 ~/ 0.1),
           child: const Icon(Icons.broken_image, size: 48, color: Colors.grey),
         ),
       );
@@ -177,12 +188,12 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
     return Container(
       height: 100,
       width: double.infinity,
-      color: theme.dividerColor.withAlpha(255~/0.1),
+      color: theme.dividerColor.withAlpha(255 ~/ 0.1),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.insert_drive_file, size: 48),
-          Text((value?.url??'').split('/').last),
+          Text((value?.url ?? '').split('/').last),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:flutter/material.dart';
 
 // 1. Global cache for data
@@ -8,7 +8,7 @@ final Set<String> _initializedKeys = {};
 
 class DocFieldTableView extends DocFieldView {
   final Future<List<Map<String, dynamic>>> Function(String, DocField)?
-      fetchSuggestions;
+  fetchSuggestions;
   final String baseUrl;
   final Future<Attachment?> Function()? onAttachmentLoaded;
 
@@ -70,9 +70,9 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   Future<void> _loadInitialRows() async {
     // Check global set instead of local boolean
     if (_initializedKeys.contains(_cacheKey)) {
-       // Already initialized in a previous tab visit, 
-       // don't reload from field.initial even if _bundles is empty.
-       return; 
+      // Already initialized in a previous tab visit,
+      // don't reload from field.initial even if _bundles is empty.
+      return;
     }
 
     // Mark as initialized globally
@@ -100,7 +100,8 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   }
 
   Future<List<DocFieldBundle>> _buildRowBundles(
-      Map<String, dynamic> rowData) async {
+    Map<String, dynamic> rowData,
+  ) async {
     if (field.childForm == null) return [];
 
     final DocForm mergedChildForm = _buildMergedChildForm(
@@ -108,15 +109,16 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
       rowData,
     );
 
-    final List<DocFieldBundle> builtBundles =
-        await docFormController.buildFormFields(
-      mergedChildForm,
-      fetchSuggestions: widget.fetchSuggestions != null
-          ? (pattern, docField) => widget.fetchSuggestions!(pattern, docField)
-          : null,
-      baseUrl: widget.baseUrl,
-      onAttachmentLoaded: widget.onAttachmentLoaded,
-    );
+    final List<DocFieldBundle> builtBundles = await docFormController
+        .buildFormFields(
+          mergedChildForm,
+          fetchSuggestions: widget.fetchSuggestions != null
+              ? (pattern, docField) =>
+                    widget.fetchSuggestions!(pattern, docField)
+              : null,
+          baseUrl: widget.baseUrl,
+          onAttachmentLoaded: widget.onAttachmentLoaded,
+        );
 
     final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
     return parentBundle?.children ?? [];
@@ -167,11 +169,7 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
               child: childView,
             ),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: removeButton(index),
-          ),
+          Positioned(right: 0, top: 0, child: removeButton(index)),
         ],
       ),
     );
@@ -199,65 +197,63 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (_bundles.isNotEmpty) ...[
-          getGridView(context),
-          totalCountIndicator,
-        ],
+        if (_bundles.isNotEmpty) ...[getGridView(context), totalCountIndicator],
         if (field.childForm != null) addButton,
       ],
     );
   }
 
   Widget get totalCountIndicator => Padding(
-        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-        child: ValueListenableBuilder<int>(
-          valueListenable: itemCountNotifier,
-          builder: (context, value, child) => Text(
-            'Total Items: $value',
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
-          ),
+    padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+    child: ValueListenableBuilder<int>(
+      valueListenable: itemCountNotifier,
+      builder: (context, value, child) => Text(
+        'Total Items: $value',
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
         ),
-      );
+      ),
+    ),
+  );
 
   Widget removeButton(int index) => Material(
-        shape: const CircleBorder(),
-        color: Theme.of(context).colorScheme.error,
-        elevation: 2,
-        clipBehavior: Clip.hardEdge,
-        child: InkWell(
-          onTap: () => onRemove(index),
-          child: const Padding(
-            padding: EdgeInsets.all(4),
-            child: Icon(Icons.close, size: 14, color: Colors.white),
-          ),
-        ),
-      );
+    shape: const CircleBorder(),
+    color: Theme.of(context).colorScheme.error,
+    elevation: 2,
+    clipBehavior: Clip.hardEdge,
+    child: InkWell(
+      onTap: () => onRemove(index),
+      child: const Padding(
+        padding: EdgeInsets.all(4),
+        child: Icon(Icons.close, size: 14, color: Colors.white),
+      ),
+    ),
+  );
 
   Widget get addButton => Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 12),
-        child: Center(
-          child: TextButton.icon(
-            onPressed: onAdd,
-            style: TextButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            ),
-            label: const Text("Add Row"),
-            icon: const Icon(Icons.add, size: 18),
-          ),
+    padding: const EdgeInsets.only(top: 8, bottom: 12),
+    child: Center(
+      child: TextButton.icon(
+        onPressed: onAdd,
+        style: TextButton.styleFrom(
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.primary.withOpacity(0.1),
         ),
-      );
+        label: const Text("Add Row"),
+        icon: const Icon(Icons.add, size: 18),
+      ),
+    ),
+  );
 
   // ─── Actions ──────────────────────────────────────────────────────────────
 
   Future<void> onRemove(int index) async {
     if (index >= 0 && index < _bundles.length) {
       setState(() {
-        _bundles.removeAt(index); 
+        _bundles.removeAt(index);
         itemCountNotifier.value = _bundles.length;
       });
       final int value = (int.tryParse(controller.text) ?? 0) - 1;
@@ -268,22 +264,23 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
   Future<void> onAdd() async {
     if (field.childForm == null) return;
 
-    final List<DocFieldBundle> builtBundles =
-        await docFormController.buildFormFields(
-      field.childForm!,
-      fetchSuggestions: widget.fetchSuggestions != null
-          ? (pattern, docField) => widget.fetchSuggestions!(pattern, docField)
-          : null,
-      baseUrl: widget.baseUrl,
-      onAttachmentLoaded: widget.onAttachmentLoaded,
-    );
+    final List<DocFieldBundle> builtBundles = await docFormController
+        .buildFormFields(
+          field.childForm!,
+          fetchSuggestions: widget.fetchSuggestions != null
+              ? (pattern, docField) =>
+                    widget.fetchSuggestions!(pattern, docField)
+              : null,
+          baseUrl: widget.baseUrl,
+          onAttachmentLoaded: widget.onAttachmentLoaded,
+        );
 
     final DocFieldBundle? parentBundle = builtBundles.firstOrNull;
     final List<DocFieldBundle> rowBundles = parentBundle?.children ?? [];
 
     if (rowBundles.isNotEmpty && mounted) {
       setState(() {
-        _bundles.addAll(rowBundles); 
+        _bundles.addAll(rowBundles);
         itemCountNotifier.value = _bundles.length;
       });
       controller.text = '${(int.tryParse(controller.text) ?? 0) + 1}';

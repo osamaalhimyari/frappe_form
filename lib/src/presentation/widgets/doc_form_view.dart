@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 04/21/25.
@@ -32,7 +32,6 @@ class DocFormView extends StatefulWidget {
     DocField field,
   )?
   fetchSuggestions;
-
 
   /// To add custom actions to the AppBar.
   final List<Widget>? actions;

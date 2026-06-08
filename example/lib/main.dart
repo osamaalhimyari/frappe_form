@@ -6,7 +6,7 @@ import 'dart:ui';
 
 import 'package:example/attachment_utils.dart';
 import 'package:example/doc_form_samples.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_field_editor/json_field_editor.dart';
@@ -105,7 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
     (name: 'French', value: Locale('fr', 'FR')),
   ];
   final List<({String name, String value})> forms = [
-    (name: 'Supported Fields Test', value: jsonEncode(DocFormSamples.fieldTest)),
+    (
+      name: 'Supported Fields Test',
+      value: jsonEncode(DocFormSamples.fieldTest),
+    ),
     // (name: 'Table Test', value: DocFormSampRles.tableTest),
   ];
   final List<({String name, InputDecorationTheme? value})>
@@ -170,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Locale? selectedLocale;
-  String selectedForm =jsonEncode(DocFormSamples.fieldTest);
+  String selectedForm = jsonEncode(DocFormSamples.fieldTest);
   InputDecorationTheme? selectedInputDecorationTheme;
   final extraLocalizations = [DocFormFrLocalization()];
   ThemeData theme = ThemeData();
@@ -530,137 +533,77 @@ class DocFormPageState extends State<DocFormPage> {
       }).toList();
     } //
 
-  Map<String, String> _formValues = {};
+    Map<String, String> _formValues = {};
 
-// ... inside build ...
-List<Map<String, dynamic>> getChildTableRows(dynamic field) {
-  // 1. Your actual data rows (initials)
-  List initials = [
-    {
-      "name": "row_1",
-      "uom": "Nos",
-      "conversion_factor": 1,
-      "doctype": "UOM Conversion Detail",
-    },
-    {
-      "name": "row_2",
-      "uom": "Box",
-      "conversion_factor": 2,
-      "doctype": "UOM Conversion Detail",
-    },
-  ];
+    return DocFormView(
+      key: ValueKey(loading),
+      form: widget.form,
+      baseUrl: "https://your-frappe-instance.com/",
 
-  // 2. Your structural definition (The Template)
-  Map<String, dynamic> childTableStructure = {
-    "name": "UOM Conversion Detail",
-    "fields": [
-      {"fieldname": "uom", "label": "UOM", "fieldtype": "Link"},
-      {"fieldname": "conversion_factor", "label": "Conversion Factor", "fieldtype": "Float"},
-    ],
-  };
+      // ───────── STEP 1: CAPTURE CHANGES ─────────
+      onDocTypeChanged: (fieldname, value) {
+        setState(() {
+          _formValues[fieldname ?? ""] = value ?? "";
+          print(" Field '$fieldname' changed to '$value'");
+        });
+      },
 
-  List<Map<String, dynamic>> rows = [];
+      // ───────── STEP 2: RESOLVE DYNAMIC DOCTYPE ─────────
+      fetchSuggestions: (pattern, field) async {
+        try {
+          print('Searching in: ${field.options} for pattern: $pattern');
+          // Get the string from the field's 'options' metadata
+          final String? name = field.fieldName;
 
-  // Loop through each data entry (The Rows)
-  for (int i = 0; i < initials.length; i++) {
-    var rowData = initials[i];
-    
-    // For every row of data, we create a fresh set of fields based on the structure
-    List<Map<String, dynamic>> fieldsForThisRow = [];
+          final String resolvedDocType =
+              // "Animal"??"";
+              (_formValues.containsKey(name))
+              ? (_formValues[name] ?? "none")
+              : (field.options ?? "none");
 
-    for (var structureField in (childTableStructure['fields'] as List)) {
-      // Create a deep copy of the field definition template
-      Map<String, dynamic> fieldInstance = Map<String, dynamic>.from(structureField);
-      
-      String fieldName = fieldInstance['fieldname'];
-
-      // Assign the value from the data row to this specific field instance
-      fieldInstance['value'] = rowData[fieldName] ?? fieldInstance['default'];
-      
-      // Crucial: Create a unique key for the UI (e.g., row index + fieldname)
-      fieldInstance['unique_id'] = "row_${i}_${fieldName}";
-      fieldInstance['row_index'] = i;
-
-      fieldsForThisRow.add(fieldInstance);
-    }
-
-    // Add the fully constructed row to our list
-    rows.add({
-      "row_id": rowData['name'] ?? i.toString(),
-      "fields": fieldsForThisRow,
-    });
-  }
-
-  return rows;
-}
-return DocFormView(
-  key: ValueKey(loading),
-  form: widget.form,
-  baseUrl: "https://your-frappe-instance.com/",
-  
-  // ───────── STEP 1: CAPTURE CHANGES ─────────
-  onDocTypeChanged: (fieldname, value) {
-    setState(() {
-      _formValues[fieldname??""] = value ?? "";
-      print(" Field '$fieldname' changed to '$value'");
-    });
-  },
-
-  // ───────── STEP 2: RESOLVE DYNAMIC DOCTYPE ─────────
-  fetchSuggestions: (pattern, field) async {
-    try {
-      print('Searching in: ${field.options} for pattern: $pattern');
-      // Get the string from the field's 'options' metadata
-      final String? name = field.fieldName;
-
-      final String resolvedDocType = 
-      // "Animal"??"";
-      (_formValues.containsKey(name))
-          ? (_formValues[name] ?? "none")
-          : (field.options ?? "none");
-
-
-      // Call your API
-      final List<Map<String, dynamic>> results = await fetchLinkSuggestions(
-        doctype: resolvedDocType,
-        query: pattern,
-      );
-
-      return results;
-    } catch (e) {
-      return [];
-    }
-  },
-  // ------------------------------------
-  getChildTableRows: getChildTableRows,
-  // ------------------------------------
-  controller: DocFormController(
-    onBuildFieldView: (field, children, onAttachmentLoaded) async {
-      switch (field.type) {
-        case FieldType.heatmap:
-          return HeatMapView(field: field, activityData: []);
-        case FieldType.connections:
-          return ConnectionsView(
-            transactions: transactions.map((e) => Transaction.fromMap(e)).toList(),
-            onTap: (String link) {},
+          // Call your API
+          final List<Map<String, dynamic>> results = await fetchLinkSuggestions(
+            doctype: resolvedDocType,
+            query: pattern,
           );
-        default:
-          return null;
-      }
-    },
-  ),
-  isLoading: loading,
-  onSubmit: onSubmit,
-  onCancel: onCancel,
-  onResponse: onResponse,
-  getDoctypesForDynamicLink: (String fieldName) async {
-    var list = widget.form.getDynamicLinkOptions(fieldName);
-    if (list.isEmpty) {
-      list = ["Job", "Fruit", "Animal"];
-    }
-    return list;
-  },
-); }
+
+          return results;
+        } catch (e) {
+          return [];
+        }
+      },
+      // ------------------------------------
+      // ------------------------------------
+      controller: DocFormController(
+        onBuildFieldView: (field, children, onAttachmentLoaded) async {
+          switch (field.type) {
+            case FieldType.heatmap:
+              return HeatMapView(field: field, activityData: []);
+            case FieldType.connections:
+              return ConnectionsView(
+                transactions: transactions
+                    .map((e) => Transaction.fromMap(e))
+                    .toList(),
+                onTap: (String link) {},
+              );
+            default:
+              return null;
+          }
+        },
+      ),
+      isLoading: loading,
+      onSubmit: onSubmit,
+      onCancel: onCancel,
+      onResponse: onResponse,
+      getDoctypesForDynamicLink: (String fieldName) async {
+        var list = widget.form.getDynamicLinkOptions(fieldName);
+        if (list.isEmpty) {
+          list = ["Job", "Fruit", "Animal"];
+        }
+        return list;
+      },
+    );
+  }
 
   Future<Attachment?> onAttachmentLoaded() async {
     return AttachmentUtils.pickAttachment(context);

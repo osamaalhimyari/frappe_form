@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 
 class DocFieldMultiSelectView extends DocFieldView {
   DocFieldMultiSelectView({

@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 
 class DocFieldBarcodeView extends DocFieldView {
@@ -11,9 +11,9 @@ class DocFieldBarcodeView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomTextEditingController(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomTextEditingController(focusNode: FocusNode()),
+       );
 
   @override
   CustomTextEditingController get controller =>
@@ -34,7 +34,6 @@ class DocFieldBarcodeView extends DocFieldView {
 
 class DocFieldBarcodeViewState<SF extends DocFieldBarcodeView>
     extends DocFieldViewState<SF> {
-  
   @override
   CustomTextEditingController get controller =>
       super.controller as CustomTextEditingController;
@@ -105,7 +104,9 @@ class DocFieldBarcodeViewState<SF extends DocFieldBarcodeView>
               ? Center(
                   child: Text(
                     'No data entered',
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.grey,
+                    ),
                   ),
                 )
               : BarcodeWidget(

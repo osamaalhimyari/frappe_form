@@ -1,10 +1,9 @@
-
 // ignore_for_file: use_build_context_synchronously, overridden_fields
 
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 // import 'package:get/get.dart';
 import 'package:signature/signature.dart';
 
@@ -42,6 +41,7 @@ class DocFieldSignatureViewState<SF extends DocFieldSignatureView>
   @override
   CustomValueController<String> get controller =>
       super.controller as CustomValueController<String>;
+
   /// Get value from controller if it exists (for initial loading or persistence)
   String? get frappeSignatureValue =>
       controller.value.isEmpty ? null : controller.value;
@@ -106,7 +106,7 @@ class DocFieldSignatureViewState<SF extends DocFieldSignatureView>
               onPressed: () {
                 _signatureController.clear();
                 // Update the controller so the Map is updated
-                controller.value = ''; 
+                controller.value = '';
                 setState(() {});
               },
             ),
@@ -124,7 +124,10 @@ class DocFieldSignatureViewState<SF extends DocFieldSignatureView>
         // ───────── PREVIEW ─────────
         if (frappeSignatureValue != null) ...[
           const SizedBox(height: 8),
-          const Text('Saved Signature Preview:', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const Text(
+            'Saved Signature Preview:',
+            style: TextStyle(fontSize: 12, color: Colors.grey),
+          ),
           const SizedBox(height: 4),
           Container(
             height: 120,
@@ -156,8 +159,9 @@ class DocFieldSignatureViewState<SF extends DocFieldSignatureView>
       // THIS UPDATES THE CONTROLLER IN YOUR FormManager Registry
       controller.value = 'data:image/png;base64,$base64';
     });
-    
- ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Signature saved')),    );
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Signature saved')));
   }
 }

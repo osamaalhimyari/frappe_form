@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 
 class DocFieldDependsOnBundle {
   final String fieldName;

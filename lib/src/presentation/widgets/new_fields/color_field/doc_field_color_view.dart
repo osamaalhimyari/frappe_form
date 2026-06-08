@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class DocFieldColorView extends DocFieldView {
@@ -11,9 +11,10 @@ class DocFieldColorView extends DocFieldView {
     required super.field,
     super.dependsOnController,
   }) : super(
-          controller: controller ??
-              CustomValueController<String>(focusNode: FocusNode()),
-        );
+         controller:
+             controller ??
+             CustomValueController<String>(focusNode: FocusNode()),
+       );
 
   @override
   CustomValueController<String> get controller =>
@@ -27,7 +28,7 @@ class DocFieldColorView extends DocFieldView {
     if (controller.value.isEmpty && field.initial != null) {
       controller.value = field.initial.toString();
     }
-    
+
     // Default to white if still empty to avoid parsing errors
     if (controller.value.isEmpty) {
       controller.value = '#FFFFFF';
@@ -38,7 +39,8 @@ class DocFieldColorView extends DocFieldView {
   State<DocFieldColorView> createState() => DocFieldColorViewState();
 }
 
-class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewState<SF> {
+class DocFieldColorViewState<SF extends DocFieldColorView>
+    extends DocFieldViewState<SF> {
   late Color _currentColor;
   late final TextEditingController _hexDisplayController;
 
@@ -50,7 +52,7 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
   void initState() {
     super.initState();
     // Initialize the local Color object from the controller's string
-    _currentColor = _parseHexColor(controller.value??'#FFFFFF');
+    _currentColor = _parseHexColor(controller.value ?? '#FFFFFF');
     _hexDisplayController = TextEditingController(text: controller.value);
   }
 
@@ -86,15 +88,17 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
               border: Border.all(color: theme.dividerColor, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withAlpha(255~/0.1),
+                  color: Colors.black.withAlpha(255 ~/ 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
-                )
+                ),
               ],
             ),
             child: Icon(
-              Icons.colorize, 
-              color: _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+              Icons.colorize,
+              color: _currentColor.computeLuminance() > 0.5
+                  ? Colors.black
+                  : Colors.white,
             ),
           ),
         ),
@@ -108,9 +112,12 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
             controller: _hexDisplayController,
             decoration: const InputDecoration(
               hintText: '#FFFFFF',
+
               // labelText: controller.value, // Shows the hex code
-            
-              labelStyle: TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
+              labelStyle: TextStyle(
+                fontFamily: 'monospace',
+                fontWeight: FontWeight.bold,
+              ),
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12),
               suffixIcon: Icon(Icons.arrow_drop_down),
@@ -138,7 +145,8 @@ class DocFieldColorViewState<SF extends DocFieldColorView> extends DocFieldViewS
                 _hexDisplayController.text = controller.value ?? '';
               });
             },
-            enableAlpha: false, // Frappe doesn't usually use Alpha in standard Color fields
+            enableAlpha:
+                false, // Frappe doesn't usually use Alpha in standard Color fields
             displayThumbColor: true,
             paletteType: PaletteType.hsvWithHue,
             labelTypes: const [ColorLabelType.hex],

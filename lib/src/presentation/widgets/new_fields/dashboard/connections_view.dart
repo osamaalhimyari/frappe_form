@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:frappe_form2/src/model/new_models/transaction.dart';
 
 class ConnectionsView extends DocFieldView {
   final List<Transaction> transactions;
   final Function(String link) onTap;
 
-  ConnectionsView({
-    super.key,
-    required this.transactions,
-    required this.onTap,
-  }) : super(
-         controller:CustomTextEditingController(focusNode: FocusNode()),
-             field:DocField()
-       );
+  ConnectionsView({super.key, required this.transactions, required this.onTap})
+    : super(
+        controller: CustomTextEditingController(focusNode: FocusNode()),
+        field: DocField(),
+      );
   @override
   State<ConnectionsView> createState() => _ConnectionsViewState();
 }

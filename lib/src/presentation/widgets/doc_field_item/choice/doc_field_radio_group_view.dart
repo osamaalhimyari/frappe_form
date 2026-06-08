@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 
 /// Created by luis901101 on 07/25/25.
 class DocFieldRadioGroupView extends DocFieldSelectView {

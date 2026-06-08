@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, overridden_fields
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:frappe_form2/src/model/new_models/message.dart';
 
 class DocFieldLinkView extends DocFieldView {
@@ -24,9 +24,9 @@ class DocFieldLinkView extends DocFieldView {
     CustomTextEditingController? controller,
     super.dependsOnController,
   }) : super(
-          controller: controller ?? 
-              CustomTextEditingController(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomTextEditingController(focusNode: FocusNode()),
+       );
 
   @override
   CustomTextEditingController get controller =>
@@ -67,7 +67,7 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
   @override
   void initState() {
     super.initState();
-    
+
     // Set display text to match initial ID
     _displayController.text = controller.text;
 
@@ -120,7 +120,7 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
       final query = pattern.toLowerCase();
       _filteredData = _fullData.where((item) {
         return (item.label?.toLowerCase().contains(query) ?? false) ||
-               (item.value?.toLowerCase().contains(query) ?? false);
+            (item.value?.toLowerCase().contains(query) ?? false);
       }).toList();
     }
   }
@@ -172,10 +172,18 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
 
   Widget _buildSuggestionsList() {
     if (_isLoading) {
-      return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()));
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
     if (_filteredData.isEmpty) {
-      return const Padding(padding: EdgeInsets.all(16), child: Text('No results', textAlign: TextAlign.center));
+      return const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('No results', textAlign: TextAlign.center),
+      );
     }
 
     return ListView.separated(
@@ -198,13 +206,14 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
   void _selectItem(Message item) {
     setState(() {
       controller.text = item.value ?? ''; // Save ID to form
-      _displayController.text = item.label ?? item.value ?? ''; // Show Label in UI
+      _displayController.text =
+          item.label ?? item.value ?? ''; // Show Label in UI
     });
 
     // if (widget.onChanged != null) {
     //   widget.onChanged!(LinkFieldValue(value: item.value, label: item.label, description: item.description));
     // }
-    
+
     _focusNode.unfocus();
     _removeOverlay();
   }
@@ -258,15 +267,25 @@ class _DocFieldLinkViewState extends DocFieldViewState<DocFieldLinkView> {
           hintText: 'Search...',
           prefixIcon: const Icon(Icons.link),
           border: const OutlineInputBorder(),
-          suffixIcon: _isLoading 
-            ? const SizedBox(width: 20, height: 20, child: Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator(strokeWidth: 2)))
-            : (_displayController.text.isNotEmpty && !isReadOnly
-                ? IconButton(icon: const Icon(Icons.clear), onPressed: () {
-                    _displayController.clear();
-                    controller.clear();
-                    // if (widget.onChanged != null) widget.onChanged!(null);
-                  })
-                : const Icon(Icons.arrow_drop_down)),
+          suffixIcon: _isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : (_displayController.text.isNotEmpty && !isReadOnly
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _displayController.clear();
+                          controller.clear();
+                          // if (widget.onChanged != null) widget.onChanged!(null);
+                        },
+                      )
+                    : const Icon(Icons.arrow_drop_down)),
         ),
       ),
     );

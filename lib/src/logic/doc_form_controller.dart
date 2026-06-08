@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:frappe_form2/src/presentation/widgets/new_fields/attach_image/doc_field_attach_iamge_view.dart';
 import 'package:frappe_form2/src/presentation/widgets/new_fields/barcode_field/doc_field_barcode_view.dart';
 import 'package:frappe_form2/src/presentation/widgets/new_fields/color_field/doc_field_color_view.dart';

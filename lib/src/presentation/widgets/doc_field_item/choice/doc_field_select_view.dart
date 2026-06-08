@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 
 /// Created by luis901101 on 06/21/25.
 class DocFieldSelectView extends DocFieldView {

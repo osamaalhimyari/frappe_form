@@ -1,4 +1,4 @@
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/phone_number.dart';
 

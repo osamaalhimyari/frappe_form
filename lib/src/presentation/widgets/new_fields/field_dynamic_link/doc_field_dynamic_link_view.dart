@@ -1,11 +1,11 @@
 // ignore_for_file: overridden_fields, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/frappe_form2.dart';
 
 class DocFieldDynamicLinkView extends DocFieldView {
   final List<String> docTypes;
-  
+
   /// Callback to notify the parent/form that the DocType category has changed
   final void Function(String? doctype, String? option)? onDocTypeChanged;
 
@@ -17,9 +17,9 @@ class DocFieldDynamicLinkView extends DocFieldView {
     CustomTextEditingController? controller,
     super.dependsOnController,
   }) : super(
-          controller:
-              controller ?? CustomTextEditingController(focusNode: FocusNode()),
-        );
+         controller:
+             controller ?? CustomTextEditingController(focusNode: FocusNode()),
+       );
 
   @override
   CustomTextEditingController get controller =>
@@ -41,7 +41,6 @@ class DocFieldDynamicLinkView extends DocFieldView {
 
 class _DocFieldDynamicLinkViewState
     extends DocFieldViewState<DocFieldDynamicLinkView> {
-  
   @override
   CustomTextEditingController get controller =>
       super.controller as CustomTextEditingController;
@@ -82,10 +81,10 @@ class _DocFieldDynamicLinkViewState
                     // Update the controller so the form state knows which DocType is selected
                     controller.text = value ?? '';
                   });
-                  
+
                   // Notify the outside world (the Parent) so the LinkField can refresh
                   if (widget.onDocTypeChanged != null) {
-                    widget.onDocTypeChanged!(value,field.options);
+                    widget.onDocTypeChanged!(value, field.options);
                   }
                 },
           decoration: InputDecoration(
@@ -93,7 +92,10 @@ class _DocFieldDynamicLinkViewState
             labelText: field.label.isNotEmpty ? field.label : 'Link To',
             prefixIcon: const Icon(Icons.category_outlined, size: 20),
             border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
           ),
         ),
       ],
