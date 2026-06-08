@@ -1,6 +1,6 @@
-import 'package:frappe_form/src/logic/utils/text_utils.dart';
-import 'package:frappe_form/src/entity/doc_field.dart';
-import 'package:frappe_form/src/presentation/widgets/doc_field_item/base/doc_field_view.dart';
+import 'package:frappe_form2/src/logic/utils/text_utils.dart';
+import 'package:frappe_form2/src/entity/doc_field.dart';
+import 'package:frappe_form2/src/presentation/widgets/doc_field_item/base/doc_field_view.dart';
 
 class DocFieldBundle {
   /// Use it just to group views

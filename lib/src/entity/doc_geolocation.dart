@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:adeptannotations/adeptannotations.dart';
-import 'package:frappe_form/src/entity/enumerator/feature_type.dart';
-import 'package:frappe_form/src/entity/enumerator/geolocation_type.dart';
-import 'package:frappe_form/src/entity/enumerator/geometry_property_type.dart';
-import 'package:frappe_form/src/entity/enumerator/geometry_type.dart';
+import 'package:frappe_form2/src/entity/enumerator/feature_type.dart';
+import 'package:frappe_form2/src/entity/enumerator/geolocation_type.dart';
+import 'package:frappe_form2/src/entity/enumerator/geometry_property_type.dart';
+import 'package:frappe_form2/src/entity/enumerator/geometry_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'doc_geolocation.g.dart';

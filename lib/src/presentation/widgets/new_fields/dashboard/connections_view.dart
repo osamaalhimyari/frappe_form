@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
-import 'package:frappe_form/src/model/new_models/transaction.dart';
+import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/src/model/new_models/transaction.dart';
 
 class ConnectionsView extends DocFieldView {
   final List<Transaction> transactions;

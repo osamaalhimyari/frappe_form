@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:frappe_form/frappe_form.dart';
-import 'package:frappe_form/src/presentation/widgets/new_fields/attach_image/doc_field_attach_iamge_view.dart';
-import 'package:frappe_form/src/presentation/widgets/new_fields/barcode_field/doc_field_barcode_view.dart';
-import 'package:frappe_form/src/presentation/widgets/new_fields/color_field/doc_field_color_view.dart';
-import 'package:frappe_form/src/presentation/widgets/new_fields/multi_select/doc_field_multi_select_view.dart';
-import 'package:frappe_form/src/presentation/widgets/new_fields/signature/doc_field_signature_view.dart';
+import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/src/presentation/widgets/new_fields/attach_image/doc_field_attach_iamge_view.dart';
+import 'package:frappe_form2/src/presentation/widgets/new_fields/barcode_field/doc_field_barcode_view.dart';
+import 'package:frappe_form2/src/presentation/widgets/new_fields/color_field/doc_field_color_view.dart';
+import 'package:frappe_form2/src/presentation/widgets/new_fields/multi_select/doc_field_multi_select_view.dart';
+import 'package:frappe_form2/src/presentation/widgets/new_fields/signature/doc_field_signature_view.dart';
 
 class DocFormController {
   /// Allows to override a [DocField] before building its view and controller.

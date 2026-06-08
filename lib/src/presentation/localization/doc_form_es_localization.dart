@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:frappe_form/src/presentation/localization/doc_form_base_localization.dart';
+import 'package:frappe_form2/src/presentation/localization/doc_form_base_localization.dart';
 
 /// Spanish localizations
 class DocFormEsLocalization extends DocFormBaseLocalization {

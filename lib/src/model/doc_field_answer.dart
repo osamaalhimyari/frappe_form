@@ -1,6 +1,6 @@
 import 'package:adeptannotations/adeptannotations.dart';
-import 'package:frappe_form/src/entity/enumerator/field_type.dart';
-import 'package:frappe_form/src/logic/utils/text_utils.dart';
+import 'package:frappe_form2/src/entity/enumerator/field_type.dart';
+import 'package:frappe_form2/src/logic/utils/text_utils.dart';
 
 part 'doc_field_answer.g.dart';
 

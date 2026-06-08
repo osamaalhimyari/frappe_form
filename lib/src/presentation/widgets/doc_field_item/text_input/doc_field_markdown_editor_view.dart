@@ -1,4 +1,4 @@
-import 'package:frappe_form/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';
+import 'package:frappe_form2/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';
 import 'package:flutter/material.dart';
 
 //TODO: must support markdown formatting options

@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 import 'package:intl/intl.dart';
 import 'package:contribution_heatmap/contribution_heatmap.dart';
 // import 'package:get/get.dart';

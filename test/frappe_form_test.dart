@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:frappe_form/src/entity/doc_field.dart';
-import 'package:frappe_form/src/entity/doc_form.dart';
-import 'package:frappe_form/src/logic/doc_field_group_controller.dart';
+import 'package:frappe_form2/src/entity/doc_field.dart';
+import 'package:frappe_form2/src/entity/doc_form.dart';
+import 'package:frappe_form2/src/logic/doc_field_group_controller.dart';
 import 'package:flutter/foundation.dart';
 
 String form1 = r'''

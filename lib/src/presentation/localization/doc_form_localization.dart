@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:frappe_form/src/presentation/localization/doc_form_base_localization.dart';
-import 'package:frappe_form/src/presentation/localization/doc_form_en_localization.dart';
-import 'package:frappe_form/src/presentation/localization/doc_form_es_localization.dart';
+import 'package:frappe_form2/src/presentation/localization/doc_form_base_localization.dart';
+import 'package:frappe_form2/src/presentation/localization/doc_form_en_localization.dart';
+import 'package:frappe_form2/src/presentation/localization/doc_form_es_localization.dart';
 
 class DocFormLocalization {
   static final instance = DocFormLocalization();

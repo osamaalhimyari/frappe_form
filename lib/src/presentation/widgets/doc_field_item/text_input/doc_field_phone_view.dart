@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 import 'package:intl_phone_field/countries.dart';
 
 /// Created by luis901101 on 05/02/25.

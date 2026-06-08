@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 
 class DocFieldDynamicLinkView extends DocFieldView {
   final List<String> docTypes;

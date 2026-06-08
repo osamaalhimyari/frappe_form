@@ -1,5 +1,5 @@
 import 'package:flutter/rendering.dart' as rendering;
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 import 'package:flutter/widgets.dart';
 
 class ViewUtils {

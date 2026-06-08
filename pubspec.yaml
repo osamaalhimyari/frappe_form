@@ -1,12 +1,8 @@
-name: frappe_form
+name: frappe_form2
 description: "A library to render Frappe DocForm and generate a response"
-version: 0.9.2
-repository: https://github.com/luis901101/frappe_form
-issue_tracker: https://github.com/luis901101/frappe_form/issues
-topics:
-  - frappe
-  - erpnext
-  - form
+version: 0.1.0
+repository: https://github.com/osamaalhimyari/frappe_form2.git
+
 
 environment:
   sdk: '>=3.8.0 <4.0.0'

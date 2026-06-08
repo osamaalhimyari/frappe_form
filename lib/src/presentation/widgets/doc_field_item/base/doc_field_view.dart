@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frappe_form/src/entity/doc_field.dart';
-import 'package:frappe_form/src/logic/utils/text_utils.dart';
-import 'package:frappe_form/src/model/doc_field_bundle.dart';
-import 'package:frappe_form/src/model/doc_field_depends_on_controller.dart';
-import 'package:frappe_form/src/presentation/utils/validation_utils.dart';
-import 'package:frappe_form/src/presentation/widgets/custom_html.dart';
-import 'package:frappe_form/src/presentation/widgets/size_renderer.dart';
+import 'package:frappe_form2/src/entity/doc_field.dart';
+import 'package:frappe_form2/src/logic/utils/text_utils.dart';
+import 'package:frappe_form2/src/model/doc_field_bundle.dart';
+import 'package:frappe_form2/src/model/doc_field_depends_on_controller.dart';
+import 'package:frappe_form2/src/presentation/utils/validation_utils.dart';
+import 'package:frappe_form2/src/presentation/widgets/custom_html.dart';
+import 'package:frappe_form2/src/presentation/widgets/size_renderer.dart';
 
 /// Created by luis901101 on 04/21/25.
 abstract class DocFieldView extends StatefulWidget {

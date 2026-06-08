@@ -4,7 +4,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 // import 'package:get/get.dart';
 import 'package:signature/signature.dart';
 

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:adeptannotations/adeptannotations.dart';
-import 'package:frappe_form/src/entity/doc_form.dart';
-import 'package:frappe_form/src/entity/doc_type.dart';
-import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
-import 'package:frappe_form/src/entity/enumerator/field_type.dart';
-import 'package:frappe_form/src/logic/utils/iterable_utils.dart';
-import 'package:frappe_form/src/logic/utils/num_utils.dart';
-import 'package:frappe_form/src/logic/utils/text_utils.dart';
+import 'package:frappe_form2/src/entity/doc_form.dart';
+import 'package:frappe_form2/src/entity/doc_type.dart';
+import 'package:frappe_form2/src/entity/enumerator/doc_type_type.dart';
+import 'package:frappe_form2/src/entity/enumerator/field_type.dart';
+import 'package:frappe_form2/src/logic/utils/iterable_utils.dart';
+import 'package:frappe_form2/src/logic/utils/num_utils.dart';
+import 'package:frappe_form2/src/logic/utils/text_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'doc_field.g.dart';

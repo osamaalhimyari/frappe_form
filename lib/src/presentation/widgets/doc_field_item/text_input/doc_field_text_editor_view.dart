@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frappe_form/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';
+import 'package:frappe_form2/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 
 /// Created by luis901101 on 05/06/25.

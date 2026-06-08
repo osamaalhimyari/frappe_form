@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 
 /// Renders a "junction" child-table field — one whose child doctype is
 /// a single [FieldType.link] — as a checklist instead of a row-by-row

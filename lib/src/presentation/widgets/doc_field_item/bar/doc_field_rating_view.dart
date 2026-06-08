@@ -1,5 +1,5 @@
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 05/06/25.

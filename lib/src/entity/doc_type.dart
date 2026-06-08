@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:adeptannotations/adeptannotations.dart';
 import 'package:equatable/equatable.dart';
-import 'package:frappe_form/src/entity/enumerator/doc_type_type.dart';
-import 'package:frappe_form/src/logic/utils/param_utils.dart';
+import 'package:frappe_form2/src/entity/enumerator/doc_type_type.dart';
+import 'package:frappe_form2/src/logic/utils/param_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'doc_type.g.dart';

@@ -1,5 +1,5 @@
-import 'package:frappe_form/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';
-import 'package:frappe_form/src/presentation/utils/validation_utils.dart';
+import 'package:frappe_form2/src/presentation/widgets/doc_field_item/base/doc_field_text_field_view.dart';
+import 'package:frappe_form2/src/presentation/utils/validation_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Created by luis901101 on 05/06/25.

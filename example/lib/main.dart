@@ -6,7 +6,7 @@ import 'dart:ui';
 
 import 'package:example/attachment_utils.dart';
 import 'package:example/doc_form_samples.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_field_editor/json_field_editor.dart';

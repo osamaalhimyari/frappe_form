@@ -1,8 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api, overridden_fields
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
-import 'package:frappe_form/src/model/new_models/message.dart';
+import 'package:frappe_form2/frappe_form.dart';
+import 'package:frappe_form2/src/model/new_models/message.dart';
 
 class DocFieldLinkView extends DocFieldView {
   // final Function(LinkFieldValue?)? onChanged;

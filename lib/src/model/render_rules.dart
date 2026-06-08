@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:adeptannotations/adeptannotations.dart';
 import 'package:equatable/equatable.dart';
-import 'package:frappe_form/src/logic/utils/text_utils.dart';
+import 'package:frappe_form2/src/logic/utils/text_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'render_rules.g.dart';

@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields
 
 import 'package:flutter/material.dart';
-import 'package:frappe_form/frappe_form.dart';
+import 'package:frappe_form2/frappe_form.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class DocFieldColorView extends DocFieldView {
