@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 
+/// Comparison operators evaluated when resolving a field's `dependsOn` rule
+/// against the current answer.
 enum DocFieldDependsOnOperator {
   /// True if whether at least one answer has a value that is equal to the dependsOn answer.
   equals('=='),
@@ -18,11 +20,17 @@ enum DocFieldDependsOnOperator {
 
   /// True if whether at least no answer has a value that is less than the dependsOn answer.
   lessThan('<'),
+
+  /// No comparison; the rule is always considered unmatched.
   none('');
 
+  /// The operator symbol backing this enum entry.
   final String name;
+
+  /// Creates a [DocFieldDependsOnOperator] bound to its symbol [name].
   const DocFieldDependsOnOperator(this.name);
 
+  /// Returns the operator whose [name] matches [name], or `null` if none.
   static DocFieldDependsOnOperator? valueOf(String? name) =>
       DocFieldDependsOnOperator.values.firstWhereOrNull(
         (value) => value.name == name,

@@ -230,9 +230,14 @@ enum FieldType {
 
 
 
+  /// The raw Frappe fieldtype string backing this enum entry.
   final String name;
+
+  /// Creates a [FieldType] bound to its raw Frappe [name].
   const FieldType(this.name);
 
+  /// Whether this type is a layout container that nests other fields
+  /// (tab, section, column break, or table).
   bool get isGroup => switch (this) {
     FieldType.tabBreak ||
     FieldType.sectionBreak ||
@@ -241,6 +246,8 @@ enum FieldType {
     _ => false,
   };
 
+  /// Whether this type holds a user-provided answer (i.e. is not a pure layout
+  /// break or heading).
   bool get isAnswerable => switch (this) {
     FieldType.tabBreak ||
     FieldType.sectionBreak ||
@@ -264,8 +271,10 @@ enum FieldType {
         _ => false,
       };
 
+  /// Whether this type is the top-most grouping level (a tab break).
   bool get isParentGroup => this == FieldType.tabBreak;
 
+  /// Returns the [FieldType] whose [name] matches [name], or `null` if none.
   static FieldType? valueOf(String? name) =>
       FieldType.values.firstWhereOrNull((value) => value.name == name);
 }
