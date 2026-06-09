@@ -240,9 +240,9 @@ class DocFieldTableViewState<SF extends DocFieldTableView>
         style: TextButton.styleFrom(
           backgroundColor: Theme.of(
             context,
-          ).colorScheme.primary.withOpacity(0.1),
+          ).colorScheme.primary.withValues(alpha: 0.1),
         ),
-        label: const Text("Add Row"),
+        label: const Text('Add Row'),
         icon: const Icon(Icons.add, size: 18),
       ),
     ),

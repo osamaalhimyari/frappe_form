@@ -72,8 +72,9 @@ class DocFieldAttachIamgeViewState<SF extends DocFieldAttachIamgeView>
   /// Combines relative Frappe paths with the baseUrl
   String? _buildSafeImageUrl(String? rawUrl) {
     if (rawUrl == null || rawUrl.isEmpty) return null;
-    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://'))
+    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
       return rawUrl;
+    }
 
     try {
       final baseUri = Uri.parse(widget.baseUrl);

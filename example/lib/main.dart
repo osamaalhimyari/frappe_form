@@ -513,7 +513,7 @@ class DocFormPageState extends State<DocFormPage> {
       required String doctype, // e.g., "Fruit"
       required String query, // e.g., "ap"
     }) async {
-      print("============================: '$query' and options: '$doctype'");
+      debugPrint("============================: '$query' and options: '$doctype'");
 
       // 1. Simulate Network Latency
       await Future.delayed(Duration(milliseconds: 200));
@@ -533,7 +533,7 @@ class DocFormPageState extends State<DocFormPage> {
       }).toList();
     } //
 
-    Map<String, String> _formValues = {};
+    Map<String, String> formValues = {};
 
     return DocFormView(
       key: ValueKey(loading),
@@ -543,22 +543,22 @@ class DocFormPageState extends State<DocFormPage> {
       // ───────── STEP 1: CAPTURE CHANGES ─────────
       onDocTypeChanged: (fieldname, value) {
         setState(() {
-          _formValues[fieldname ?? ""] = value ?? "";
-          print(" Field '$fieldname' changed to '$value'");
+          formValues[fieldname ?? ""] = value ?? "";
+          debugPrint(" Field '$fieldname' changed to '$value'");
         });
       },
 
       // ───────── STEP 2: RESOLVE DYNAMIC DOCTYPE ─────────
       fetchSuggestions: (pattern, field) async {
         try {
-          print('Searching in: ${field.options} for pattern: $pattern');
+          debugPrint('Searching in: ${field.options} for pattern: $pattern');
           // Get the string from the field's 'options' metadata
           final String? name = field.fieldName;
 
           final String resolvedDocType =
               // "Animal"??"";
-              (_formValues.containsKey(name))
-              ? (_formValues[name] ?? "none")
+              (formValues.containsKey(name))
+              ? (formValues[name] ?? "none")
               : (field.options ?? "none");
 
           // Call your API

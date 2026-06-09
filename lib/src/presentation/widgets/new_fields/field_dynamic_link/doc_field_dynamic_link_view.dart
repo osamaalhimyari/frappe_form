@@ -65,7 +65,7 @@ class _DocFieldDynamicLinkViewState
         // ───────── CATEGORY SELECTION (DocType) ─────────
         DropdownButtonFormField<String>(
           // Use controller.text as the source of truth for the dropdown
-          value: controller.text.isEmpty ? null : controller.text,
+          initialValue: controller.text.isEmpty ? null : controller.text,
           isExpanded: true,
           hint: const Text('Select Category'),
           items: uniqueDocTypes.map((type) {

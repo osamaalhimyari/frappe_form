@@ -227,10 +227,10 @@ abstract class DocFieldViewState<SF extends DocFieldView> extends State<SF>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (titleView != null) titleView,
+                  ?titleView,
                   buildBody(context),
-                  if (descriptionView != null) descriptionView,
-                  if (errorManuallyView != null) errorManuallyView,
+                  ?descriptionView,
+                  ?errorManuallyView,
                 ],
               ),
             ),

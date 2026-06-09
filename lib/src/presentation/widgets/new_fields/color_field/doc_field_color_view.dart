@@ -176,6 +176,6 @@ class DocFieldColorViewState<SF extends DocFieldColorView>
   }
 
   String _toHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2, 8).toUpperCase()}';
+    return '#${color.toARGB32().toRadixString(16).substring(2, 8).toUpperCase()}';
   }
 }

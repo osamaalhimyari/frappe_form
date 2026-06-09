@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frappe_form2/frappe_form2.dart';
-import 'package:frappe_form2/src/model/new_models/transaction.dart';
 
 class ConnectionsView extends DocFieldView {
   final List<Transaction> transactions;
@@ -109,7 +108,7 @@ class _ConnectionsViewState extends State<ConnectionsView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        transaction.label ?? "",
+                        transaction.label ?? '',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),

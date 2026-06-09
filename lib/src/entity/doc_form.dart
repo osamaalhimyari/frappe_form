@@ -74,7 +74,7 @@ class DocForm extends DocType {
     return rawCapture
         .split(',')
         .map((item) => item.trim())
-        .map((item) => item.replaceAll(RegExp("['\"]"), "")) 
+        .map((item) => item.replaceAll(RegExp('[\'"]'), ''))
         .where((item) => item.isNotEmpty)
         .toList();
   }
